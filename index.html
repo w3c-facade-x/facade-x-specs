@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Façade-X Specifications</title>
+
+  <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+  <script class="remove">
+    var respecConfig = {
+      specStatus: "unofficial",
+      editors: [
+        { name: "Luigi Asprino", company: "Università Telematica San Raffaele - Roma", companyURL: "https://www.uniroma5.it/", mailto: "luigi.asprino@uniroma5.it", orcid: "0000-0003-1907-0677", w3cid: 130089 },
+        { name: "Enrico Daga", company: "The Open University", companyURL: "https://www.open.ac.uk/", mailto: "enrico.daga@open.ac.uk", orcid: "0000-0002-3184-5407", w3cid: 76898 },
+      ],
+      github: "w3c-facade-x/facade-x-specs",
+      shortName: "facade-x",
+      xref: "web-platform",
+      group: "cg/facade-x",
+      isPreview: true,
+      license: "w3c-software-doc",
+      latestVersion: "https://w3c-facade-x.github.io/facade-x-specs/",
+    };
+  </script>
+</head>
+
+<body>
+
+  <h1 id="title">Façade-X Specifications</h1>
+  <h2 id="subtitle">A minimalist metamodel for representing heterogeneous data formats in a unified way.</h2>
+
+  <section id="abstract">
+    <p>
+      This page provides an overview of the Façade-X specification documents.
+      Façade-X is the (meta-)model resulting from the abstraction of all the basic data structures used to
+      represent source data formats, combined into a unified model. RDF languages can implement it to
+      provide users with direct access to external, heterogeneous data formats without requiring
+      format-specific transformations.
+    </p>
+  </section>
+
+  <section id="sotd">
+    <p>This document is currently in active development.</p>
+  </section>
+
+  <section class="informative">
+    <h2>Overview</h2>
+    <p>
+      Modern data landscapes are inherently heterogeneous: CSV files, JSON documents, spreadsheets,
+      XML, and many other formats each impose their own structural conventions. Façade-X addresses this
+      fragmentation by identifying the minimal set of structural primitives —
+      <em>containers</em>, <em>slots</em>, and <em>values</em> — that are sufficient to faithfully
+      represent any of these formats within a single, coherent model.
+    </p>
+    <p>
+      The model is intentionally abstract. A container generalises both ordered lists and associative
+      maps; a slot is the allotted place for a value or a nested container, identified either by a
+      cardinal number (a <em>NumberSlot</em>) or by a string key (a <em>StringSlot</em>).
+      This small vocabulary, together with a precisely stated set of logical axioms, constitutes the
+      metamodel from which format-specific RDF mappings are derived.
+    </p>
+    <p>
+      This repository contains two companion specification documents:
+      the formal metamodel, expressed in first-order logic, and the RDF vocabulary that realises it
+      under the namespace <code>http://sparql.xyz/facade-x/ns/</code>.
+    </p>
+  </section>
+
+  <section>
+    <h2>Specification Documents</h2>
+
+    <section>
+      <h3><a href="metamodel.html">Façade-X Concepts and Metamodel</a></h3>
+      <p>
+        This document provides the formal definition of the Façade-X metamodel using first-order
+        logic axioms. It introduces and specifies the following concepts:
+      </p>
+      <ul>
+        <li><strong>Resources and Data Sources</strong> — digital artifacts and the data collections they contain.</li>
+        <li><strong>Containers, Slots, and Values</strong> — the core structural primitives of the model, abstracting over lists and maps.</li>
+        <li><strong>Types</strong> — classifications that can be assigned to containers.</li>
+        <li><strong>Root Container</strong> — the unique top-level entry point for each data source.</li>
+        <li><strong>Disjointness</strong> — a complete set of axioms ensuring the concepts are pairwise disjoint.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3><a href="rdf.html">Façade-X RDF Vocabulary</a></h3>
+      <p>
+        This document specifies the RDF realisation of the Façade-X metamodel.
+        It defines the vocabulary terms under the <code>fx:</code> namespace
+        (<code>http://sparql.xyz/facade-x/ns/</code>), including:
+      </p>
+      <ul>
+        <li><code>fx:Container</code> — the class of containers.</li>
+        <li><code>fx:Slot</code>, <code>fx:SlotNumber</code>, <code>fx:SlotString</code> — the slot hierarchy.</li>
+        <li><code>fx:Value</code> — the class of primitive values.</li>
+        <li><code>fx:Type</code> — the class of types assignable to containers.</li>
+        <li><code>fx:Root</code> — the type of the unique top-level container of a data source.</li>
+      </ul>
+    </section>
+
+  </section>
+
+</body>
+
+</html>
