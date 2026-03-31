@@ -40,9 +40,10 @@
     window.addEventListener('load', function () {
       if (!window.MathJax || !window.MathJax.startup) return;
       window.MathJax.startup.promise.then(function () {
-        document.querySelectorAll('pre').forEach(function (pre) {
+        document.querySelectorAll('pre:not([data-nomath])').forEach(function (pre) {
           var text = pre.textContent.trim();
           if (!text) return;
+          if (!text.includes('\\')) return;
           var math = text.startsWith('\\[') && text.endsWith('\\]')
             ? text
             : '\\[' + text + '\\]';
@@ -621,8 +622,8 @@
       <ul>
         <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/Slot</li>
 		<li><strong>Sub Class Of:</strong> rdfs:Property </li>
-		<li><strong>Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
-		<li><strong>Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
+		<li><strong>Instances - Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
+		<li><strong>Instances - Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
       </ul>
 	</div>
   </section>
@@ -635,8 +636,8 @@
       <ul>
         <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/SlotNumber</li>
 		<li><strong>Sub Class Of:</strong> http://sparql.xyz/facade-x/ns/Slot [AND] rdfs:ContainerMembershipProperty</li>
-		<li><strong>Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
-		<li><strong>Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
+		<li><strong>Instances - Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
+		<li><strong>Instances - Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
 		<li><strong>Generator:</strong> rdf:_[cardinal number]</li>
 		
 		<!-- <li><strong>Predicates:</strong> ANY rdfs:subPropertyOf <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li> -->
@@ -651,8 +652,8 @@
       <ul>
         <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/SlotString</li>
 		<li><strong>Sub Class Of:</strong> http://sparql.xyz/facade-x/ns/Slot</li>
-		<li><strong>Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
-		<li><strong>Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
+		<li><strong>Instances - Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
+		<li><strong>Instances - Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
         <!-- <li><strong>Predicates:</strong> ANY rdfs:subPropertyOf <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li> -->
 		<li><strong>Generator:</strong> xyz:[source string]</li>
       </ul>
@@ -701,9 +702,123 @@
     
   </section>
 
-  <section id="Name Graphs">
-    <h3>Name Graphs</h3>
-	<p> </p>
+  <section id="NamedGraphs">
+    <h2>Named Graphs</h2>
+    <p>
+      In Façade-X, named graphs are used to associate each data source with its container hierarchy.
+      When a resource is processed, each of its data sources is assigned a distinct graph IRI.
+      All triples belonging to that data source — its root container, slots, and values — are placed
+      within the corresponding named graph. This allows multiple data sources to coexist within the
+      same RDF dataset without ambiguity: the graph IRI acts as the identity of the data source,
+      and querying or reasoning over a specific source is simply a matter of selecting its graph.
+      For resources that contain a single data source, a single named graph is produced; for
+      resources such as spreadsheets that contain multiple data sources (e.g. one per sheet),
+      a named graph is produced for each.
+    </p>
+  </section>
+
+  <section id="ManchesterSyntax">
+    <h2>Façade-X Vocabulary in OWL Manchester Syntax</h2>
+    <p>
+      The following provides a representation of the Façade-X vocabulary in
+      <a href="https://www.w3.org/TR/owl2-manchester-syntax/">OWL 2 Manchester Syntax</a>.
+      It is derived directly from the term definitions in the <a href="#Vocabulary">Façade-X Vocabulary</a>
+      section above.
+    </p>
+
+    <pre data-nomath class="example">
+Prefix: fx: &lt;http://sparql.xyz/facade-x/ns/&gt;
+Prefix: xyz: &lt;http://sparql.xyz/facade-x/data/&gt;
+Prefix: rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+Prefix: rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+Prefix: xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+Prefix: owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+Ontology: &lt;http://sparql.xyz/facade-x/ns/&gt;
+
+
+## Classes
+
+Class: fx:Container
+    Annotations:
+        rdfs:label "Container",
+        rdfs:comment "The class of containers."
+    SubClassOf:
+        rdfs:Class
+    DisjointWith:
+        fx:Slot,
+        fx:Value,
+        fx:Type
+
+Class: fx:Slot
+    Annotations:
+        rdfs:label "Slot",
+        rdfs:comment "The class of slots. Any instance of fx:Slot is a property
+                      with domain fx:Container and range fx:Container or fx:Value."
+    SubClassOf:
+        rdfs:Property,
+        rdfs:domain value fx:Container,
+        rdfs:range value (fx:Container or fx:Value)
+    DisjointWith:
+        fx:Container,
+        fx:Value,
+        fx:Type
+
+Class: fx:SlotNumber
+    Annotations:
+        rdfs:label "SlotNumber",
+        rdfs:comment "The class of slots whose key is a cardinal number.
+                      Any instance of fx:SlotNumber is also an instance of
+                      fx:Slot and of rdfs:ContainerMembershipProperty."
+    SubClassOf:
+        fx:Slot,
+        rdfs:ContainerMembershipProperty
+    DisjointWith:
+        fx:SlotString
+
+Class: fx:SlotString
+    Annotations:
+        rdfs:label "SlotString",
+        rdfs:comment "The class of slots whose key is a string.
+                      Any instance of fx:SlotString is also an instance of fx:Slot."
+    SubClassOf:
+        fx:Slot
+    DisjointWith:
+        fx:SlotNumber
+
+Class: fx:Type
+    Annotations:
+        rdfs:label "Type",
+        rdfs:comment "The class of types in the source data."
+    SubClassOf:
+        rdfs:Class
+    DisjointWith:
+        fx:Container,
+        fx:Slot,
+        fx:Value
+
+Class: fx:Value
+    Annotations:
+        rdfs:label "Value",
+        rdfs:comment "The class of values in the source data."
+    SubClassOf:
+        rdfs:Literal
+    DisjointWith:
+        fx:Container,
+        fx:Slot,
+        fx:Type
+
+Class: fx:Root
+    Annotations:
+        rdfs:label "Root",
+        rdfs:comment "The type of the main container. There can only be a single container of type fx:Root."
+    SubClassOf:
+        fx:Container
+    DisjointWith:
+        fx:Slot,
+        fx:Value,
+        fx:Type
+    </pre>
   </section>
 
 
