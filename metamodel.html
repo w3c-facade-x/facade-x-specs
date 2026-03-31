@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <h1 id="title"><code>Fa&ccedil;ade-X</code> concepts and meta model specification</h1>
+  <h2 id="subtitle">A minimalist model for representing heterogeneous data formats in a unified way.</h2>
+
+  <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+  <script class="remove">
+    // All config options at https://respec.org/docs/
+    var respecConfig = {
+      specStatus: "ED",
+      editors: [
+        { name: "Luigi Asprino", company: "Università Telematica San Raffaele - Roma", companyURL: "https://www.uniroma5.it/", mailto: "luigi.asprino@uniroma5.it", orcid: "0000-0003-1907-0677", w3cid: 130089 },
+        { name: "Enrico Daga", company: "The Open University", companyURL: "https://www.open.ac.uk/", mailto: "enrico.daga@open.ac.uk", orcid: "0000-0002-3184-5407", w3cid: 76898 },],
+      github: "w3c-facade-x/facade-x-metamodel",
+      shortName: "facade-x",
+      xref: "web-platform",
+      group: "cg/facade-x",
+      isPreview: true,
+      license: "w3c-software-doc",
+      specStatus: "unofficial",
+      latestVersion: "https://w3c-facade-x.github.io/facadex-metamodel/",
+
+    };
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      },
+      startup: { typeset: false },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'code'] },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+  <script>
+    window.addEventListener('load', function () {
+      if (!window.MathJax || !window.MathJax.startup) return;
+      window.MathJax.startup.promise.then(function () {
+        document.querySelectorAll('pre').forEach(function (pre) {
+          var text = pre.textContent.trim();
+          if (!text) return;
+          var math = text.startsWith('\\[') && text.endsWith('\\]')
+            ? text
+            : '\\[' + text + '\\]';
+          var block = document.createElement('div');
+          block.textContent = math;
+          pre.replaceWith(block);
+        });
+        window.MathJax.typesetPromise();
+      });
+    });
+  </script>
+</head>
+
+<body>
+
+  <section id="abstract">
+    <p>This document specifies the Fa&ccedil;ade-X concepts and metamodel.</p>
+  </section>
+
+  <section id="sotd">
+    <p>This document is currently in active development.</p>
+  </section>
+
+  <section class="informative">
+    <h2>Introduction</h2>
+    <p></p>
+    <p>Fa&ccedil;ade-X is the (meta-)model resulting from the abstraction of all the basic data structures used to
+      represent source data formats, combined into a unified model.
+      RDF languages can implement it to provide users direct access to external, heterogeneus data formats.
+      The Figure below provide an intuive overview of Fa&ccedil;ade-X.
+      The related RDF vocabulary is [under preparation].
+    </p>
+
+
+    <figure id="figure">
+      <img src="model.png" alt="Facade-X model" />
+      <figcaption>A diagram of the Fa&ccedil;ade-X model</figcaption>
+    </figure>
+
+  </section>
+
+  <section>
+    <h2>Issues</h2>
+    <p class="issue" data-number="1">
+    <p class="issue" data-number="2"></p>
+    <!-- Issue can automatically be populated from GitHub -->
+  </section>
+  </section>
+
+
+
+  <section id="resources_datasources">
+    <h2>Resources and Data Sources</h2>
+
+
+    <p>
+      We rely on the generic notion of <em>resource</em> to refer to a digital artifact that wraps some data (to not be
+      confused with the concept of Resource in RDFS).
+      We say that a resource contains one or more <em>data sources</em>, to refer to actual data contained in them.
+    </p>
+
+    <p>
+      Intuitively, a CSV is a file (then, a resource) that includes some tabular data (hence, a single data source).
+      A Spreadsheet is a file (then, a resource) containing many tabs, each one of them including tabular data
+      (hence, possibly multiple data sources).
+    </p>
+
+    <p>
+      <strong>Predicate Definition</strong>
+      <code>Resource(x)</code> denotes a digital artifact (e.g., a file or service).
+      <code>DataSource(x)</code> denotes a collection of data contained in a resource.
+      <code>includes(r, ds)</code> means that resource <code>r</code> contains data source <code>ds</code>.
+    </p>
+
+    <p>Every resource must contain at least one data source.</p>
+    <pre>
+\forall r . \exists ds.  \mathrm{Resource}(r) \Rightarrow   \mathrm{includes}(r, ds) 
+    </pre>
+
+    <p>The first argument of the includes predicate is a resource and the second is a data source.</p>
+    <pre>
+\forall r, ds .  \mathrm{includes}(r, ds) \Rightarrow \mathrm{Resource}(r) \wedge \mathrm{DataSource}(ds) 
+    </pre>
+
+    <p>Every data source must belong to some resource.</p>
+    <pre>
+\forall ds.  \exists r. \mathrm{DataSource}(ds) \Rightarrow  \mathrm{includes}(r, ds) \wedge \mathrm{Resource}(r)  
+    </pre>
+
+    <p>A data source cannot belong to two different resources; it is included in one at most.</p>
+    <pre>
+\forall ds, r_1, r_2 .  \mathrm{includes}(r_1, ds) \wedge \mathrm{includes}(r_2, ds) \Rightarrow r_1 = r_2
+    </pre>
+  </section>
+
+  <section>
+    <h2>Containers, Slots, and Values</h2>
+
+    <p>
+      The framework introduces the notion of <em>Container</em> as an abstraction of both lists and maps through the
+      notion of <em>Slots</em>.
+      A <em>Slot</em> is an allotted place for an object, namely a primitive value or another container,
+      <em>&ldquo;contained&rdquo;</em> in a <em>Container</em>.
+    </p>
+    <p>
+      Containers are collections of unique key/value pairs (slots) where:
+      the key of the slot is unique in the collection and can be either a number (i.e. <code>NumberSlot</code>)
+      or a sequence of alphanumeric characters (i.e. <code>StringSlot</code>);
+      the value can be either a primitive value or another container.
+    </p>
+
+    <p>
+      We say that a container <code>c</code> <em>contains</em> a slot <code>s</code> if
+      <code>(c,s)</code> is in the interpretation of the predicate
+      <code>hasSlot</code>.
+      Moreover, we say that a slot <code>s</code> <em>holds</em> a value
+      <code>v</code> (or a container <code>c</code>) if
+      <code>(s,v)</code> (resp. <code>(s,c)</code>) is in the interpretation of
+      <code>hasValue</code> (resp. <code>hasContainer</code>).
+      In this case we can also say that <code>v</code> (resp. <code>c</code>) is assigned to a slot.
+    </p>
+
+    <p>
+      Finally, we say that a container <code>c</code> <em>recursively contains</em> a container
+      <code>c'</code> if there exists a sequence
+      <code>s<sub>0</sub>,...,s<sub>n</sub></code> and containers
+      <code>c<sub>1</sub>,...,c<sub>n</sub></code> such that
+      <code>(c,s<sub>0</sub>),(c<sub>1</sub>,s<sub>1</sub>)...(c<sub>n</sub>,s<sub>n</sub>)</code> is in the
+      interpretation of
+      <code>hasSlot</code> and
+      <code>(s<sub>0</sub>,c<sub>1</sub>),(s<sub>1</sub>,c<sub>2</sub>),...,(s<sub>n</sub>,c')</code> is in the
+      interpretation of
+      <code>hasContainer</code>.
+    </p>
+
+
+    <p>
+      <strong>Predicate Definition</strong>
+      <code>Container(x)</code> represents a collection of slots (list or map).
+      <code>Slot(x)</code> is an allotted place for an object within a container.
+      <code>NumberSlot(x)</code> and <code>StringSlot(x)</code> identify the type of the slot.
+      <code>Value(x)</code> denotes a primitive datum.
+      <code>hasSlot(c,s)</code> links a container to a slot.
+      <code>hasValue(s,v)</code> links a slot to a value.
+      <code>hasContainer(s,c)</code> links a slot to a nested container.
+      <code>includesContainer(ds,c)</code> associates a data source with its containers.
+    </p>
+
+    <p>The first argument of hasSlot is a Container and the second is a Slot.</p>
+    <pre>
+\forall c, s.  \mathrm{hasSlot}(c, s) \Rightarrow \mathrm{Container}(c) \wedge \mathrm{Slot}(s)
+    </pre>
+
+    <p>The first argument of hasValue is a slot and the second is a value.</p>
+    <pre>
+\forall s, v.  \mathrm{hasValue}(s, v) \Rightarrow \mathrm{Slot}(s) \wedge \mathrm{Value}(v) 
+    </pre>
+
+    <p>The first argument of hasContainer is a slot and the second is a container.</p>
+    <pre>
+\forall s, c .  \mathrm{hasContainer}(s, c) \Rightarrow \mathrm{Slot}(s) \wedge \mathrm{Container}(c) 
+    </pre>
+
+
+    <p>The first argument of includesContainer is a data source and the second is a container.</p>
+    <pre>
+  \forall ds, c .  \mathrm{includesContainer}(ds, c) \Rightarrow \mathrm{DataSource}(ds) \wedge \mathrm{Container}(c) 
+      </pre>
+
+    <p>Every NumberSlot is a slot.</p>
+    <pre>
+\forall s .  \mathrm{NumberSlot}(s) \Rightarrow \mathrm{Slot}(s) 
+    </pre>
+
+    <p>Every StringSlot is a slot.</p>
+    <pre>
+\forall s . \mathrm{StringSlot}(s) \Rightarrow \mathrm{Slot}(s)
+    </pre>
+
+    <p>A slot identified by a string cannot also be a NumberSlot.</p>
+    <pre>
+\forall s . \mathrm{StringSlot}(s) \Rightarrow \neg \mathrm{NumberSlot}(s) 
+    </pre>
+
+    <p>Every slot must be either a NumberSlot or a StringSlot.</p>
+    <pre>
+\forall s .  \mathrm{Slot}(s) \Rightarrow \mathrm{NumberSlot}(s) \vee \mathrm{StringSlot}(s) 
+    </pre>
+    <pre>
+\nexists s. \mathrm{NumberSlot}(s) \wedge \mathrm{StringSlot}(s) 
+    </pre>
+
+    <p>Every container must belong to some data source.</p>
+    <pre>
+\forall c . \exists ds .   \mathrm{Container}(c) \Rightarrow  \mathrm{includesContainer}(ds, c) \wedge \mathrm{DataSource}(ds) 
+    </pre>
+
+    <p>A container cannot belong to more than one data source.</p>
+    <pre>
+\forall c, ds_1, ds_2 .  \mathrm{includesContainer}(ds_1, c) \wedge \mathrm{includesContainer}(ds_2, c) \Rightarrow ds_1 = ds_2 
+    </pre>
+  </section>
+
+  <section>
+    <h2>Properties of Slots</h2>
+    <p>
+      Values must be assigned to a slot.
+      Slots must be contained by a single container.
+      Slots must hold either a single container or a single value.
+      There cannot exist a container c and a slot s such that c contains s and s holds c.
+      Each container cannot recursively contain itself through a sequence of slots and containers.
+    </p>
+
+    <p>Every value must be assigned to some slot.</p>
+    <pre>
+\forall v . \exists s . \mathrm{Value}(v) \Rightarrow \mathrm{hasValue}(s, v)
+    </pre>
+
+    <p>Every slot must be contained in some container.</p>
+    <pre>
+\forall s . \exists c.  \mathrm{Slot}(s) \Rightarrow   \mathrm{hasSlot}(c, s) 
+    </pre>
+
+    <p>Each slot belongs to exactly one container.</p>
+    <pre>
+\forall s, c_1, c_2 .  \mathrm{hasSlot}(c_1, s) \wedge \mathrm{hasSlot}(c_2, s) \Rightarrow c_1 = c_2
+    </pre>
+
+    <p>Every slot must hold either a container or a value.</p>
+    <pre>
+\forall s . \exists x. \mathrm{Slot}(s) \Rightarrow  \mathrm{hasContainer}(s, x)  \vee  \mathrm{hasValue}(s, x) 
+    </pre>
+
+    <p>A slot cannot simultaneously hold a container and a value.</p>
+    <pre>
+\forall s, x . \mathrm{hasContainer}(s, x) \Rightarrow \neg \mathrm{hasValue}(s, x)
+    </pre>
+
+    <p>A slot can hold at most one container.</p>
+    <pre>
+\forall s, c_1, c_2 . \mathrm{hasContainer}(s, c_1) \wedge \mathrm{hasContainer}(s, c_2) \Rightarrow c_1 = c_2 
+    </pre>
+
+    <p>A slot can hold at most one value.</p>
+    <pre>
+\forall s, v_1, v_2 . \mathrm{hasValue}(s, v_1) \wedge \mathrm{hasValue}(s, v_2) \Rightarrow v_1 = v_2 
+    </pre>
+
+    <p>A container cannot directly contain itself via one of its slots.</p>
+    <pre>
+\forall c, s . \mathrm{hasSlot}(c, s) \Rightarrow \neg \mathrm{hasContainer}(s, c) 
+    </pre>
+
+    <p>No container may (even indirectly) contain itself, namely, the containment graph is acyclic.</p>
+    <pre>
+\neg \exists c, s_1,\ldots,s_n, c_1,\ldots,c_n .
+  \mathrm{hasSlot}(c, s_1) \wedge \mathrm{hasContainer}(s_1, c_1) \wedge \ldots \wedge \mathrm{hasSlot}(c_{n-1}, s_n) \wedge \mathrm{hasContainer}(s_n, c)
+    </pre>
+
+    <p>Each container can only be held by a single slot (it is not possible for two slots to hold the same container).
+    </p>
+    <pre>
+\forall c, s_1, s_2. \mathrm{hasSlot}(s_1,c) \wedge \mathrm{hasSlot}(s_2, c) \Rightarrow s_1 = s_2
+    </pre>
+
+  </section>
+
+  <section>
+    <h2>Types</h2>
+    <p>
+      Containers can have types.
+      Every type must be assigned to a container.
+      To this end we introduce the unary predicate <code>Type</code> and the binary predicate <code>hasType</code>.
+    </p>
+
+    <p>
+      <strong>Predicate Definition</strong>
+      <code>Type(x)</code> denotes a classification assigned to containers.
+      <code>hasType(c,t)</code> links a container to a type.
+    </p>
+
+    <p>The first argument of hasType is a container and the second is a type.</p>
+    <pre>
+\forall c, t  . \mathrm{hasType}(c, t) \Rightarrow \mathrm{Container}(c) \wedge \mathrm{Type}(t) 
+    </pre>
+
+    <p>Every type must be assigned to at least one container.</p>
+    <pre>
+\forall t . \exists c . \mathrm{Type}(t) \Rightarrow  \mathrm{hasType}(c, t) 
+    </pre>
+  </section>
+
+  
+
+  <section>
+    <h2>Root Container</h2>
+    <p>
+      For each data source, there exists one and only one Root container.
+      The Root container cannot be assigned to a slot.
+      Containers that are not root must be assigned to a slot.
+      To identify the root container we introduce the unary predicate <code>Root</code> as a specialisation of Container
+      and the binary predicate <code>hasRoot</code> that connects a data source to its root container.
+    </p>
+
+    <p>
+      <strong>Predicate Definition</strong>
+      For each data source there is a distinguished top-level container, the root.
+      The root is the entry point of the container hierarchy and cannot be nested in any slot.
+      All other containers must be reachable from it.
+    </p>
+
+    <p>Every data source must have at least one root container.</p>
+    <pre>
+\forall ds . \exists r . \mathrm{DataSource}(ds) \Rightarrow  \mathrm{hasRoot}(ds, r) 
+    </pre>
+
+    <p>The first argument of hasRoot is a data source and the second is a root.</p>
+    <pre>
+\forall ds, r . \mathrm{hasRoot}(ds, r) \Rightarrow \mathrm{DataSource}(ds) \wedge \mathrm{Root}(r) 
+    </pre>
+
+    <p>Every root container is the root of some data source.</p>
+    <pre>
+\forall r . \exists ds . \mathrm{Root}(r) \Rightarrow  \mathrm{hasRoot}(ds, r) 
+    </pre>
+
+    <p>The root container of a data source is included in that data source.</p>
+    <pre>
+\forall ds, r . \mathrm{hasRoot}(ds, r) \Rightarrow \mathrm{includesContainer}(ds, r) 
+    </pre>
+
+    <p>Every root is also a container.</p>
+    <pre>
+\forall x . \mathrm{Root}(x) \Rightarrow \mathrm{Container}(x) 
+    </pre>
+
+    <p>A root container cannot be nested inside any slot.</p>
+    <pre>
+\forall r, s . \mathrm{Root}(r) \Rightarrow \neg \mathrm{hasContainer}(s, r) 
+    </pre>
+
+    <p>Each data source cannot have more than one root container.</p>
+    <pre>
+\forall ds, r_1, r_2 . \mathrm{hasRoot}(ds, r_1) \wedge \mathrm{hasRoot}(ds, r_2) \Rightarrow r_1 = r_2 
+    </pre>
+
+    <p>Every non-root container must be contained in some slot.</p>
+    <pre>
+\forall c . \exists s . \mathrm{Container}(c) \wedge \neg \mathrm{Root}(c) \Rightarrow \mathrm{hasContainer}(s, c) 
+    </pre>
+  </section>
+
+  <section>
+    <h2>Disjointness</h2>
+    The unary predicates Container, Slot, Value, and Type are pairwise disjoint.
+    The unary predicates DataSource and Resource are disjoint from Container, Slot, Value, and Type.
+    The unary predicate Root is disjoint from Type, Slot, Value, DataSource, and Resource.
+    The binary predicates includes, includesContainer, hasType, hasSlot, hasContainer, and hasValue are pairwise disjoint.
+
+    <p>Nothing can be both a container and a slot.</p>
+    <pre>
+\forall x . \mathrm{Container}(x) \Rightarrow \neg \mathrm{Slot}(x) 
+    </pre>
+
+    <p>Nothing can be both a container and a value.</p>
+    <pre>
+\forall x . \mathrm{Container}(x) \Rightarrow \neg \mathrm{Value}(x) 
+    </pre>
+
+    <p>Nothing can be both a container and a type.</p>
+    <pre>
+\forall x . \mathrm{Container}(x) \Rightarrow \neg \mathrm{Type}(x) 
+    </pre>
+
+    <p>Nothing can be both a slot and a container.</p>
+    <pre>
+\forall x . \mathrm{Slot}(x) \Rightarrow \neg \mathrm{Container}(x) 
+    </pre>
+
+    <p>Nothing can be both a slot and a value.</p>
+    <pre>
+\forall x . \mathrm{Slot}(x) \Rightarrow \neg \mathrm{Value}(x) 
+    </pre>
+
+    <p>Nothing can be both a slot and a type.</p>
+    <pre>
+\forall x . \mathrm{Slot}(x) \Rightarrow \neg \mathrm{Type}(x) 
+    </pre>
+
+    <p>Nothing can be both a value and a container.</p>
+    <pre>
+\forall x . \mathrm{Value}(x) \Rightarrow \neg \mathrm{Container}(x) 
+    </pre>
+
+    <p>Nothing can be both a value and a slot.</p>
+    <pre>
+\forall x . \mathrm{Value}(x) \Rightarrow \neg \mathrm{Slot}(x) 
+    </pre>
+
+    <p>Nothing can be both a value and a type.</p>
+    <pre>
+\forall x . \mathrm{Value}(x) \Rightarrow \neg \mathrm{Type}(x) 
+    </pre>
+
+    <p>Nothing can be both a type and a container.</p>
+    <pre>
+\forall x . \mathrm{Type}(x) \Rightarrow \neg \mathrm{Container}(x)
+    </pre>
+
+    <p>Nothing can be both a type and a slot.</p>
+    <pre>
+\forall x . \mathrm{Type}(x) \Rightarrow \neg \mathrm{Slot}(x) 
+    </pre>
+
+    <p>Nothing can be both a type and a value.</p>
+    <pre>
+\forall x . \mathrm{Type}(x) \Rightarrow \neg \mathrm{Value}(x) 
+    </pre>
+
+    <p>Nothing can be both a data source and a container.</p>
+    <pre>
+\forall x . \mathrm{DataSource}(x) \Rightarrow \neg \mathrm{Container}(x) 
+    </pre>
+
+    <p>Nothing can be both a data source and a slot.</p>
+    <pre>
+\forall x . \mathrm{DataSource}(x) \Rightarrow \neg \mathrm{Slot}(x) 
+    </pre>
+
+    <p>Nothing can be both a data source and a value.</p>
+    <pre>
+\forall x . \mathrm{DataSource}(x) \Rightarrow \neg \mathrm{Value}(x) 
+    </pre>
+
+    <p>Nothing can be both a data source and a type.</p>
+    <pre>
+\forall x . \mathrm{DataSource}(x) \Rightarrow \neg \mathrm{Type}(x) 
+    </pre>
+
+    <p>Nothing can be both a resource and a container.</p>
+    <pre>
+\forall x . \mathrm{Resource}(x) \Rightarrow \neg \mathrm{Container}(x) 
+    </pre>
+
+    <p>Nothing can be both a resource and a slot.</p>
+    <pre>
+\forall x . \mathrm{Resource}(x) \Rightarrow \neg \mathrm{Slot}(x) 
+    </pre>
+
+    <p>Nothing can be both a resource and a value.</p>
+    <pre>
+\forall x . \mathrm{Resource}(x) \Rightarrow \neg \mathrm{Value}(x) 
+    </pre>
+
+    <p>Nothing can be both a resource and a type.</p>
+    <pre>
+\forall x . \mathrm{Resource}(x) \Rightarrow \neg \mathrm{Type}(x) 
+    </pre>
+
+    <p>Nothing can be both a root and a type.</p>
+    <pre>
+\forall x . \mathrm{Root}(x) \Rightarrow \neg \mathrm{Type}(x) 
+    </pre>
+
+    <p>Nothing can be both a root and a slot.</p>
+    <pre>
+\forall x . \mathrm{Root}(x) \Rightarrow \neg \mathrm{Slot}(x) 
+    </pre>
+
+    <p>Nothing can be both a root and a value.</p>
+    <pre>
+\forall x . \mathrm{Root}(x) \Rightarrow \neg \mathrm{Value}(x) 
+    </pre>
+
+    <p>Nothing can be both a root and a data source.</p>
+    <pre>
+\forall x . \mathrm{Root}(x) \Rightarrow \neg \mathrm{DataSource}(x) 
+    </pre>
+
+    <p>Nothing can be both a root and a resource.</p>
+    <pre>
+\forall x . \mathrm{Root}(x) \Rightarrow \neg \mathrm{Resource}(x) 
+    </pre>
+
+    <p>No pair can be related by both includes and includesContainer.</p>
+    <pre>
+\forall x, y . \mathrm{includes}(x, y) \Rightarrow \neg \mathrm{includesContainer}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includes and hasType.</p>
+    <pre>
+\forall x, y . \mathrm{includes}(x, y) \Rightarrow \neg \mathrm{hasType}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includes and hasSlot.</p>
+    <pre>
+\forall x, y . \mathrm{includes}(x, y) \Rightarrow \neg \mathrm{hasSlot}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includes and hasContainer.</p>
+    <pre>
+\forall x, y . \mathrm{includes}(x, y) \Rightarrow \neg \mathrm{hasContainer}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includes and hasValue.</p>
+    <pre>
+\forall x, y . \mathrm{includes}(x, y) \Rightarrow \neg \mathrm{hasValue}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includesContainer and hasType.</p>
+    <pre>
+\forall x, y . \mathrm{includesContainer}(x, y) \Rightarrow \neg \mathrm{hasType}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includesContainer and hasSlot.</p>
+    <pre>
+\forall x, y . \mathrm{includesContainer}(x, y) \Rightarrow \neg \mathrm{hasSlot}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includesContainer and hasContainer.</p>
+    <pre>
+\forall x, y . \mathrm{includesContainer}(x, y) \Rightarrow \neg \mathrm{hasContainer}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both includesContainer and hasValue.</p>
+    <pre>
+\forall x, y . \mathrm{includesContainer}(x, y) \Rightarrow \neg \mathrm{hasValue}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both hasType and hasSlot.</p>
+    <pre>
+\forall x, y . \mathrm{hasType}(x, y) \Rightarrow \neg \mathrm{hasSlot}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both hasType and hasContainer.</p>
+    <pre>
+\forall x, y . \mathrm{hasType}(x, y) \Rightarrow \neg \mathrm{hasContainer}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both hasType and hasValue.</p>
+    <pre>
+\forall x, y . \mathrm{hasType}(x, y) \Rightarrow \neg \mathrm{hasValue}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both hasSlot and hasContainer.</p>
+    <pre>
+\forall x, y . \mathrm{hasSlot}(x, y) \Rightarrow \neg \mathrm{hasContainer}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both hasSlot and hasValue.</p>
+    <pre>
+\forall x, y . \mathrm{hasSlot}(x, y) \Rightarrow \neg \mathrm{hasValue}(x, y) 
+    </pre>
+
+    <p>No pair can be related by both hasContainer and hasValue.</p>
+    <pre>
+\forall x, y . \mathrm{hasContainer}(x, y) \Rightarrow \neg \mathrm{hasValue}(x, y) 
+    </pre>
+  </section>
+
+
+
+</body>
+
+</html>

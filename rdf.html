@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <h1 id="title"><code>Fa&ccedil;ade-X</code> RDF vocabulary</h1>
+  <h2 id="subtitle">RDF vocabulary to access open-ended, heterogeneus resources.</h2>
+
+  <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
+  <script class="remove">
+    // All config options at https://respec.org/docs/
+    var respecConfig = {
+      specStatus: "ED",
+      editors: [
+        { name: "Luigi Asprino", company: "Università Telematica San Raffaele - Roma", companyURL: "https://www.uniroma5.it/", mailto: "luigi.asprino@uniroma5.it", orcid: "0000-0003-1907-0677", w3cid: 130089 },
+        { name: "Enrico Daga", company: "The Open University", companyURL: "https://www.open.ac.uk/", mailto: "enrico.daga@open.ac.uk", orcid: "0000-0002-3184-5407", w3cid: 76898 },],
+      github: "w3c-facade-x/facade-x-rdf",
+      shortName: "facade-x",
+      xref: "web-platform",
+      group: "cg/facade-x",
+      isPreview: true,
+      license: "w3c-software-doc",
+      specStatus: "unofficial",
+      latestVersion: "https://w3c-facade-x.github.io/facade-x-rdf/",
+
+    };
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      },
+      startup: { typeset: false },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'code'] },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+  <script>
+    window.addEventListener('load', function () {
+      if (!window.MathJax || !window.MathJax.startup) return;
+      window.MathJax.startup.promise.then(function () {
+        document.querySelectorAll('pre').forEach(function (pre) {
+          var text = pre.textContent.trim();
+          if (!text) return;
+          var math = text.startsWith('\\[') && text.endsWith('\\]')
+            ? text
+            : '\\[' + text + '\\]';
+          var block = document.createElement('div');
+          block.textContent = math;
+          pre.replaceWith(block);
+        });
+        window.MathJax.typesetPromise();
+      });
+    });
+  </script>
+	
+	
+	
+	
+	<!-- styles copied from Web Annotation Vocabulary -->
+
+    <style>
+      .turtle .hll {
+        background-color: #ffffcc
+      }
+    
+      .turtle .c {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment */
+    
+      .turtle .err {
+        border: 1px solid #FF0000
+      }
+      /* Error */
+    
+      .turtle .k {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword */
+    
+      .turtle .o {
+        color: #666666
+      }
+      /* Operator */
+    
+      .turtle .ch {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Hashbang */
+    
+      .turtle .cm {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Multiline */
+    
+      .turtle .cp {
+        color: #BC7A00
+      }
+      /* Comment.Preproc */
+    
+      .turtle .cpf {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.PreprocFile */
+    
+      .turtle .c1 {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Single */
+    
+      .turtle .cs {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Special */
+    
+      .turtle .gd {
+        color: #A00000
+      }
+      /* Generic.Deleted */
+    
+      .turtle .ge {
+        font-style: italic
+      }
+      /* Generic.Emph */
+    
+      .turtle .gr {
+        color: #FF0000
+      }
+      /* Generic.Error */
+    
+      .turtle .gh {
+        color: #000080;
+        font-weight: bold
+      }
+      /* Generic.Heading */
+    
+      .turtle .gi {
+        color: #00A000
+      }
+      /* Generic.Inserted */
+    
+      .turtle .go {
+        color: #888888
+      }
+      /* Generic.Output */
+    
+      .turtle .gp {
+        color: #000080;
+        font-weight: bold
+      }
+      /* Generic.Prompt */
+    
+      .turtle .gs {
+        font-weight: bold
+      }
+      /* Generic.Strong */
+    
+      .turtle .gu {
+        color: #800080;
+        font-weight: bold
+      }
+      /* Generic.Subheading */
+    
+      .turtle .gt {
+        color: #0044DD
+      }
+      /* Generic.Traceback */
+    
+      .turtle .kc {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Constant */
+    
+      .turtle .kd {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Declaration */
+    
+      .turtle .kn {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Namespace */
+    
+      .turtle .kp {
+        color: #008000
+      }
+      /* Keyword.Pseudo */
+    
+      .turtle .kr {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Reserved */
+    
+      .turtle .kt {
+        color: #B00040
+      }
+      /* Keyword.Type */
+    
+      .turtle .m {
+        color: #666666
+      }
+      /* Literal.Number */
+    
+      .turtle .s {
+        color: #BA2121
+      }
+      /* Literal.String */
+    
+      .turtle .na {
+        color: #7D9029
+      }
+      /* Name.Attribute */
+    
+      .turtle .nb {
+        color: #008000
+      }
+      /* Name.Builtin */
+    
+      .turtle .nc {
+        color: #0000FF;
+        font-weight: bold
+      }
+      /* Name.Class */
+    
+      .turtle .no {
+        color: #880000
+      }
+      /* Name.Constant */
+    
+      .turtle .nd {
+        color: #AA22FF
+      }
+      /* Name.Decorator */
+    
+      .turtle .ni {
+        color: #999999;
+        font-weight: bold
+      }
+      /* Name.Entity */
+    
+      .turtle .ne {
+        color: #D2413A;
+        font-weight: bold
+      }
+      /* Name.Exception */
+    
+      .turtle .nf {
+        color: #0000FF
+      }
+      /* Name.Function */
+    
+      .turtle .nl {
+        color: #A0A000
+      }
+      /* Name.Label */
+    
+      .turtle .nn {
+        color: #0000FF;
+        font-weight: bold
+      }
+      /* Name.Namespace */
+    
+      .turtle .nt {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Name.Tag */
+    
+      .turtle .nv {
+        color: #19177C
+      }
+      /* Name.Variable */
+    
+      .turtle .ow {
+        color: #AA22FF;
+        font-weight: bold
+      }
+      /* Operator.Word */
+    
+      .turtle .w {
+        color: #bbbbbb
+      }
+      /* Text.Whitespace */
+    
+      .turtle .mb {
+        color: #666666
+      }
+      /* Literal.Number.Bin */
+    
+      .turtle .mf {
+        color: #666666
+      }
+      /* Literal.Number.Float */
+    
+      .turtle .mh {
+        color: #666666
+      }
+      /* Literal.Number.Hex */
+    
+      .turtle .mi {
+        color: #666666
+      }
+      /* Literal.Number.Integer */
+    
+      .turtle .mo {
+        color: #666666
+      }
+      /* Literal.Number.Oct */
+    
+      .turtle .sa {
+        color: #BA2121
+      }
+      /* Literal.String.Affix */
+    
+      .turtle .sb {
+        color: #BA2121
+      }
+      /* Literal.String.Backtick */
+    
+      .turtle .sc {
+        color: #BA2121
+      }
+      /* Literal.String.Char */
+    
+      .turtle .dl {
+        color: #BA2121
+      }
+      /* Literal.String.Delimiter */
+    
+      .turtle .sd {
+        color: #BA2121;
+        font-style: italic
+      }
+      /* Literal.String.Doc */
+    
+      .turtle .s2 {
+        color: #BA2121
+      }
+      /* Literal.String.Double */
+    
+      .turtle .se {
+        color: #BB6622;
+        font-weight: bold
+      }
+      /* Literal.String.Escape */
+    
+      .turtle .sh {
+        color: #BA2121
+      }
+      /* Literal.String.Heredoc */
+    
+      .turtle .si {
+        color: #BB6688;
+        font-weight: bold
+      }
+      /* Literal.String.Interpol */
+    
+      .turtle .sx {
+        color: #008000
+      }
+      /* Literal.String.Other */
+    
+      .turtle .sr {
+        color: #BB6688
+      }
+      /* Literal.String.Regex */
+    
+      .turtle .s1 {
+        color: #BA2121
+      }
+      /* Literal.String.Single */
+    
+      .turtle .ss {
+        color: #19177C
+      }
+      /* Literal.String.Symbol */
+    
+      .turtle .bp {
+        color: #008000
+      }
+      /* Name.Builtin.Pseudo */
+    
+      .turtle .fm {
+        color: #0000FF
+      }
+      /* Name.Function.Magic */
+    
+      .turtle .vc {
+        color: #19177C
+      }
+      /* Name.Variable.Class */
+    
+      .turtle .vg {
+        color: #19177C
+      }
+      /* Name.Variable.Global */
+    
+      .turtle .vi {
+        color: #19177C
+      }
+      /* Name.Variable.Instance */
+    
+      .turtle .vm {
+        color: #19177C
+      }
+      /* Name.Variable.Magic */
+    
+      .turtle .il {
+        color: #666666
+      }
+      /* Literal.Number.Integer.Long */
+    </style>
+    <style>
+      .model {
+        empty-cells: show;
+        border-collapse: collapse;
+        margin-bottom: .5ex;
+        border: 1px solid black;
+        width: 100%;
+      }
+    
+      .model th {
+        padding: 3px;
+        border: 1px solid #404040;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+      }
+    
+      .model td {
+        padding: 5px;
+        border: 1px solid #404040;
+        text-align: left;
+        font-family: sans-serif;
+      }
+    
+      .termtoc {
+        border: 1px dashed black;
+        background: #f0f0f0;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        font-family: sans-serif;
+        padding: 5px;
+      }
+    
+      .term {
+        /*border: 1px solid black;*/
+        margin-left: 10px;
+        padding: 5px;
+        margin-bottom: 5px;
+      }
+    
+      .term h4 {
+        font-family: sans-serif;
+        color: #6060C0;
+        padding-left: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid black;
+      }
+    
+      .tech {
+        border-top: 1px dashed black;
+        border-bottom: 1px dashed black;
+        background: #f0f0f0;
+        margin: 5px;
+      }
+    
+      .example-padding {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    
+      .tech ul {
+        padding-left: 10px;
+      }
+    
+      .tech ul li {
+        list-style: none;
+        padding-bottom: 2px;
+        padding-left: 0px;
+        margin-left: 0px;
+      }
+    
+      .tech ul li {
+        font-family: sans-serif;
+        font-weight: normal;
+      }
+    
+      .diagram_img {
+        text-align: center;
+      }
+    </style>
+	<!-- Styles added -->
+	<style>
+		h3 {
+			margin-top: 1rem;
+		}
+	</style>
+</head>
+
+<body>
+
+  <section id="abstract">
+    <p>This document specifies the Fa&ccedil;ade-X RDF vocabulary.</p>
+  </section>
+
+  <section id="sotd">
+    <p>This document is currently in active development.</p>
+  </section>
+
+  <section class="informative" id="Introduction">
+    <h2>Introduction</h2>
+	<p></p>
+    <p>
+		<!-- Fa&ccedil;ade-X is the (meta-)model resulting from the abstraction of all the basic data structures used to
+      represent source data formats, combined into a unified model. 
+	  RDF languages can implement it to provide users direct access to external, heterogeneus data formats.
+      The Figure below provide an intuive overview of Fa&ccedil;ade-X.
+	  The related RDF vocabulary is [under preparation]. -->
+    </p>
+
+
+    <!-- <figure id="figure">
+      <img src="model.png" alt="Facade-X model" />
+      <figcaption>A diagram of the Fa&ccedil;ade-X model</figcaption>
+    </figure> -->
+		
+	<section id="Namespaces">
+		<h3 id="h-namespaces" resource="#h-namespaces">Namespaces</h3>
+		<table class="model">
+		        <tbody>
+		          <tr>
+		            <th>Prefix</th>
+		            <th>Namespace</th>
+		            <th>Description</th>
+		          </tr>
+		          <tr>
+		            <td>fx</td>
+		            <td>http://sparql.xyz/facade-x/ns/</td>
+		            <td>The Façade-X RDF vocabulary: configuration and primitives</td>
+		          </tr>
+		          <tr>
+		            <td>xyz</td>
+		            <td>http://sparql.xyz/facade-x/data/</td>
+		            <td>The Façade-X RDF vocabulary: namespace for derived data</td>
+		          </tr>
+		          <tr>
+		            <td>rdf</td>
+		            <td>http://www.w3.org/1999/02/22-rdf-syntax-ns#</td>
+		            <td>[<cite><a class="bibref" href="#bib-rdf-schema">rdf-schema</a></cite>]</td>
+		          </tr>
+		          <tr>
+		            <td>rdfs</td>
+		            <td>http://www.w3.org/2000/01/rdf-schema#</td>
+		            <td>[<cite><a class="bibref" href="#bib-rdf-schema">rdf-schema</a></cite>]</td>
+		          </tr>
+		          <tr>
+		            <td>xsd</td>
+		            <td>http://www.w3.org/2001/XMLSchema#</td>
+		            <td>[<cite><a class="bibref" href="#bib-xmlschema-2">xmlschema-2</a></cite>]</td>
+		          </tr>
+		        </tbody>
+		      </table>
+	</section>
+
+  </section>
+
+  <section>
+    <h2>Issues</h2>
+    <p class="issue" data-number="2"></p>
+	<p class="issue" data-number="3"></p>
+	<p class="issue" data-number="4"></p>
+      <!-- Issue can automatically be populated from GitHub -->
+    
+  </section>
+  </section>
+
+  <section id="Vocabulary">
+	  <h2 id="" class="">Fa&ccedil;ade-X Vocabulary</h2>
+	  <p>The namespace used for the Fa&ccedil;ade-X Vocabulary is: <code>http://sparql.xyz/facade-x/ns/</code></p>
+
+	  <div class="termtoc">
+	  	<a href="#Container">Container</a> |
+	  	<a href="#Slot">Slot</a> | 
+	  	<a href="#SlotString">SlotString</a> | 
+	  	<a href="#SlotNumber">SlotNumber</a> | 
+	  	<a href="#Type">Type</a> | 
+	  	<a href="#Value">Value</a> |
+	  	<a href="#Root">Root</a> 
+	  </div>
+
+  <section class="term" id="Container">
+    <h3 id="h-Container">Container</h3>
+	<p>The class of containers</p>
+	<div class="tech">
+      <ul>
+        <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/Container</li>
+		<li><strong>Sub Class Of:</strong> http://www.w3.org/2000/01/rdf-schema#Class </li>
+        <li><strong>Predicates:</strong> ANY rdf:type <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li>
+      </ul>
+	</div>
+  </section>
+
+  <section class="term" id="Slot">
+    <h3 id="h-Slot">Slot</h3>
+	<p>The class of slots</p>
+	<div class="tech">
+      <ul>
+        <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/Slot</li>
+		<li><strong>Sub Class Of:</strong> rdfs:Property </li>
+		<li><strong>Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
+		<li><strong>Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
+      </ul>
+	</div>
+  </section>
+
+
+  <section class="term" id="SlotNumber">
+    <h3 id="h-SlotNumber">SlotNumber</h3>
+	<p>The class of slots in the source data that are numbers</p>
+	<div class="tech">
+      <ul>
+        <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/SlotNumber</li>
+		<li><strong>Sub Class Of:</strong> http://sparql.xyz/facade-x/ns/Slot [AND] rdfs:ContainerMembershipProperty</li>
+		<li><strong>Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
+		<li><strong>Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
+		<li><strong>Generator:</strong> rdf:_[cardinal number]</li>
+		
+		<!-- <li><strong>Predicates:</strong> ANY rdfs:subPropertyOf <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li> -->
+      </ul>
+	</div>
+  </section>
+
+  <section class="term" id="SlotString">
+    <h3 id="h-SlotString">SlotString</h3>
+	<p>The class of slots in the source data that are strings</p>
+	<div class="tech">
+      <ul>
+        <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/SlotString</li>
+		<li><strong>Sub Class Of:</strong> http://sparql.xyz/facade-x/ns/Slot</li>
+		<li><strong>Domain:</strong> http://sparql.xyz/facade-x/ns/Container </li>
+		<li><strong>Range:</strong> http://sparql.xyz/facade-x/ns/Container [OR] http://sparql.xyz/facade-x/ns/Value</li>
+        <!-- <li><strong>Predicates:</strong> ANY rdfs:subPropertyOf <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li> -->
+		<li><strong>Generator:</strong> xyz:[source string]</li>
+      </ul>
+	</div>
+  </section>
+
+  <section class="term" id="Type">
+    <h3 id="h-Type">Type</h3>
+	<p>The class of types in the source data</p>
+	<div class="tech">
+      <ul>
+        <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/Type</li>
+		<li><strong>Sub Class Of:</strong> rdfs:Class</li>
+        <!-- <li><strong>Predicates:</strong> ANY rdfs:subPropertyOf <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li> -->
+		<li><strong>Generator:</strong> xyz:[source string]</li>
+      </ul>
+	</div>
+  </section>
+
+  <section class="term" id="Value">
+    <h3 id="h-Value">Value</h3>
+	<p>The class of values in the source data</p>
+	<div class="tech">
+      <ul>
+        <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/Value</li>
+		<li><strong>Sub Class Of:</strong> rdfs:Literal</li>
+        <!-- <li><strong>Predicates:</strong> ANY rdfs:subPropertyOf <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li> -->
+		<li><strong>Generator:</strong> xyz:[source string]</li>
+      </ul>
+	</div>
+  </section>
+
+  <section class="term" id="Root">
+    <h3 id="h-Root">Root</h3>
+	<p>The type of the main container. There can only be a single container of type fx:Root.</p>
+	<div class="tech">
+      <ul>
+        <li><strong>IRI:</strong> http://sparql.xyz/facade-x/ns/Root</li>
+		<li><strong>Sub Class Of:</strong> rdfs:Class</li>
+        <!-- <li><strong>Predicates:</strong> ANY rdfs:subPropertyOf <a href="#Slot">fx:Slot</a>, <a href="#rdf-type">rdf:type</a></li> -->
+		<!-- <li><strong>Generator:</strong> xyz:[source string]</li> -->
+      </ul>
+	</div>
+  </section>
+  
+    
+  </section>
+
+  <section id="Name Graphs">
+    <h3>Name Graphs</h3>
+	<p> </p>
+  </section>
+
+
+ <section class="informative" id="References">
+	 <h2>References</h2>
+	 <p></p>
+	 <section>
+	 	<dt id="bib-rdf-schema">[rdf-schema]</dt>
+		<dd><a href="https://www.w3.org/TR/rdf-schema/" property="dc:requires"><cite>RDF Schema 1.1</cite></a>. Dan Brickley; Ramanathan Guha. W3C. 25 February 2014. W3C Recommendation. URL: <a href="https://www.w3.org/TR/rdf-schema/" property="dc:requires">https://www.w3.org/TR/rdf-schema/</a></dd>
+		<dt id="bib-xmlschema-2">[xmlschema-2]</dt>
+		<dd><a href="https://www.w3.org/TR/xmlschema-2/" property="dc:requires"><cite>XML Schema Part 2: Datatypes Second Edition</cite></a>. Paul V. Biron; Ashok Malhotra. W3C. 28 October 2004. W3C Recommendation. URL: <a href="https://www.w3.org/TR/xmlschema-2/" property="dc:requires">https://www.w3.org/TR/xmlschema-2/</a>
+		        </dd>
+	</section>
+ </section> 
+</body>
+
+</html>
