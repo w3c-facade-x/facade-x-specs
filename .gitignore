@@ -416,3 +416,9 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# --- Façade-X spec build output ---
+# _site/ is generated from content/ + templates/ by build.py and published
+# to GitHub Pages by CI. It is not version-controlled.
+_site/
+.python3.12
