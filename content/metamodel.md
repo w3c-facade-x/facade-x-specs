@@ -32,7 +32,7 @@ The related RDF vocabulary is [under preparation].
 ## Issues
 
 <p class="issue" data-number="1"></p>
-<p class="issue" data-number="2"></p>
+<!-- <p class="issue" data-number="2"></p> -->
 <p class="issue" data-number="3"></p>
 <p class="issue" data-number="12"></p>
 <p class="issue" data-number="13"></p>
