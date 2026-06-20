@@ -59,8 +59,10 @@ This document is currently in active development.
 ## Issues
 
 <p class="issue" data-number="2"></p>
-<p class="issue" data-number="3"></p>
-<p class="issue" data-number="4"></p>
+<p class="issue" data-number="7"></p>
+<p class="issue" data-number="9"></p>
+<p class="issue" data-number="11"></p>
+<p class="issue" data-number="14"></p>
 <!-- Issue can automatically be populated from GitHub -->
 
 </section>
