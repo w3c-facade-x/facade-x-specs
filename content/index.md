@@ -30,10 +30,11 @@ cardinal number (a *NumberSlot*) or by a string key (a *StringSlot*).
 This small vocabulary, together with a precisely stated set of logical axioms, constitutes the
 metamodel from which format-specific RDF mappings are derived.
 
-This repository contains two normative specification documents — the formal metamodel, expressed in
-first-order logic, and the RDF vocabulary that realises it under the namespace
-`http://sparql.xyz/facade-x/ns/` — together with a non-normative *Primer* that introduces the model
-informally through worked examples. Readers new to Façade-X should start with the Primer.
+This repository contains three normative specification documents — the formal metamodel, expressed
+in first-order logic; the RDF vocabulary that realises it under the namespace
+`http://sparql.xyz/facade-x/ns/`; and the specification of how Façade-X data is accessed and queried
+in SPARQL — together with a non-normative *Primer* that introduces the model informally through
+worked examples. Readers new to Façade-X should start with the Primer.
 
 </section>
 
@@ -80,6 +81,17 @@ It defines the vocabulary terms under the `fx:` namespace
 - `fx:Value` — the class of primitive values.
 - `fx:Type` — the class of types assignable to containers.
 - `fx:Root` — the type of the unique top-level container of a data source.
+
+</section>
+
+<section>
+
+### [Façade-X Data Access in SPARQL](sparql.html)
+
+This document specifies how a Façade-X view of a resource is obtained and queried from within a
+SPARQL query. It defines the `SERVICE` clause and `x-sparql-anything:` IRI scheme, the options
+(`fx:location`, `fx:media-type`, `fx:namespace`, `fx:blank-nodes`, and others) that control how a
+resource is interpreted, and the magic property `fx:anySlot` for traversing container members.
 
 </section>
 
