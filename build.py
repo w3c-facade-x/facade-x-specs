@@ -42,6 +42,7 @@ PAGES = [
     ("primer.md", "primer.html", "primer.html"),
     ("metamodel.md", "metamodel.html", "metamodel.html"),
     ("rdf.md", "rdf.html", "rdf.html"),
+    ("sparql.md", "sparql.html", "sparql.html"),
 ]
 
 # Static files copied verbatim into _site.
