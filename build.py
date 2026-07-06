@@ -39,6 +39,7 @@ OUTPUT_DIR = ROOT / "_site"
 # (markdown file, template file, output file)
 PAGES = [
     ("index.md", "index.html", "index.html"),
+    ("primer.md", "primer.html", "primer.html"),
     ("metamodel.md", "metamodel.html", "metamodel.html"),
     ("rdf.md", "rdf.html", "rdf.html"),
 ]
