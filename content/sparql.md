@@ -68,8 +68,7 @@ RDF, with no separate transformation step.
 <section>
 
 ## Issues
-<p class="issue" data-number="7"></p>
-<!-- <p class="issue" data-number="24"></p> -->
+<!-- BUILD:ISSUES label="FX access in SPARQL" -->
 
 The reserved IRI scheme is currently `x-sparql-anything:`, the scheme used by the reference
 implementation. A vendor-neutral scheme name is expected to be chosen before this document reaches

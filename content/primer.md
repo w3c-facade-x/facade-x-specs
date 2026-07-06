@@ -16,6 +16,14 @@ requirements on implementations.
 
 </section>
 
+<section>
+
+## Issues
+
+<!-- BUILD:ISSUES label="FX Primer" -->
+
+</section>
+
 <section class="informative">
 
 ## How to read this document
