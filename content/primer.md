@@ -256,27 +256,48 @@ and the reason the mapping from *any* supported format is well-defined.
 
 <section class="informative">
 
+<section class="informative">
+
 ## Querying Façade-X data
 
-Because a façade is ordinary RDF, it is queried with ordinary SPARQL. Returning to the JSON example,
-this query lists each pet together with the owner's name:
+A façade need not be produced as a file before it can be queried. In the reference implementation,
+[SPARQL Anything](https://sparql-anything.cc/), the façade of a source is exposed *inside a query*
+through a magic `SERVICE` clause whose IRI uses the `x-sparql-anything:` protocol. The engine
+intercepts that clause, builds the Façade-X representation of the resource named there, and
+evaluates the enclosed graph pattern against it — so an ordinary SPARQL 1.1 query reads the source
+directly, with no prior transformation step.
+
+Options are passed to the engine as triples inside the `SERVICE` block: the special subject
+`fx:properties` carries one `fx:`-prefixed option per triple, the only mandatory one being the
+source `fx:location` (a URL or file path). Returning to the JSON example, this query lists each pet
+together with the owner's name:
 
 ```example
 PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
 PREFIX xyz: <http://sparql.xyz/facade-x/data/>
 
 SELECT ?name ?pet WHERE {
-  ?root a fx:Root ;
-        xyz:name ?name ;
-        xyz:pets ?pets .
-  ?pets ?slot ?pet .
+  SERVICE <x-sparql-anything:> {
+    fx:properties fx:location "people.json" .
+    ?root a fx:Root ;
+          xyz:name ?name ;
+          xyz:pets ?pets .
+    ?pets fx:anySlot ?pet .
+  }
 }
 ```
 
-The query starts from the Root, reads the `name` value, follows the `pets` slot to the nested
-container, and then matches each of that container's slots to collect the values `"cat"` and
-`"dog"`. Nothing here is specific to JSON: the same style of query works against the façade of a
-CSV file, an XML document, or a spreadsheet, because they all present the same primitives.
+The pattern starts from the Root, reads the `name` value, and follows the `pets` slot to the nested
+container. Rather than enumerate that container's numeric slots by hand (`rdf:_1`, `rdf:_2`, …), it
+uses the magic property `fx:anySlot`, which matches any of a container's membership slots at once —
+collecting the values `"cat"` and `"dog"` with a single pattern.
+
+The same options may equivalently be written inline in the protocol IRI, so
+`SERVICE <x-sparql-anything:location=people.json>` is shorthand for the `fx:location` triple above;
+further options (`fx:media-type`, `fx:namespace`, format-specific settings, and so on) are supplied
+the same way. Nothing in the graph pattern is specific to JSON: point the same `SERVICE` clause at a
+CSV file, an XML document, or a spreadsheet and the identical query shape applies, because every
+source presents the same Façade-X primitives.
 
 </section>
 
