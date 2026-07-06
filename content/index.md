@@ -30,15 +30,27 @@ cardinal number (a *NumberSlot*) or by a string key (a *StringSlot*).
 This small vocabulary, together with a precisely stated set of logical axioms, constitutes the
 metamodel from which format-specific RDF mappings are derived.
 
-This repository contains two companion specification documents:
-the formal metamodel, expressed in first-order logic, and the RDF vocabulary that realises it
-under the namespace `http://sparql.xyz/facade-x/ns/`.
+This repository contains two normative specification documents — the formal metamodel, expressed in
+first-order logic, and the RDF vocabulary that realises it under the namespace
+`http://sparql.xyz/facade-x/ns/` — together with a non-normative *Primer* that introduces the model
+informally through worked examples. Readers new to Façade-X should start with the Primer.
 
 </section>
 
 <section>
 
 ## Specification Documents
+
+<section>
+
+### [Façade-X Primer](primer.html)
+
+A non-normative, example-driven introduction to Façade-X, intended for developers, implementers,
+and users. It motivates the model, walks through how common formats (JSON, CSV, and others) map
+onto containers, slots, and values, explains why the model is shaped the way it is, and shows how
+to query the resulting RDF with SPARQL. Start here, then move on to the normative documents below.
+
+</section>
 
 <section>
 
