@@ -256,8 +256,6 @@ and the reason the mapping from *any* supported format is well-defined.
 
 <section class="informative">
 
-<section class="informative">
-
 ## Querying Façade-X data
 
 A façade need not be produced as a file before it can be queried. In the reference implementation,
