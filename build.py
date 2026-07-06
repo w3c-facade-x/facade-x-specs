@@ -184,7 +184,7 @@ def _expand_issue_markers(text: str) -> str:
     def replace(m):
         nums = _open_issue_numbers(m.group("label"))
         if not nums:
-            return f'<!-- no open issues with label {m.group("label")} -->'
+            return f'No open issues with label {m.group("label")}.'
         return "\n".join(f'<p class="issue" data-number="{n}"></p>' for n in nums)
     return ISSUES_MARKER.sub(replace, text)
 
