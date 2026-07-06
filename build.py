@@ -36,6 +36,12 @@ CONTENT_DIR = ROOT / "content"
 TEMPLATE_DIR = ROOT / "templates"
 OUTPUT_DIR = ROOT / "_site"
 
+
+import json, os, re, sys, urllib.request, urllib.parse, urllib.error
+
+GITHUB_REPO = "w3c-facade-x/facade-x-specs"
+ISSUES_MARKER = re.compile(r'<!--\s*BUILD:ISSUES\s+label="(?P<label>[^"]+)"\s*-->')
+
 # (markdown file, template file, output file)
 PAGES = [
     ("index.md", "index.html", "index.html"),
@@ -108,6 +114,7 @@ def _enable_md_in_blocks(text: str) -> str:
 
 def render_markdown(md_path: Path) -> str:
     text = md_path.read_text(encoding="utf-8")
+    text = _expand_issue_markers(text)
     text = _enable_md_in_blocks(text)
     md = markdown.Markdown(
         extensions=["extra", "attr_list", "fenced_code", "md_in_html"],
@@ -149,6 +156,37 @@ def copy_static() -> None:
         else:
             print(f"  (skipped missing static file {name})")
 
+
+def _open_issue_numbers(label: str) -> list[int]:
+    """Numbers of open issues carrying `label` (PRs excluded). [] on failure."""
+    numbers, page = [], 1
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "facade-x-build"}
+    if token := os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {token}"
+    try:
+        while True:
+            q = urllib.parse.urlencode(
+                {"state": "open", "labels": label, "per_page": 100, "page": page})
+            req = urllib.request.Request(
+                f"https://api.github.com/repos/{GITHUB_REPO}/issues?{q}", headers=headers)
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                batch = json.load(resp)
+            numbers += [i["number"] for i in batch if "pull_request" not in i]
+            if len(batch) < 100:
+                break
+            page += 1
+    except (urllib.error.URLError, TimeoutError, ValueError) as exc:
+        sys.stderr.write(f"  warning: could not fetch issues for label {label!r}: {exc}\n")
+        return []
+    return numbers
+
+def _expand_issue_markers(text: str) -> str:
+    def replace(m):
+        nums = _open_issue_numbers(m.group("label"))
+        if not nums:
+            return f'<!-- no open issues with label {m.group("label")} -->'
+        return "\n".join(f'<p class="issue" data-number="{n}"></p>' for n in nums)
+    return ISSUES_MARKER.sub(replace, text)
 
 def main() -> int:
     OUTPUT_DIR.mkdir(exist_ok=True)
