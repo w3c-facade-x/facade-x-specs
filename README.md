@@ -1,6 +1,6 @@
 # facade-x-specs
 
-Repository for the specification of the Façade-X metamodel.
+Repository for the specification of the Façade-X metamodel. 
 
 ## Editing workflow
 
