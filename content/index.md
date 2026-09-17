@@ -106,4 +106,13 @@ on `fx:properties`), and the use of `rdfs:member` for traversing container membe
 
 </section>
 
+<section>
+
+### [Façade-X Format Mappings](mappings.html)
+
+The list of format mappings, and the principles they share. Each mapping specifies how resources
+in one source format (CSV, JSON, XML, …) are represented as Façade-X data sources.
+
+</section>
+
 </section>
