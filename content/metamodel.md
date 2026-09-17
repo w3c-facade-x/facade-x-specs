@@ -31,7 +31,7 @@ The related RDF vocabulary is [under preparation].
 
 ## Issues
 
-<!-- BUILD:ISSUES label="FX metamodel" -->
+<!-- BUILD:ISSUES label="FX Metamodel" -->
 
 </section>
 
