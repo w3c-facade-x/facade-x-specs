@@ -70,7 +70,7 @@ logic axioms. It introduces and specifies the following concepts:
 
 <section>
 
-### [Façade-X RDF Vocabulary](rdf.html)
+### [Façade-X Schema Vocabulary](schema.html)
 
 This document specifies the RDF realisation of the Façade-X metamodel.
 It defines the vocabulary terms under the `fx:` namespace

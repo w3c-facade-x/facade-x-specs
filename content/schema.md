@@ -1,6 +1,6 @@
 <section id="abstract">
 
-This document specifies the Fa&ccedil;ade-X RDF vocabulary.
+This document specifies the Fa&ccedil;ade-X Schema vocabulary.
 
 </section>
 
@@ -58,7 +58,7 @@ This document is currently in active development.
 
 ## Issues
 
-<!-- BUILD:ISSUES label="FX RDF Vocabulary" -->
+<!-- BUILD:ISSUES label="FX Schema Vocabulary" -->
 
 </section>
 
