@@ -43,15 +43,6 @@ This document applies the [common principles](mappings.html#Principles) of the f
 
 <!-- BUILD:ISSUES label="FX CSV Mapping" -->
 
-`fxe:csv.null-string` has the same effect as the general option `fxe:null-string`. It is kept for
-compatibility with the reference implementation; whether both are needed is open.
-
-The treatment of records with more fields than the header row, of duplicate header names, and of
-empty lines is not yet specified.
-
-When `fxe:csv.headers-row` is greater than 1, whether the records before the header row are
-represented is not yet specified.
-
 </section>
 
 <section id="Selection">
