@@ -24,7 +24,7 @@ Each format mapping specifies:
 - which source structures become containers, which become slots, and which become values;
 - how slot IRIs and types are minted from source names;
 - how values are typed;
-- the format-specific options, as terms of the [Engine vocabulary](engine.html).
+- the format-specific options, in terms of the [Engine vocabulary](engine.html).
 
 A format mapping is selected by the media type of the resource, given by
 [`fxe:media-type`](engine.html#media-type) or inferred by the engine.
@@ -47,7 +47,7 @@ The following principles apply to every format mapping, unless the mapping state
 
 **Values are strings.** Every value is a literal of type `xsd:string`, unless the source format
 defines its own value types. In that case, the mapping specifies how each source type maps to an
-XML Schema datatype. Engines MUST NOT infer types from the lexical form of a string.
+XML Schema datatype. Engines MUST NOT infer data types from the lexical form of a string.
 
 **Order is kept.** Where the source format orders its members, the order is kept in the numbers of
 the container-membership properties `rdf:_1`, `rdf:_2`, …, starting from 1.
