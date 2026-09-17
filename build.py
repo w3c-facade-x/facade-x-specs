@@ -48,6 +48,7 @@ PAGES = [
     ("primer.md", "primer.html", "primer.html"),
     ("metamodel.md", "metamodel.html", "metamodel.html"),
     ("schema.md", "schema.html", "schema.html"),
+    ("engine.md", "engine.html", "engine.html"),
     ("sparql.md", "sparql.html", "sparql.html"),
 ]
 
