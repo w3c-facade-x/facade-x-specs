@@ -41,7 +41,7 @@ This document applies the [common principles](mappings.html#Principles) of the f
 
 ## Issues
 
-<!-- BUILD:ISSUES label="FX CSV Mapping" -->
+<!-- BUILD:ISSUES label="Mapping: CSV" -->
 
 </section>
 
