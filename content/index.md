@@ -100,9 +100,9 @@ It covers source options (`fxe:location`, `fxe:content`, `fxe:media-type`, …) 
 ### [Façade-X Data Access in SPARQL](sparql.html)
 
 This document specifies how a Façade-X view of a resource is obtained and queried from within a
-SPARQL query. It defines the `SERVICE` clause and `x-sparql-anything:` IRI scheme, the options
-(`fx:location`, `fx:media-type`, `fx:namespace`, `fx:blank-nodes`, and others) that control how a
-resource is interpreted, and the magic property `fx:anySlot` for traversing container members.
+SPARQL query. It defines the `SERVICE` clause and `x-sparql-anything:` IRI scheme, how
+[Engine vocabulary](engine.html) options are supplied in a query (in the service IRI or as triples
+on `fx:properties`), and the use of `rdfs:member` for traversing container members.
 
 </section>
 
