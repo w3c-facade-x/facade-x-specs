@@ -5,7 +5,7 @@ SPARQL query. It defines the `SERVICE` clause and IRI scheme through which an en
 build the Façade-X representation of a resource, the *options* (properties) that control how the
 resource is interpreted, and the *magic properties* that support querying the resulting containers.
 It is a companion to the [Façade-X Concepts and Metamodel](metamodel.html) and
-[Façade-X RDF Vocabulary](rdf.html) documents: the former defines the model, the latter its RDF
+[Façade-X Schema Vocabulary](schema.html) documents: the former defines the model, the latter its RDF
 terms, and this document defines how that RDF is obtained and queried in SPARQL.
 
 </section>
@@ -23,7 +23,7 @@ IRI scheme in particular is expected to be revisited before standardisation (see
 
 ## Introduction
 
-The [metamodel](metamodel.html) and [RDF vocabulary](rdf.html) documents describe *what* a Façade-X
+The [metamodel](metamodel.html) and [Schema vocabulary](schema.html) documents describe *what* a Façade-X
 view of a resource is: a single root container, holding slots keyed by number or string, whose
 values are literals or further containers. This document describes *how* a SPARQL query obtains and
 queries such a view.
@@ -31,7 +31,7 @@ queries such a view.
 The mechanism is a *magic* `SERVICE` clause. Rather than materialising the Façade-X RDF of a
 resource ahead of time, a query names the resource inside a `SERVICE` block whose IRI carries a
 reserved scheme. A conforming engine intercepts that clause, produces the Façade-X representation of
-the named resource according to the [metamodel](metamodel.html) and [RDF vocabulary](rdf.html), and
+the named resource according to the [metamodel](metamodel.html) and [Schema vocabulary](schema.html), and
 evaluates the enclosed graph pattern against it. The resource is thus queried in place, as ordinary
 RDF, with no separate transformation step.
 
@@ -75,7 +75,7 @@ implementation. A vendor-neutral scheme name is expected to be chosen before thi
 Recommendation status; until then, the implementation-specific scheme is used throughout.
 
 This document types the root container `fx:Root`, in agreement with the
-[RDF vocabulary](rdf.html#Root) document. Some implementations currently emit the lowercase
+[Schema vocabulary](schema.html#Root) document. Some implementations currently emit the lowercase
 `fx:root`; the casing is to be reconciled across the specifications and implementations.
 
 </section>
@@ -100,14 +100,14 @@ the `x-sparql-anything:` scheme:
    [Providing options](#Options)), where exactly one *source* option — `fx:location`, `fx:content`,
    or `fx:command` — MUST be given;
 2. construct the Façade-X representation of that resource as defined by the
-   [metamodel](metamodel.html) and realised by the [RDF vocabulary](rdf.html); and
+   [metamodel](metamodel.html) and realised by the [Schema vocabulary](schema.html); and
 3. evaluate the enclosed group graph pattern against that representation, returning solutions as for
    any other `SERVICE` invocation.
 
 The resulting representation is a single Façade-X data source: one container typed
-[`fx:Root`](rdf.html#Root), reachable from which are its slots, values, and nested containers. Where
+[`fx:Root`](schema.html#Root), reachable from which are its slots, values, and nested containers. Where
 a resource yields more than one data source, each is produced in its own named graph, as described
-in [Named Graphs](rdf.html#NamedGraphs).
+in [Named Graphs](schema.html#NamedGraphs).
 
 </section>
 
@@ -322,7 +322,7 @@ itself. All are optional.
 
 ## Magic properties
 
-Beyond the terms defined by the [RDF vocabulary](rdf.html), an engine recognises a small number of
+Beyond the terms defined by the [Schema vocabulary](schema.html), an engine recognises a small number of
 *magic properties* within a Façade-X `SERVICE` block. These are not asserted triples but query-time
 constructs the engine evaluates specially.
 
@@ -402,7 +402,7 @@ CONSTRUCT { ?s ?p ?o } WHERE {
 ## References
 
 - [Façade-X Concepts and Metamodel](metamodel.html) — the model this document provides access to.
-- [Façade-X RDF Vocabulary](rdf.html) — the RDF terms produced for a Façade-X data source.
+- [Façade-X Schema Vocabulary](schema.html) — the RDF terms produced for a Façade-X data source.
 - [SPARQL Anything](https://sparql-anything.cc/) — the reference implementation of the mechanism
   specified here.
 

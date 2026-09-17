@@ -4,7 +4,7 @@ This document is a *non-normative primer* for Façade-X. It introduces the model
 through motivation and worked examples — to help developers, implementers, and users build an
 intuition for how Façade-X represents heterogeneous data as RDF. The precise definitions live in
 the companion [Façade-X Concepts and Metamodel](metamodel.html) and
-[Façade-X RDF Vocabulary](rdf.html) documents. Wherever this primer and those documents appear to
+[Façade-X Schema Vocabulary](schema.html) documents. Wherever this primer and those documents appear to
 disagree, the normative documents take precedence.
 
 </section>
@@ -30,7 +30,7 @@ requirements on implementations.
 
 Façade-X is described normatively in two places: the
 [Concepts and Metamodel](metamodel.html) document, which defines the model in first-order logic,
-and the [RDF Vocabulary](rdf.html) document, which defines the `fx:` terms that realise it in RDF.
+and the [Schema Vocabulary](schema.html) document, which defines the `fx:` terms that realise it in RDF.
 Those documents are precise but deliberately terse. This primer sits alongside them and answers a
 different question: *what does Façade-X actually look like, and why is it shaped the way it is?*
 
@@ -229,7 +229,7 @@ structures land in the model.
 </table>
 
 Where a resource holds more than one data source — the sheets of a spreadsheet, say — each data
-source is kept in its own [named graph](rdf.html#NamedGraphs), so several sources can share one RDF
+source is kept in its own [named graph](schema.html#NamedGraphs), so several sources can share one RDF
 dataset without their containers being confused for one another.
 
 </section>
@@ -313,7 +313,7 @@ source presents the same Façade-X primitives.
 
 - The [Façade-X Concepts and Metamodel](metamodel.html) document gives the precise, first-order
   definitions of the concepts introduced informally here.
-- The [Façade-X RDF Vocabulary](rdf.html) document specifies every `fx:` term, its RDF Schema
+- The [Façade-X Schema Vocabulary](schema.html) document specifies every `fx:` term, its RDF Schema
   characterisation, and the use of named graphs.
 - Discussion of open questions happens in the project's
   [issue tracker](https://github.com/w3c-facade-x/facade-x-specs/issues).

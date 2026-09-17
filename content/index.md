@@ -86,6 +86,17 @@ It defines the vocabulary terms under the `fx:` namespace
 
 <section>
 
+### [Façade-X Engine Vocabulary](engine.html)
+
+This document specifies the options used to configure an engine that builds a Façade-X
+representation, under the `fxe:` namespace (`http://sparql.xyz/facade-x/engine/`). It is separate
+from the Schema vocabulary so that it can be adopted independently and used outside SPARQL.
+It covers source options (`fxe:location`, `fxe:content`, `fxe:media-type`, …) and mapping options
+(`fxe:root`, `fxe:namespace`, `fxe:blank-nodes`, …).
+
+</section>
+<section>
+
 ### [Façade-X Data Access in SPARQL](sparql.html)
 
 This document specifies how a Façade-X view of a resource is obtained and queried from within a

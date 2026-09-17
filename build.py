@@ -47,7 +47,7 @@ PAGES = [
     ("index.md", "index.html", "index.html"),
     ("primer.md", "primer.html", "primer.html"),
     ("metamodel.md", "metamodel.html", "metamodel.html"),
-    ("rdf.md", "rdf.html", "rdf.html"),
+    ("schema.md", "schema.html", "schema.html"),
     ("sparql.md", "sparql.html", "sparql.html"),
 ]
 
@@ -121,6 +121,8 @@ def render_markdown(md_path: Path) -> str:
         output_format="html5",
     )
     html = md.convert(text)
+    # Markdown tables get the same styling as hand-written <table class="model">.
+    html = html.replace("<table>", '<table class="model">')
     return _restore_raw_blocks(html)
 
 
