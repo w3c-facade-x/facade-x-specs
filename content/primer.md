@@ -274,33 +274,36 @@ evaluates the enclosed graph pattern against it — so an ordinary SPARQL 1.1 qu
 directly, with no prior transformation step.
 
 Options are passed to the engine as triples inside the `SERVICE` block: the special subject
-`fx:properties` carries one `fx:`-prefixed option per triple, the only mandatory one being the
-source `fx:location` (a URL or file path). Returning to the JSON example, this query lists each pet
+`fx:properties` carries one option per triple, using the terms of the
+[Engine vocabulary](engine.html) (`fxe:`). The only mandatory option is the source, typically
+`fxe:location` (a URL or file path). Returning to the JSON example, this query lists each pet
 together with the owner's name:
 
 ```example
-PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
-PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:   <http://sparql.xyz/facade-x/ns/>
+PREFIX fxe:  <http://sparql.xyz/facade-x/engine/>
+PREFIX xyz:  <http://sparql.xyz/facade-x/data/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?name ?pet WHERE {
   SERVICE <x-sparql-anything:> {
-    fx:properties fx:location "people.json" .
+    fx:properties fxe:location "people.json" .
     ?root a fx:Root ;
           xyz:name ?name ;
           xyz:pets ?pets .
-    ?pets fx:anySlot ?pet .
+    ?pets rdfs:member ?pet .
   }
 }
 ```
 
 The pattern starts from the Root, reads the `name` value, and follows the `pets` slot to the nested
 container. Rather than enumerate that container's numeric slots by hand (`rdf:_1`, `rdf:_2`, …), it
-uses the magic property `fx:anySlot`, which matches any of a container's membership slots at once —
+uses `rdfs:member`, which matches any of a container's membership slots at once —
 collecting the values `"cat"` and `"dog"` with a single pattern.
 
 The same options may equivalently be written inline in the protocol IRI, so
-`SERVICE <x-sparql-anything:location=people.json>` is shorthand for the `fx:location` triple above;
-further options (`fx:media-type`, `fx:namespace`, format-specific settings, and so on) are supplied
+`SERVICE <x-sparql-anything:location=people.json>` is shorthand for the `fxe:location` triple above;
+further options (`fxe:media-type`, `fxe:namespace`, format-specific settings, and so on) are supplied
 the same way. Nothing in the graph pattern is specific to JSON: point the same `SERVICE` clause at a
 CSV file, an XML document, or a spreadsheet and the identical query shape applies, because every
 source presents the same Façade-X primitives.
