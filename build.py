@@ -8,18 +8,24 @@ HTML fragment and injects it into the matching template, writing the finished
 documents into ``_site/``. Static assets referenced by the specs (e.g. images)
 are copied across as-is.
 
+Every ``content/<name>.md`` is rendered with ``templates/<name>.html`` into
+``_site/<name>.html``.
+
 Run with no arguments from the repository root:
 
     python build.py
-
-The mapping between content, template and output is declared in ``PAGES``.
 """
 
 from __future__ import annotations
 
+import json
+import os
 import re
 import shutil
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 try:
@@ -36,21 +42,8 @@ CONTENT_DIR = ROOT / "content"
 TEMPLATE_DIR = ROOT / "templates"
 OUTPUT_DIR = ROOT / "_site"
 
-
-import json, os, re, sys, urllib.request, urllib.parse, urllib.error
-
 GITHUB_REPO = "w3c-facade-x/facade-x-specs"
 ISSUES_MARKER = re.compile(r'<!--\s*BUILD:ISSUES\s+label="(?P<label>[^"]+)"\s*-->')
-
-# (markdown file, template file, output file)
-PAGES = [
-    ("index.md", "index.html", "index.html"),
-    ("primer.md", "primer.html", "primer.html"),
-    ("metamodel.md", "metamodel.html", "metamodel.html"),
-    ("schema.md", "schema.html", "schema.html"),
-    ("engine.md", "engine.html", "engine.html"),
-    ("sparql.md", "sparql.html", "sparql.html"),
-]
 
 # Static files copied verbatim into _site.
 STATIC_FILES = ["model.png"]
@@ -127,27 +120,25 @@ def render_markdown(md_path: Path) -> str:
     return _restore_raw_blocks(html)
 
 
-def build_page(md_name: str, template_name: str, output_name: str) -> None:
-    md_path = CONTENT_DIR / md_name
-    template_path = TEMPLATE_DIR / template_name
-    output_path = OUTPUT_DIR / output_name
+def build_page(md_path: Path) -> None:
+    name = md_path.stem
+    template_path = TEMPLATE_DIR / f"{name}.html"
+    output_path = OUTPUT_DIR / f"{name}.html"
 
-    if not md_path.exists():
-        raise FileNotFoundError(f"Missing content file: {md_path}")
     if not template_path.exists():
         raise FileNotFoundError(f"Missing template file: {template_path}")
 
     template = template_path.read_text(encoding="utf-8")
     if BODY_MARKER not in template:
         raise ValueError(
-            f"Template {template_name} does not contain the body marker "
+            f"Template {template_path.name} does not contain the body marker "
             f"{BODY_MARKER!r}"
         )
 
     body = render_markdown(md_path)
     result = template.replace(BODY_MARKER, body)
     output_path.write_text(result, encoding="utf-8")
-    print(f"  built {output_name}  ({md_name} + {template_name})")
+    print(f"  built {output_path.name}  ({md_path.name} + {template_path.name})")
 
 
 def copy_static() -> None:
@@ -194,8 +185,8 @@ def _expand_issue_markers(text: str) -> str:
 def main() -> int:
     OUTPUT_DIR.mkdir(exist_ok=True)
     print(f"Building Façade-X specs into {OUTPUT_DIR.relative_to(ROOT)}/")
-    for md_name, template_name, output_name in PAGES:
-        build_page(md_name, template_name, output_name)
+    for md_path in sorted(CONTENT_DIR.glob("*.md")):
+        build_page(md_path)
     copy_static()
     print("Done.")
     return 0
