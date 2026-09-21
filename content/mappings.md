@@ -46,8 +46,18 @@ A format mapping is selected by the media type of the resource, given by
 The following principles apply to every format mapping, unless the mapping states otherwise.
 
 **Values are strings.** Every value is a literal of type `xsd:string`, unless the source format
-defines its own value types. In that case, the mapping specifies how each source type maps to an
-XML Schema datatype. Engines MUST NOT infer data types from the lexical form of a string.
+defines its own value types. Engines MUST NOT infer types from the lexical form of a string.
+
+**Lexical forms are kept.** The lexical form of a value is its form in the source; engines MUST NOT
+rewrite it. When the source format defines value types, the datatype of a value is chosen so that
+the literal is well-typed:
+
+1. the natural XML Schema datatype for the source type, when the source form is in its lexical space;
+2. otherwise, another XML Schema datatype whose lexical space accepts the source form;
+3. otherwise, `xsd:string`.
+
+Each mapping specifies this decision for its value types (see
+[issue #41](https://github.com/w3c-facade-x/facade-x-specs/issues/41)).
 
 **Order is kept.** Where the source format orders its members, the order is kept in the numbers of
 the container-membership properties `rdf:_1`, `rdf:_2`, …, starting from 1.
