@@ -1,6 +1,7 @@
 ---
 title: Façade-X Primer
 subtitle: A non-normative, example-driven introduction to Façade-X.
+order: 2
 ---
 
 <section id="abstract">

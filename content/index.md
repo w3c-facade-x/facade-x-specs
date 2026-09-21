@@ -1,6 +1,7 @@
 ---
-title: Façade-X Specifications
+title: Façade-X Overview
 subtitle: A minimalist metamodel for representing heterogeneous data formats in a unified way.
+order: 1
 ---
 
 <section id="abstract">
