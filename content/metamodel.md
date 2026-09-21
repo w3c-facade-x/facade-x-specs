@@ -1,6 +1,7 @@
 ---
-title: <code>Fa&ccedil;ade-X</code> concepts and meta model specification
+title: <code>Fa&ccedil;ade-X</code> Concepts and Metamodel Specification
 subtitle: A minimalist model for representing heterogeneous data formats in a unified way.
+order: 6
 ---
 
 <section id="abstract">

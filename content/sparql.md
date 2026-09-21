@@ -1,6 +1,7 @@
 ---
 title: <code>Façade-X</code> Data Access in SPARQL
 subtitle: Accessing heterogeneous resources as Façade-X through the SPARQL <code>SERVICE</code> clause.
+order: 5
 ---
 
 <section id="abstract">

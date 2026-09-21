@@ -1,6 +1,7 @@
 ---
 title: <code>Fa&ccedil;ade-X</code> Schema vocabulary
 subtitle: RDF vocabulary to access open-ended, heterogeneous resources.
+order: 3
 ---
 
 <section id="abstract">

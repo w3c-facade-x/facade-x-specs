@@ -21,6 +21,11 @@ The optional ``order`` field sets the position of the page in the "Set of
 Documents" list that the build adds to the Status of This Document section of
 every page (pages without it come last, by file name).
 
+The optional ``parent`` field names another page (by file name, without
+``.md``) that lists this one, e.g. ``parent: mappings`` for a format mapping.
+Such pages are left out of the Set of Documents list; their own Status section
+points to the parent instead.
+
 Run with no arguments from the repository root:
 
     python build.py
@@ -177,25 +182,53 @@ def collect_pages() -> list[tuple[Path, dict[str, str], str]]:
     return sorted(pages, key=key)
 
 
-def set_of_documents(pages, current: Path) -> str:
-    """HTML for the Set of Documents subsection, marking the current page."""
-    count = len(pages)
+def page_link(md_path: Path, fields: dict[str, str]) -> str:
+    return f'<a href="{md_path.stem}.html">{htmllib.escape(plain(fields["title"]))}</a>'
+
+
+def set_of_documents(pages, current: Path, current_fields: dict[str, str]) -> str:
+    """HTML for the Set of Documents subsection of the current page.
+
+    The list holds the pages without a ``parent``; the pages that name one of
+    them as ``parent`` are listed under it. The current page is marked
+    "(this document)"; a page with a ``parent`` also gets a sentence pointing
+    to it.
+    """
+    members = [(p, f) for p, f, _ in pages if "parent" not in f]
+    count = len(members)
     count_text = NUMBER_WORDS[count] if count < len(NUMBER_WORDS) else str(count)
+
+    def item(md_path, fields):
+        link = page_link(md_path, fields)
+        return link + " (this document)" if md_path == current else link
+
     items = []
-    for md_path, fields, _ in pages:
-        link = f'<a href="{md_path.stem}.html">{htmllib.escape(plain(fields["title"]))}</a>'
-        if md_path == current:
-            link += " (this document)"
-        items.append(f"    <li>{link}</li>")
+    for md_path, fields in members:
+        children = [item(p, f) for p, f, _ in pages if f.get("parent") == md_path.stem]
+        nested = ""
+        if children:
+            nested = ("\n      <ul>\n"
+                      + "\n".join(f"        <li>{c}</li>" for c in children)
+                      + "\n      </ul>\n    ")
+        items.append(f"    <li>{item(md_path, fields)}{nested}</li>")
+    if "parent" in current_fields:
+        parent = next(((p, f) for p, f in members if p.stem == current_fields["parent"]), None)
+        if parent is None:
+            raise ValueError(f"{current.name}: parent {current_fields['parent']!r} "
+                             "is not a page in the Set of Documents")
+        intro = (f"This document is listed in {page_link(*parent)}, one of the "
+                 f"{count_text} Fa&ccedil;ade-X specification documents produced by the "
+                 "Data Fa&ccedil;ades Community Group:")
+    else:
+        intro = (f"This document is one of {count_text} Fa&ccedil;ade-X specification "
+                 "documents produced by the Data Fa&ccedil;ades Community Group:")
     return (
         '\n<section id="set-of-documents">\n'
         "  <h3>Set of Documents</h3>\n"
-        f"  <p>This document is one of {count_text} Fa&ccedil;ade-X specification documents "
-        "produced by the Data Fa&ccedil;ades Community Group:</p>\n"
+        f"  <p>{intro}</p>\n"
         "  <ol>\n" + "\n".join(items) + "\n  </ol>\n"
         "</section>\n"
     )
-
 
 def add_set_of_documents(text: str, block: str) -> str:
     """Append the block to the Status of This Document section, creating it if absent."""
@@ -209,7 +242,7 @@ def add_set_of_documents(text: str, block: str) -> str:
 def build_page(md_path: Path, fields: dict[str, str], text: str, template: str,
                pages) -> None:
     output_path = OUTPUT_DIR / f"{md_path.stem}.html"
-    text = add_set_of_documents(text, set_of_documents(pages, md_path))
+    text = add_set_of_documents(text, set_of_documents(pages, md_path, fields))
     plain_title = plain(fields["title"])
     result = (
         template.replace("{{PLAIN_TITLE}}", htmllib.escape(plain_title))

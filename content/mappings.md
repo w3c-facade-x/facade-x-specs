@@ -1,6 +1,7 @@
 ---
-title: <code>Fa&ccedil;ade-X</code> format mappings
+title: <code>Fa&ccedil;ade-X</code> Mappings
 subtitle: Mappings from source formats to Fa&ccedil;ade-X.
+order: 7
 ---
 
 <section id="abstract">

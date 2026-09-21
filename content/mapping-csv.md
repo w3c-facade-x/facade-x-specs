@@ -1,6 +1,7 @@
 ---
 title: <code>Fa&ccedil;ade-X</code> mapping for CSV
 subtitle: Representing comma-separated values in Fa&ccedil;ade-X.
+parent: mappings
 ---
 
 <section id="abstract">

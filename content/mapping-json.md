@@ -1,6 +1,7 @@
 ---
 title: <code>Fa&ccedil;ade-X</code> mapping for JSON
 subtitle: Representing JSON in Fa&ccedil;ade-X.
+parent: mappings
 ---
 
 <section id="abstract">
