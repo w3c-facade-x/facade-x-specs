@@ -88,8 +88,8 @@ vocabulary (for example `fxe:trim-strings` and `fxe:null-string`) apply to every
 | Format | Media types | Status | Document | Issue |
 |---|---|---|---|---|
 | CSV | `text/csv`, `text/tab-separated-values` | Draft | [CSV mapping](mapping-csv.html) | [#29](https://github.com/w3c-facade-x/facade-x-specs/issues/29) |
-| JSON | `application/json` | Planned | — | [#30](https://github.com/w3c-facade-x/facade-x-specs/issues/30) |
-| XML | `application/xml`, `text/xml` | Planned | — | [#31](https://github.com/w3c-facade-x/facade-x-specs/issues/31) |
+| JSON | `application/json` | Draft |  [JSON mapping](mapping-json.html)  | [#30](https://github.com/w3c-facade-x/facade-x-specs/issues/30) |
+| XML | `application/xml`, `text/xml` | Draft |  [XML mapping](mapping-xml.html)  | [#31](https://github.com/w3c-facade-x/facade-x-specs/issues/31) |
 | HTML | `text/html` | Not started | — | — |
 | Markdown | `text/markdown` | Not started | — | — |
 | YAML | `application/yaml` | Not started | — | — |
