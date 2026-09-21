@@ -4,8 +4,7 @@
 Editable prose lives in Markdown under ``content/``. The ReSpec scaffolding
 (config script, MathJax/Turtle setup, styles, ``<head>``) lives in a single
 HTML template. This script renders each Markdown file to an HTML fragment and
-injects it into the template, writing the finished documents into ``_site/``.
-Static assets referenced by the specs (e.g. images)
+injects it into the template, writing the finished documents into ``_site/``. Static assets referenced by the specs (e.g. images)
 are copied across as-is.
 
 Every ``content/<name>.md`` is rendered with the shared template
@@ -15,7 +14,12 @@ with a front matter block giving the page title and subtitle::
     ---
     title: <code>Façade-X</code> mapping for JSON
     subtitle: Representing JSON in Façade-X.
+    order: 9
     ---
+
+The optional ``order`` field sets the position of the page in the "Set of
+Documents" list that the build adds to the Status of This Document section of
+every page (pages without it come last, by file name).
 
 Run with no arguments from the repository root:
 
@@ -59,6 +63,11 @@ STATIC_FILES = ["model.png"]
 BODY_MARKER = "<!-- BUILD:CONTENT -->"
 FRONT_MATTER = re.compile(r"\A---\n(?P<head>.*?)\n---\n", re.DOTALL)
 FRONT_MATTER_KEYS = ("title", "subtitle")
+DEFAULT_ORDER = 1000
+SOTD_OPEN = re.compile(r'<section\s+id="sotd"[^>]*>')
+NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+                "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+                "sixteen", "seventeen", "eighteen", "nineteen", "twenty"]
 
 
 def _restore_raw_blocks(html: str) -> str:
@@ -145,10 +154,63 @@ def render_markdown(text: str) -> str:
     return _restore_raw_blocks(html)
 
 
-def build_page(md_path: Path, template: str) -> None:
+def plain(title: str) -> str:
+    """The title without markup or character references."""
+    return htmllib.unescape(re.sub(r"<[^>]+>", "", title))
+
+
+def collect_pages() -> list[tuple[Path, dict[str, str], str]]:
+    """All content pages, in the order of the Set of Documents list."""
+    pages = []
+    for md_path in CONTENT_DIR.glob("*.md"):
+        fields, text = split_front_matter(md_path)
+        pages.append((md_path, fields, text))
+
+    def key(page):
+        md_path, fields, _ = page
+        try:
+            order = int(fields.get("order", DEFAULT_ORDER))
+        except ValueError:
+            raise ValueError(f"{md_path.name}: order must be an integer")
+        return (order, md_path.stem)
+
+    return sorted(pages, key=key)
+
+
+def set_of_documents(pages, current: Path) -> str:
+    """HTML for the Set of Documents subsection, marking the current page."""
+    count = len(pages)
+    count_text = NUMBER_WORDS[count] if count < len(NUMBER_WORDS) else str(count)
+    items = []
+    for md_path, fields, _ in pages:
+        link = f'<a href="{md_path.stem}.html">{htmllib.escape(plain(fields["title"]))}</a>'
+        if md_path == current:
+            link += " (this document)"
+        items.append(f"    <li>{link}</li>")
+    return (
+        '\n<section id="set-of-documents">\n'
+        "  <h3>Set of Documents</h3>\n"
+        f"  <p>This document is one of {count_text} Fa&ccedil;ade-X specification documents "
+        "produced by the Data Fa&ccedil;ades Community Group:</p>\n"
+        "  <ol>\n" + "\n".join(items) + "\n  </ol>\n"
+        "</section>\n"
+    )
+
+
+def add_set_of_documents(text: str, block: str) -> str:
+    """Append the block to the Status of This Document section, creating it if absent."""
+    match = SOTD_OPEN.search(text)
+    if not match:
+        return f'<section id="sotd">\n{block}\n</section>\n\n' + text
+    close = text.index("</section>", match.end())
+    return text[:close] + block + "\n" + text[close:]
+
+
+def build_page(md_path: Path, fields: dict[str, str], text: str, template: str,
+               pages) -> None:
     output_path = OUTPUT_DIR / f"{md_path.stem}.html"
-    fields, text = split_front_matter(md_path)
-    plain_title = htmllib.unescape(re.sub(r"<[^>]+>", "", fields["title"]))
+    text = add_set_of_documents(text, set_of_documents(pages, md_path))
+    plain_title = plain(fields["title"])
     result = (
         template.replace("{{PLAIN_TITLE}}", htmllib.escape(plain_title))
         .replace("{{TITLE}}", fields["title"])
@@ -204,8 +266,9 @@ def main() -> int:
     OUTPUT_DIR.mkdir(exist_ok=True)
     print(f"Building Façade-X specs into {OUTPUT_DIR.relative_to(ROOT)}/")
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
-    for md_path in sorted(CONTENT_DIR.glob("*.md")):
-        build_page(md_path, template)
+    pages = collect_pages()
+    for md_path, fields, text in pages:
+        build_page(md_path, fields, text, template, pages)
     copy_static()
     print("Done.")
     return 0
