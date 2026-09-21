@@ -2,14 +2,20 @@
 """Build script for the Façade-X specifications.
 
 Editable prose lives in Markdown under ``content/``. The ReSpec scaffolding
-(config script, MathJax/Turtle setup, styles, ``<head>``) lives in HTML
-templates under ``templates/``. This script renders each Markdown file to an
-HTML fragment and injects it into the matching template, writing the finished
-documents into ``_site/``. Static assets referenced by the specs (e.g. images)
+(config script, MathJax/Turtle setup, styles, ``<head>``) lives in a single
+HTML template. This script renders each Markdown file to an HTML fragment and
+injects it into the template, writing the finished documents into ``_site/``.
+Static assets referenced by the specs (e.g. images)
 are copied across as-is.
 
-Every ``content/<name>.md`` is rendered with ``templates/<name>.html`` into
-``_site/<name>.html``.
+Every ``content/<name>.md`` is rendered with the shared template
+``templates/spec.html`` into ``_site/<name>.html``. Each Markdown file starts
+with a front matter block giving the page title and subtitle::
+
+    ---
+    title: <code>Façade-X</code> mapping for JSON
+    subtitle: Representing JSON in Façade-X.
+    ---
 
 Run with no arguments from the repository root:
 
@@ -18,6 +24,7 @@ Run with no arguments from the repository root:
 
 from __future__ import annotations
 
+import html as htmllib
 import json
 import os
 import re
@@ -39,7 +46,7 @@ except ImportError:  # pragma: no cover - guidance for local runs
 
 ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "content"
-TEMPLATE_DIR = ROOT / "templates"
+TEMPLATE_PATH = ROOT / "templates" / "spec.html"
 OUTPUT_DIR = ROOT / "_site"
 
 GITHUB_REPO = "w3c-facade-x/facade-x-specs"
@@ -48,15 +55,17 @@ ISSUES_MARKER = re.compile(r'<!--\s*BUILD:ISSUES\s+label="(?P<label>[^"]+)"\s*--
 # Static files copied verbatim into _site.
 STATIC_FILES = ["model.png"]
 
-# Marker in each template that gets replaced by the rendered Markdown body.
+# Placeholders in the shared template.
 BODY_MARKER = "<!-- BUILD:CONTENT -->"
+FRONT_MATTER = re.compile(r"\A---\n(?P<head>.*?)\n---\n", re.DOTALL)
+FRONT_MATTER_KEYS = ("title", "subtitle")
 
 
 def _restore_raw_blocks(html: str) -> str:
     """Turn fenced ``math`` / ``turtle`` code blocks back into bare markup.
 
-    The page's own MathJax and Turtle scripts look for plain ``<pre>`` elements
-    (math) and ``<pre class="turtle">`` / ``<pre class="example">`` blocks. The
+    The page's own MathJax and Turtle scripts look for ``<pre class="math">``
+    elements and ``<pre class="turtle">`` / ``<pre class="example">`` blocks. The
     Markdown renderer emits ``<pre><code class="language-...">`` for fenced
     blocks, so we rewrite those specific languages into the shape the existing
     client-side scripts expect, leaving their contents untouched.
@@ -69,11 +78,11 @@ def _restore_raw_blocks(html: str) -> str:
         # is exactly what the original hand-written HTML used for these blocks
         # (e.g. &lt; in Turtle/Manchester), so we keep it as-is.
         if lang == "math":
-            return f"<pre>\n{body}\n    </pre>"
+            return f'<pre class="math">\n{body}\n    </pre>'
         if lang == "turtle":
             return f'<pre class="turtle">\n{body}\n    </pre>'
         if lang in ("manchester", "example"):
-            return f'<pre data-nomath class="example">\n{body}\n    </pre>'
+            return f'<pre class="example">\n{body}\n    </pre>'
         # Any other language: leave the rendered <pre><code> intact.
         return match.group(0)
 
@@ -106,8 +115,24 @@ def _enable_md_in_blocks(text: str) -> str:
     return pattern.sub(add_attr, text)
 
 
-def render_markdown(md_path: Path) -> str:
+def split_front_matter(md_path: Path) -> tuple[dict[str, str], str]:
+    """Return the front matter fields and the Markdown body of a content file."""
     text = md_path.read_text(encoding="utf-8")
+    match = FRONT_MATTER.match(text)
+    if not match:
+        raise ValueError(f"{md_path.name}: missing front matter (--- title/subtitle ---)")
+    fields = {}
+    for line in match.group("head").splitlines():
+        if line.strip():
+            key, _, value = line.partition(":")
+            fields[key.strip()] = value.strip()
+    missing = [k for k in FRONT_MATTER_KEYS if k not in fields]
+    if missing:
+        raise ValueError(f"{md_path.name}: front matter lacks {', '.join(missing)}")
+    return fields, text[match.end():]
+
+
+def render_markdown(text: str) -> str:
     text = _expand_issue_markers(text)
     text = _enable_md_in_blocks(text)
     md = markdown.Markdown(
@@ -120,25 +145,18 @@ def render_markdown(md_path: Path) -> str:
     return _restore_raw_blocks(html)
 
 
-def build_page(md_path: Path) -> None:
-    name = md_path.stem
-    template_path = TEMPLATE_DIR / f"{name}.html"
-    output_path = OUTPUT_DIR / f"{name}.html"
-
-    if not template_path.exists():
-        raise FileNotFoundError(f"Missing template file: {template_path}")
-
-    template = template_path.read_text(encoding="utf-8")
-    if BODY_MARKER not in template:
-        raise ValueError(
-            f"Template {template_path.name} does not contain the body marker "
-            f"{BODY_MARKER!r}"
-        )
-
-    body = render_markdown(md_path)
-    result = template.replace(BODY_MARKER, body)
+def build_page(md_path: Path, template: str) -> None:
+    output_path = OUTPUT_DIR / f"{md_path.stem}.html"
+    fields, text = split_front_matter(md_path)
+    plain_title = htmllib.unescape(re.sub(r"<[^>]+>", "", fields["title"]))
+    result = (
+        template.replace("{{PLAIN_TITLE}}", htmllib.escape(plain_title))
+        .replace("{{TITLE}}", fields["title"])
+        .replace("{{SUBTITLE}}", fields["subtitle"])
+        .replace(BODY_MARKER, render_markdown(text))
+    )
     output_path.write_text(result, encoding="utf-8")
-    print(f"  built {output_path.name}  ({md_path.name} + {template_path.name})")
+    print(f"  built {output_path.name}")
 
 
 def copy_static() -> None:
@@ -185,8 +203,9 @@ def _expand_issue_markers(text: str) -> str:
 def main() -> int:
     OUTPUT_DIR.mkdir(exist_ok=True)
     print(f"Building Façade-X specs into {OUTPUT_DIR.relative_to(ROOT)}/")
+    template = TEMPLATE_PATH.read_text(encoding="utf-8")
     for md_path in sorted(CONTENT_DIR.glob("*.md")):
-        build_page(md_path)
+        build_page(md_path, template)
     copy_static()
     print("Done.")
     return 0

@@ -1,3 +1,8 @@
+---
+title: <code>Façade-X</code> Data Access in SPARQL
+subtitle: Accessing heterogeneous resources as Façade-X through the SPARQL <code>SERVICE</code> clause.
+---
+
 <section id="abstract">
 
 This document specifies how a Façade-X view of a heterogeneous resource is accessed from within a

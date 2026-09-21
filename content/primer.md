@@ -1,3 +1,8 @@
+---
+title: Façade-X Primer
+subtitle: A non-normative, example-driven introduction to Façade-X.
+---
+
 <section id="abstract">
 
 This document is a *non-normative primer* for Façade-X. It introduces the model informally —

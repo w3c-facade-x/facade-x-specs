@@ -1,3 +1,8 @@
+---
+title: <code>Fa&ccedil;ade-X</code> Schema vocabulary
+subtitle: RDF vocabulary to access open-ended, heterogeneous resources.
+---
+
 <section id="abstract">
 
 This document specifies the Fa&ccedil;ade-X Schema vocabulary.

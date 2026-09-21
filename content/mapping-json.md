@@ -1,3 +1,8 @@
+---
+title: <code>Fa&ccedil;ade-X</code> mapping for JSON
+subtitle: Representing JSON in Fa&ccedil;ade-X.
+---
+
 <section id="abstract">
 
 This document specifies how a JSON resource is represented as a Fa&ccedil;ade-X data source.

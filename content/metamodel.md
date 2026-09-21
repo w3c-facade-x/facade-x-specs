@@ -1,3 +1,8 @@
+---
+title: <code>Fa&ccedil;ade-X</code> concepts and meta model specification
+subtitle: A minimalist model for representing heterogeneous data formats in a unified way.
+---
+
 <section id="abstract">
 
 This document specifies the Fa&ccedil;ade-X concepts and metamodel.

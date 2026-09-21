@@ -1,3 +1,8 @@
+---
+title: <code>Fa&ccedil;ade-X</code> mapping for CSV
+subtitle: Representing comma-separated values in Fa&ccedil;ade-X.
+---
+
 <section id="abstract">
 
 This document specifies how a CSV resource is represented as a Fa&ccedil;ade-X data source.

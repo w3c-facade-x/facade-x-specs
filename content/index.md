@@ -1,3 +1,8 @@
+---
+title: Façade-X Specifications
+subtitle: A minimalist metamodel for representing heterogeneous data formats in a unified way.
+---
+
 <section id="abstract">
 
 This page provides an overview of the Façade-X specification documents.

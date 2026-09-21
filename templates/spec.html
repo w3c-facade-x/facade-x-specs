@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
-  <h1 id="title"><code>Fa&ccedil;ade-X</code> mapping for JSON</h1>
-  <h2 id="subtitle">Representing JSON in Fa&ccedil;ade-X.</h2>
+  <title>{{PLAIN_TITLE}}</title>
 
   <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
   <script class="remove">
     // All config options at https://respec.org/docs/
     var respecConfig = {
-      specStatus: "ED",
       editors: [
         { name: "Luigi Asprino", company: "Università Telematica San Raffaele - Roma", companyURL: "https://www.uniroma5.it/", mailto: "luigi.asprino@uniroma5.it", orcid: "0000-0003-1907-0677", w3cid: 130089 },
         { name: "Enrico Daga", company: "The Open University", companyURL: "https://www.open.ac.uk/", mailto: "enrico.daga@open.ac.uk", orcid: "0000-0002-3184-5407", w3cid: 76898 },],
@@ -40,10 +38,9 @@
     window.addEventListener('load', function () {
       if (!window.MathJax || !window.MathJax.startup) return;
       window.MathJax.startup.promise.then(function () {
-        document.querySelectorAll('pre:not([data-nomath])').forEach(function (pre) {
+        document.querySelectorAll('pre.math').forEach(function (pre) {
           var text = pre.textContent.trim();
           if (!text) return;
-          if (!text.includes('\\')) return;
           var math = text.startsWith('\\[') && text.endsWith('\\]')
             ? text
             : '\\[' + text + '\\]';
@@ -55,11 +52,8 @@
       });
     });
   </script>
-	
-	
-	
-	
-	<!-- styles copied from Web Annotation Vocabulary -->
+
+  <!-- Turtle highlighting styles, copied from the Web Annotation Vocabulary -->
 
     <style>
       .turtle .hll {
@@ -504,15 +498,29 @@
         text-align: center;
       }
     </style>
-	<!-- Styles added -->
-	<style>
-		h3 {
-			margin-top: 1rem;
-		}
-	</style>
+    <style>
+      h3 {
+        margin-top: 1rem;
+      }
+
+      figure img {
+        max-width: 100%;
+      }
+
+      pre.turtle,
+      pre.example {
+        background: #f7f7f9;
+        border: 1px solid #e1e1e8;
+        padding: 8px;
+        overflow-x: auto;
+      }
+    </style>
 </head>
 
 <body>
+
+  <h1 id="title">{{TITLE}}</h1>
+  <h2 id="subtitle">{{SUBTITLE}}</h2>
 
   <!-- BUILD:CONTENT -->
 

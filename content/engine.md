@@ -1,3 +1,8 @@
+---
+title: <code>Fa&ccedil;ade-X</code> Engine vocabulary
+subtitle: Options for engines that build Fa&ccedil;ade-X representations of resources.
+---
+
 <section id="abstract">
 
 This document specifies the Fa&ccedil;ade-X Engine vocabulary: the terms used to configure an engine
