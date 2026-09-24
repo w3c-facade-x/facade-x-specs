@@ -61,21 +61,6 @@ to query the resulting RDF with SPARQL. Start here, then move on to the normativ
 
 <section>
 
-### [Façade-X Concepts and Metamodel](metamodel.html)
-
-This document provides the formal definition of the Façade-X metamodel using first-order
-logic axioms. It introduces and specifies the following concepts:
-
-- **Resources and Data Sources** — digital artifacts and the data collections they contain.
-- **Containers, Slots, and Values** — the core structural primitives of the model, abstracting over lists and maps.
-- **Types** — classifications that can be assigned to containers.
-- **Root Container** — the unique top-level entry point for each data source.
-- **Disjointness** — a complete set of axioms ensuring the concepts are pairwise disjoint.
-
-</section>
-
-<section>
-
 ### [Façade-X Schema Vocabulary](schema.html)
 
 This document specifies the RDF realisation of the Façade-X metamodel.
@@ -111,6 +96,22 @@ SPARQL query. It defines the `SERVICE` clause and `x-sparql-anything:` IRI schem
 on `fx:properties`), and the use of `rdfs:member` for traversing container members.
 
 </section>
+
+<section>
+
+### [Façade-X Concepts and Metamodel](metamodel.html)
+
+This document provides the formal definition of the Façade-X metamodel using first-order
+logic axioms. It introduces and specifies the following concepts:
+
+- **Resources and Data Sources** — digital artifacts and the data collections they contain.
+- **Containers, Slots, and Values** — the core structural primitives of the model, abstracting over lists and maps.
+- **Types** — classifications that can be assigned to containers.
+- **Root Container** — the unique top-level entry point for each data source.
+- **Disjointness** — a complete set of axioms ensuring the concepts are pairwise disjoint.
+
+</section>
+
 
 <section>
 
