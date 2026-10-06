@@ -429,3 +429,7 @@ _site/
 !/releases/
 # Intermediate release builds, made by release.sh.
 /build/
+
+.DS_Store
+update.sh
+
