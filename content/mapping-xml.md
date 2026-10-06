@@ -188,6 +188,10 @@ the scope of `xml:lang` defined in [XML 1.0 §2.12](https://www.w3.org/TR/xml/#s
 
 All other values are of type `xsd:string`.
 
+The language of an element is determined by the XML source alone. Options that omit triples do
+not change it: with [`fxe:null-string`](engine.html#null-string) set to `""`, the slot for
+`xml:lang=""` is omitted, but the element still has no language.
+
 </section>
 
 </section>
