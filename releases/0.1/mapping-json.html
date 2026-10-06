@@ -1,0 +1,2037 @@
+<!DOCTYPE html><html lang="en" data-fx-version="0.1"><head>
+<meta charset="utf-8">
+<meta name="generator" content="ReSpec 37.4.1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<style>
+span.example-title{text-transform:none}
+:is(aside,div).example,div.illegal-example{padding:.5em;margin:1em 0;position:relative;clear:both}
+div.illegal-example{color:red}
+div.illegal-example p{color:#000}
+aside.example div.example{border-left-width:.1em;border-color:#999;background:#fff}
+</style>
+<style>
+.issue-label{text-transform:initial}
+.warning>p:first-child{margin-top:0}
+.warning{padding:.5em;border-left-width:.5em;border-left-style:solid}
+span.warning{padding:.1em .5em .15em}
+.issue.closed span.issue-number{text-decoration:line-through}
+.issue.closed span.issue-number::after{content:" (Closed)";font-size:smaller}
+.warning{border-color:#f11;border-color:var(--warning-border,#f11);border-width:.2em;border-style:solid;background:#fbe9e9;background:var(--warning-bg,#fbe9e9);color:#000;color:var(--text,#000)}
+.warning-title:before{content:"⚠";font-size:1.3em;float:left;padding-right:.3em;margin-top:-.3em}
+li.task-list-item{list-style:none}
+input.task-list-item-checkbox{margin:0 .35em .25em -1.6em;vertical-align:middle}
+.issue a.respec-gh-label{padding:5px;margin:0 2px 0 2px;font-size:10px;text-transform:none;text-decoration:none;font-weight:700;border-radius:4px;position:relative;bottom:2px;border:none;display:inline-block}
+</style>
+<style>
+dfn{cursor:pointer}
+.dfn-panel{position:absolute;z-index:35;min-width:300px;max-width:500px;padding:.5em .75em;margin-top:.6em;font-family:"Helvetica Neue",sans-serif;font-size:small;background:#fff;background:var(--indextable-hover-bg,#fff);color:#000;color:var(--text,#000);box-shadow:0 1em 3em -.4em rgba(0,0,0,.3),0 0 1px 1px rgba(0,0,0,.05);box-shadow:0 1em 3em -.4em var(--tocsidebar-shadow,rgba(0,0,0,.3)),0 0 1px 1px var(--tocsidebar-shadow,rgba(0,0,0,.05));border-radius:2px}
+.dfn-panel:not(.docked)>.caret{position:absolute;top:-9px}
+.dfn-panel:not(.docked)>.caret::after,.dfn-panel:not(.docked)>.caret::before{content:"";position:absolute;border:10px solid transparent;border-top:0;border-bottom:10px solid #fff;border-bottom-color:var(--indextable-hover-bg,#fff);top:0}
+.dfn-panel:not(.docked)>.caret::before{border-bottom:9px solid #a2a9b1;border-bottom-color:var(--indextable-hover-bg,#a2a9b1)}
+.dfn-panel *{margin:0}
+.dfn-panel b{display:block;color:#000;color:var(--text,#000);margin-top:.25em}
+.dfn-panel ul a[href]{color:#333;color:var(--text,#333)}
+.dfn-panel>div{display:flex}
+.dfn-panel a.self-link{font-weight:700;margin-right:auto}
+.dfn-panel .marker{padding:.1em;margin-left:.5em;border-radius:.2em;text-align:center;white-space:nowrap;font-size:90%;color:#040b1c}
+.dfn-panel .marker.dfn-exported{background:#d1edfd;box-shadow:0 0 0 .125em #1ca5f940}
+.dfn-panel .marker.idl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel .marker.cddl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel a:not(:hover){text-decoration:none!important;border-bottom:none!important}
+.dfn-panel a[href]:hover{border-bottom-width:1px}
+.dfn-panel ul{padding:0}
+.dfn-panel li{margin-left:1em}
+.dfn-panel.docked{position:fixed;left:.5em;top:unset;bottom:2em;margin:0 auto;max-width:calc(100vw - .75em * 2 - .5em - .2em * 2);max-height:30vh;overflow:auto}
+</style>
+  
+  
+<title>Façade-X mapping for JSON</title>
+
+  
+  
+  
+<script>
+    // On a release snapshot, point to the latest release when a newer one
+    // exists. The banner has class "remove" so that the ReSpec export used to
+    // freeze a release does not keep it if it shows up at export time.
+    window.addEventListener('load', function () {
+      var version = document.documentElement.dataset.fxVersion;
+      if (!version || version === 'dev') return;
+      fetch('https://w3c-facade-x.github.io/facade-x-specs/versions.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (v) {
+          if (!v || !v.latest || v.latest === version) return;
+          var page = location.pathname.split('/').pop() || 'index.html';
+          var note = document.createElement('p');
+          note.className = 'remove fx-outdated';
+          note.innerHTML = 'This is version ' + version + ' of this document. ' +
+            'The latest release is <a href="https://w3c-facade-x.github.io/facade-x-specs/' +
+            page + '">version ' + v.latest + '</a>.';
+          document.body.insertBefore(note, document.body.firstChild);
+        })
+        .catch(function () {});
+    });
+  </script>
+  
+<script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      },
+      startup: { typeset: false },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'code'] },
+    };
+  </script>
+  
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer=""></script>
+  
+<script>
+    window.addEventListener('load', function () {
+      if (!window.MathJax || !window.MathJax.startup) return;
+      window.MathJax.startup.promise.then(function () {
+        document.querySelectorAll('pre.math').forEach(function (pre) {
+          var text = pre.textContent.trim();
+          if (!text) return;
+          var math = text.startsWith('\\[') && text.endsWith('\\]')
+            ? text
+            : '\\[' + text + '\\]';
+          var block = document.createElement('div');
+          block.textContent = math;
+          pre.replaceWith(block);
+        });
+        window.MathJax.typesetPromise();
+      });
+    });
+  </script>
+
+  
+
+    
+<style>
+
+      .turtle .hll {
+        background-color: #ffffcc
+      }
+    
+      .turtle .c {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment */
+    
+      .turtle .err {
+        border: 1px solid #FF0000
+      }
+      /* Error */
+    
+      .turtle .k {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword */
+    
+      .turtle .o {
+        color: #666666
+      }
+      /* Operator */
+    
+      .turtle .ch {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Hashbang */
+    
+      .turtle .cm {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Multiline */
+    
+      .turtle .cp {
+        color: #BC7A00
+      }
+      /* Comment.Preproc */
+    
+      .turtle .cpf {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.PreprocFile */
+    
+      .turtle .c1 {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Single */
+    
+      .turtle .cs {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Special */
+    
+      .turtle .gd {
+        color: #A00000
+      }
+      /* Generic.Deleted */
+    
+      .turtle .ge {
+        font-style: italic
+      }
+      /* Generic.Emph */
+    
+      .turtle .gr {
+        color: #FF0000
+      }
+      /* Generic.Error */
+    
+      .turtle .gh {
+        color: #000080;
+        font-weight: bold
+      }
+      /* Generic.Heading */
+    
+      .turtle .gi {
+        color: #00A000
+      }
+      /* Generic.Inserted */
+    
+      .turtle .go {
+        color: #888888
+      }
+      /* Generic.Output */
+    
+      .turtle .gp {
+        color: #000080;
+        font-weight: bold
+      }
+      /* Generic.Prompt */
+    
+      .turtle .gs {
+        font-weight: bold
+      }
+      /* Generic.Strong */
+    
+      .turtle .gu {
+        color: #800080;
+        font-weight: bold
+      }
+      /* Generic.Subheading */
+    
+      .turtle .gt {
+        color: #0044DD
+      }
+      /* Generic.Traceback */
+    
+      .turtle .kc {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Constant */
+    
+      .turtle .kd {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Declaration */
+    
+      .turtle .kn {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Namespace */
+    
+      .turtle .kp {
+        color: #008000
+      }
+      /* Keyword.Pseudo */
+    
+      .turtle .kr {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Reserved */
+    
+      .turtle .kt {
+        color: #B00040
+      }
+      /* Keyword.Type */
+    
+      .turtle .m {
+        color: #666666
+      }
+      /* Literal.Number */
+    
+      .turtle .s {
+        color: #BA2121
+      }
+      /* Literal.String */
+    
+      .turtle .na {
+        color: #7D9029
+      }
+      /* Name.Attribute */
+    
+      .turtle .nb {
+        color: #008000
+      }
+      /* Name.Builtin */
+    
+      .turtle .nc {
+        color: #0000FF;
+        font-weight: bold
+      }
+      /* Name.Class */
+    
+      .turtle .no {
+        color: #880000
+      }
+      /* Name.Constant */
+    
+      .turtle .nd {
+        color: #AA22FF
+      }
+      /* Name.Decorator */
+    
+      .turtle .ni {
+        color: #999999;
+        font-weight: bold
+      }
+      /* Name.Entity */
+    
+      .turtle .ne {
+        color: #D2413A;
+        font-weight: bold
+      }
+      /* Name.Exception */
+    
+      .turtle .nf {
+        color: #0000FF
+      }
+      /* Name.Function */
+    
+      .turtle .nl {
+        color: #A0A000
+      }
+      /* Name.Label */
+    
+      .turtle .nn {
+        color: #0000FF;
+        font-weight: bold
+      }
+      /* Name.Namespace */
+    
+      .turtle .nt {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Name.Tag */
+    
+      .turtle .nv {
+        color: #19177C
+      }
+      /* Name.Variable */
+    
+      .turtle .ow {
+        color: #AA22FF;
+        font-weight: bold
+      }
+      /* Operator.Word */
+    
+      .turtle .w {
+        color: #bbbbbb
+      }
+      /* Text.Whitespace */
+    
+      .turtle .mb {
+        color: #666666
+      }
+      /* Literal.Number.Bin */
+    
+      .turtle .mf {
+        color: #666666
+      }
+      /* Literal.Number.Float */
+    
+      .turtle .mh {
+        color: #666666
+      }
+      /* Literal.Number.Hex */
+    
+      .turtle .mi {
+        color: #666666
+      }
+      /* Literal.Number.Integer */
+    
+      .turtle .mo {
+        color: #666666
+      }
+      /* Literal.Number.Oct */
+    
+      .turtle .sa {
+        color: #BA2121
+      }
+      /* Literal.String.Affix */
+    
+      .turtle .sb {
+        color: #BA2121
+      }
+      /* Literal.String.Backtick */
+    
+      .turtle .sc {
+        color: #BA2121
+      }
+      /* Literal.String.Char */
+    
+      .turtle .dl {
+        color: #BA2121
+      }
+      /* Literal.String.Delimiter */
+    
+      .turtle .sd {
+        color: #BA2121;
+        font-style: italic
+      }
+      /* Literal.String.Doc */
+    
+      .turtle .s2 {
+        color: #BA2121
+      }
+      /* Literal.String.Double */
+    
+      .turtle .se {
+        color: #BB6622;
+        font-weight: bold
+      }
+      /* Literal.String.Escape */
+    
+      .turtle .sh {
+        color: #BA2121
+      }
+      /* Literal.String.Heredoc */
+    
+      .turtle .si {
+        color: #BB6688;
+        font-weight: bold
+      }
+      /* Literal.String.Interpol */
+    
+      .turtle .sx {
+        color: #008000
+      }
+      /* Literal.String.Other */
+    
+      .turtle .sr {
+        color: #BB6688
+      }
+      /* Literal.String.Regex */
+    
+      .turtle .s1 {
+        color: #BA2121
+      }
+      /* Literal.String.Single */
+    
+      .turtle .ss {
+        color: #19177C
+      }
+      /* Literal.String.Symbol */
+    
+      .turtle .bp {
+        color: #008000
+      }
+      /* Name.Builtin.Pseudo */
+    
+      .turtle .fm {
+        color: #0000FF
+      }
+      /* Name.Function.Magic */
+    
+      .turtle .vc {
+        color: #19177C
+      }
+      /* Name.Variable.Class */
+    
+      .turtle .vg {
+        color: #19177C
+      }
+      /* Name.Variable.Global */
+    
+      .turtle .vi {
+        color: #19177C
+      }
+      /* Name.Variable.Instance */
+    
+      .turtle .vm {
+        color: #19177C
+      }
+      /* Name.Variable.Magic */
+    
+      .turtle .il {
+        color: #666666
+      }
+      /* Literal.Number.Integer.Long */
+    
+</style>
+    
+<style>
+
+      .model {
+        empty-cells: show;
+        border-collapse: collapse;
+        margin-bottom: .5ex;
+        border: 1px solid black;
+        width: 100%;
+      }
+    
+      .model th {
+        padding: 3px;
+        border: 1px solid #404040;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+      }
+    
+      .model td {
+        padding: 5px;
+        border: 1px solid #404040;
+        text-align: left;
+        font-family: sans-serif;
+      }
+    
+      .termtoc {
+        border: 1px dashed black;
+        background: #f0f0f0;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        font-family: sans-serif;
+        padding: 5px;
+      }
+    
+      .term {
+        /*border: 1px solid black;*/
+        margin-left: 10px;
+        padding: 5px;
+        margin-bottom: 5px;
+      }
+    
+      .term h4 {
+        font-family: sans-serif;
+        color: #6060C0;
+        padding-left: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid black;
+      }
+    
+      .tech {
+        border-top: 1px dashed black;
+        border-bottom: 1px dashed black;
+        background: #f0f0f0;
+        margin: 5px;
+      }
+    
+      .example-padding {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    
+      .tech ul {
+        padding-left: 10px;
+      }
+    
+      .tech ul li {
+        list-style: none;
+        padding-bottom: 2px;
+        padding-left: 0px;
+        margin-left: 0px;
+      }
+    
+      .tech ul li {
+        font-family: sans-serif;
+        font-weight: normal;
+      }
+    
+      .diagram_img {
+        text-align: center;
+      }
+    
+</style>
+    
+<style>
+
+      .fx-outdated {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        margin: 0 0 1em;
+        padding: .5em 1em;
+        background: #fff3cd;
+        border: 1px solid #e0c060;
+        font-family: sans-serif;
+      }
+      h3 {
+        margin-top: 1rem;
+      }
+
+      figure img {
+        max-width: 100%;
+      }
+
+      pre.turtle,
+      pre.example {
+        background: #f7f7f9;
+        border: 1px solid #e1e1e8;
+        padding: 8px;
+        overflow-x: auto;
+      }
+    
+</style>
+
+<style id="respec-mainstyle">
+@keyframes pop{
+0%{transform:scale(1,1)}
+25%{transform:scale(1.25,1.25);opacity:.75}
+100%{transform:scale(1,1)}
+}
+a.internalDFN{color:inherit;border-bottom:1px solid #99c;text-decoration:none}
+a.externalDFN{color:inherit;border-bottom:1px dotted #ccc;text-decoration:none}
+a.bibref{text-decoration:none}
+.respec-offending-element:target{animation:pop .25s ease-in-out 0s 1}
+.respec-offending-element,a[href].respec-offending-element{text-decoration:red wavy underline}
+@supports not (text-decoration:red wavy underline){
+.respec-offending-element:not(pre){display:inline-block}
+.respec-offending-element{background:url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x}
+}
+#references :target{background:#eaf3ff;animation:pop .4s ease-in-out 0s 1}
+@media (prefers-color-scheme:dark){
+#references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+}
+body:has(input[name=color-scheme][value=dark]:checked) #references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+cite .bibref{font-style:italic}
+a[href].orcid{padding-left:4px;padding-right:4px}
+a[href].orcid>svg{margin-bottom:-2px}
+ol.tof,ul.tof{list-style:none outside none}
+.caption{margin-top:.5em;font-style:italic}
+#issue-summary>ul{column-count:2}
+#issue-summary li{list-style:none}
+details.respec-tests-details{margin-left:1em;display:inline-block;vertical-align:top}
+details.respec-tests-details>*{padding-right:2em}
+details.respec-tests-details[open]{z-index:999999;position:absolute;border:thin solid #cad3e2;border-radius:.3em;background-color:#fff;padding-bottom:.5em}
+details.respec-tests-details[open]>summary{border-bottom:thin solid #cad3e2;padding-left:1em;margin-bottom:1em;line-height:2em}
+details.respec-tests-details>ul{width:100%;margin-top:-.3em}
+details.respec-tests-details>li{padding-left:1em}
+.self-link:hover{opacity:1;text-decoration:none;background-color:transparent}
+aside.example .marker>a.self-link{color:inherit}
+.header-wrapper{display:flex;align-items:baseline}
+:is(h2,h3,h4,h5,h6):not(:where(#toc>h2,#abstract>h2,#sotd>h2,.head>h2)):has(+a.self-link){position:relative;left:-.5em}
+:is(h2,h3,h4,h5,h6):not(:where(#toch2))+a.self-link{color:inherit;order:-1;position:relative;left:-1.1em;font-size:1rem;opacity:.8;text-decoration:none}
+:is(h2,h3,h4,h5,h6)+a.self-link::before{content:"§"}
+:is(h2,h3)+a.self-link{top:-.2em}
+:is(h2,h3)+a.self-link::before{color:var(--heading-text)}
+@media (max-width:767px){
+dd{margin-left:0}
+}
+@media print{
+.removeOnSave{display:none}
+}
+body:has(input[name=color-scheme][value=light]:checked),head:not(:has(meta[name=color-scheme][content~=dark]))+body{color-scheme:light}
+body:has(input[name=color-scheme][value=dark]:checked){color-scheme:dark}
+</style>
+<style type="text/css">
+.CtxtMenu_InfoClose {  top:.2em; right:.2em;}
+.CtxtMenu_InfoContent {  overflow:auto; text-align:left; font-size:80%;  padding:.4em .6em; border:1px inset; margin:1em 0px;  max-height:20em; max-width:30em; background-color:#EEEEEE;  white-space:normal;}
+.CtxtMenu_Info.CtxtMenu_MousePost {outline:none;}
+.CtxtMenu_Info {  position:fixed; left:50%; width:auto; text-align:center;  border:3px outset; padding:1em 2em; background-color:#DDDDDD;  color:black;  cursor:default; font-family:message-box; font-size:120%;  font-style:normal; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 15px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius:15px;               /* Safari and Chrome */  -moz-border-radius:15px;                  /* Firefox */  -khtml-border-radius:15px;                /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */  filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color="gray", Positive="true"); /* IE */}
+
+</style>
+<style type="text/css">
+.CtxtMenu_MenuClose {  position:absolute;  cursor:pointer;  display:inline-block;  border:2px solid #AAA;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  font-family: "Courier New", Courier;  font-size:24px;  color:#F0F0F0}
+.CtxtMenu_MenuClose span {  display:block; background-color:#AAA; border:1.5px solid;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  line-height:0;  padding:8px 0 6px     /* may need to be browser-specific */}
+.CtxtMenu_MenuClose:hover {  color:white!important;  border:2px solid #CCC!important}
+.CtxtMenu_MenuClose:hover span {  background-color:#CCC!important}
+.CtxtMenu_MenuClose:hover:focus {  outline:none}
+
+</style>
+<style type="text/css">
+.CtxtMenu_Menu {  position:absolute;  background-color:white;  color:black;  width:auto; padding:5px 0px;  border:1px solid #CCCCCC; margin:0; cursor:default;  font: menu; text-align:left; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 5px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius: 5px;             /* Safari and Chrome */  -moz-border-radius: 5px;                /* Firefox */  -khtml-border-radius: 5px;              /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */}
+.CtxtMenu_MenuItem {  padding: 1px 2em;  background:transparent;}
+.CtxtMenu_MenuArrow {  position:absolute; right:.5em; padding-top:.25em; color:#666666;  font-family: null; font-size: .75em}
+.CtxtMenu_MenuActive .CtxtMenu_MenuArrow {color:white}
+.CtxtMenu_MenuArrow.CtxtMenu_RTL {left:.5em; right:auto}
+.CtxtMenu_MenuCheck {  position:absolute; left:.7em;  font-family: null}
+.CtxtMenu_MenuCheck.CtxtMenu_RTL { right:.7em; left:auto }
+.CtxtMenu_MenuRadioCheck {  position:absolute; left: .7em;}
+.CtxtMenu_MenuRadioCheck.CtxtMenu_RTL {  right: .7em; left:auto}
+.CtxtMenu_MenuInputBox {  padding-left: 1em; right:.5em; color:#666666;  font-family: null;}
+.CtxtMenu_MenuInputBox.CtxtMenu_RTL {  left: .1em;}
+.CtxtMenu_MenuComboBox {  left:.1em; padding-bottom:.5em;}
+.CtxtMenu_MenuSlider {  left: .1em;}
+.CtxtMenu_SliderValue {  position:absolute; right:.1em; padding-top:.25em; color:#333333;  font-size: .75em}
+.CtxtMenu_SliderBar {  outline: none; background: #d3d3d3}
+.CtxtMenu_MenuLabel {  padding: 1px 2em 3px 1.33em;  font-style:italic}
+.CtxtMenu_MenuRule {  border-top: 1px solid #DDDDDD;  margin: 4px 3px;}
+.CtxtMenu_MenuDisabled {  color:GrayText}
+.CtxtMenu_MenuActive {  background-color: #606872;  color: white;}
+.CtxtMenu_MenuDisabled:focus {  background-color: #E8E8E8}
+.CtxtMenu_MenuLabel:focus {  background-color: #E8E8E8}
+.CtxtMenu_ContextMenu:focus {  outline:none}
+.CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus {  outline:none}
+.CtxtMenu_SelectionMenu {  position:relative; float:left;  border-bottom: none; -webkit-box-shadow:none; -webkit-border-radius:0px; }
+.CtxtMenu_SelectionItem {  padding-right: 1em;}
+.CtxtMenu_Selection {  right: 40%; width:50%; }
+.CtxtMenu_SelectionBox {  padding: 0em; max-height:20em; max-width: none;  background-color:#FFFFFF;}
+.CtxtMenu_SelectionDivider {  clear: both; border-top: 2px solid #000000;}
+.CtxtMenu_Menu .CtxtMenu_MenuClose {  top:-10px; left:-10px}
+
+</style>
+<style id="MJX-CHTML-styles">
+
+mjx-container[jax="CHTML"] {
+  line-height: 0;
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > * {
+  display: table-cell;
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+_::-webkit-full-page-media, _:future, :root mjx-container {
+  will-change: opacity;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-c::before {
+  display: block;
+  width: 0;
+}
+
+.MJX-TEX {
+  font-family: MJXZERO, MJXTEX;
+}
+
+.TEX-B {
+  font-family: MJXZERO, MJXTEX-B;
+}
+
+.TEX-I {
+  font-family: MJXZERO, MJXTEX-I;
+}
+
+.TEX-MI {
+  font-family: MJXZERO, MJXTEX-MI;
+}
+
+.TEX-BI {
+  font-family: MJXZERO, MJXTEX-BI;
+}
+
+.TEX-S1 {
+  font-family: MJXZERO, MJXTEX-S1;
+}
+
+.TEX-S2 {
+  font-family: MJXZERO, MJXTEX-S2;
+}
+
+.TEX-S3 {
+  font-family: MJXZERO, MJXTEX-S3;
+}
+
+.TEX-S4 {
+  font-family: MJXZERO, MJXTEX-S4;
+}
+
+.TEX-A {
+  font-family: MJXZERO, MJXTEX-A;
+}
+
+.TEX-C {
+  font-family: MJXZERO, MJXTEX-C;
+}
+
+.TEX-CB {
+  font-family: MJXZERO, MJXTEX-CB;
+}
+
+.TEX-FR {
+  font-family: MJXZERO, MJXTEX-FR;
+}
+
+.TEX-FRB {
+  font-family: MJXZERO, MJXTEX-FRB;
+}
+
+.TEX-SS {
+  font-family: MJXZERO, MJXTEX-SS;
+}
+
+.TEX-SSB {
+  font-family: MJXZERO, MJXTEX-SSB;
+}
+
+.TEX-SSI {
+  font-family: MJXZERO, MJXTEX-SSI;
+}
+
+.TEX-SC {
+  font-family: MJXZERO, MJXTEX-SC;
+}
+
+.TEX-T {
+  font-family: MJXZERO, MJXTEX-T;
+}
+
+.TEX-V {
+  font-family: MJXZERO, MJXTEX-V;
+}
+
+.TEX-VB {
+  font-family: MJXZERO, MJXTEX-VB;
+}
+
+mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
+  font-family: MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important;
+}
+
+@font-face /* 0 */ {
+  font-family: MJXZERO;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff") format("woff");
+}
+
+@font-face /* 1 */ {
+  font-family: MJXTEX;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff") format("woff");
+}
+
+@font-face /* 2 */ {
+  font-family: MJXTEX-B;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Bold.woff") format("woff");
+}
+
+@font-face /* 3 */ {
+  font-family: MJXTEX-I;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff") format("woff");
+}
+
+@font-face /* 4 */ {
+  font-family: MJXTEX-MI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Italic.woff") format("woff");
+}
+
+@font-face /* 5 */ {
+  font-family: MJXTEX-BI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-BoldItalic.woff") format("woff");
+}
+
+@font-face /* 6 */ {
+  font-family: MJXTEX-S1;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff") format("woff");
+}
+
+@font-face /* 7 */ {
+  font-family: MJXTEX-S2;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff") format("woff");
+}
+
+@font-face /* 8 */ {
+  font-family: MJXTEX-S3;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff") format("woff");
+}
+
+@font-face /* 9 */ {
+  font-family: MJXTEX-S4;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff") format("woff");
+}
+
+@font-face /* 10 */ {
+  font-family: MJXTEX-A;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff") format("woff");
+}
+
+@font-face /* 11 */ {
+  font-family: MJXTEX-C;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff") format("woff");
+}
+
+@font-face /* 12 */ {
+  font-family: MJXTEX-CB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Bold.woff") format("woff");
+}
+
+@font-face /* 13 */ {
+  font-family: MJXTEX-FR;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Regular.woff") format("woff");
+}
+
+@font-face /* 14 */ {
+  font-family: MJXTEX-FRB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Bold.woff") format("woff");
+}
+
+@font-face /* 15 */ {
+  font-family: MJXTEX-SS;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Regular.woff") format("woff");
+}
+
+@font-face /* 16 */ {
+  font-family: MJXTEX-SSB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Bold.woff") format("woff");
+}
+
+@font-face /* 17 */ {
+  font-family: MJXTEX-SSI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Italic.woff") format("woff");
+}
+
+@font-face /* 18 */ {
+  font-family: MJXTEX-SC;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Script-Regular.woff") format("woff");
+}
+
+@font-face /* 19 */ {
+  font-family: MJXTEX-T;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Typewriter-Regular.woff") format("woff");
+}
+
+@font-face /* 20 */ {
+  font-family: MJXTEX-V;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Regular.woff") format("woff");
+}
+
+@font-face /* 21 */ {
+  font-family: MJXTEX-VB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff");
+}
+
+</style>
+<meta name="color-scheme" content="light">
+<meta name="description" content="This document specifies how a JSON resource is represented as a Façade-X data source.">
+<style>
+.hljs,body:has(input[name=color-scheme][value=light]:checked) .hljs,head:not(:has(meta[name=color-scheme][content~=dark]))+body .hljs{--base:#fafafa;--mono-1:#383a42;--mono-2:#686b77;--mono-3:#717277;--hue-1:#0b76c5;--hue-2:#336ae3;--hue-3:#a626a4;--hue-4:#42803c;--hue-5:#ca4706;--hue-5-2:#c91243;--hue-6:#986801;--hue-6-2:#9a6a01}
+@media (prefers-color-scheme:dark){
+.hljs{
+  --base: #282c34;
+  --mono-1: #abb2bf;
+  --mono-2: #818896;
+  --mono-3: #5c6370;
+  --hue-1: #56b6c2;
+  --hue-2: #61aeee;
+  --hue-3: #c678dd;
+  --hue-4: #98c379;
+  --hue-5: #e06c75;
+  --hue-5-2: #be5046;
+  --hue-6: #d19a66;
+  --hue-6-2: #e6c07b;
+}
+}
+body:has(input[name=color-scheme][value=dark]:checked) .hljs{
+  --base: #282c34;
+  --mono-1: #abb2bf;
+  --mono-2: #818896;
+  --mono-3: #5c6370;
+  --hue-1: #56b6c2;
+  --hue-2: #61aeee;
+  --hue-3: #c678dd;
+  --hue-4: #98c379;
+  --hue-5: #e06c75;
+  --hue-5-2: #be5046;
+  --hue-6: #d19a66;
+  --hue-6-2: #e6c07b;
+}
+.hljs{display:block;overflow-x:auto;padding:.5em;color:#383a42;color:var(--mono-1,#383a42);background:#fafafa;background:var(--base,#fafafa)}
+.hljs-comment,.hljs-quote{color:#717277;color:var(--mono-3,#717277);font-style:italic}
+.hljs-doctag,.hljs-formula,.hljs-keyword{color:#a626a4;color:var(--hue-3,#a626a4)}
+.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#ca4706;color:var(--hue-5,#ca4706);font-weight:700}
+.hljs-literal{color:#0b76c5;color:var(--hue-1,#0b76c5)}
+.hljs-addition,.hljs-attribute,.hljs-meta-string,.hljs-regexp,.hljs-string{color:#42803c;color:var(--hue-4,#42803c)}
+.hljs-built_in,.hljs-class .hljs-title{color:#9a6a01;color:var(--hue-6-2,#9a6a01)}
+.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#986801;color:var(--hue-6,#986801)}
+.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#336ae3;color:var(--hue-2,#336ae3)}
+.hljs-emphasis{font-style:italic}
+.hljs-strong{font-weight:700}
+.hljs-link{text-decoration:underline}
+</style>
+<style>
+var:hover{text-decoration:underline;cursor:pointer}
+var.respec-hl{color:var(--color,#000);background-color:var(--bg-color);box-shadow:0 0 0 2px var(--bg-color)}
+@media (prefers-color-scheme:dark){
+var.respec-hl{filter:saturate(.9) brightness(.9)}
+}
+var.respec-hl-c1{--bg-color:#f4d200}
+var.respec-hl-c2{--bg-color:#ff87a2}
+var.respec-hl-c3{--bg-color:#96e885}
+var.respec-hl-c4{--bg-color:#3eeed2}
+var.respec-hl-c5{--bg-color:#eacfb6}
+var.respec-hl-c6{--bg-color:#82ddff}
+var.respec-hl-c7{--bg-color:#ffbcf2}
+@media print{
+var.respec-hl{background:0 0;color:#000;box-shadow:unset}
+}
+</style>
+<style>
+var[data-type]{position:relative}
+var[data-type]::after,var[data-type]::before{position:absolute;left:50%;top:-6px;opacity:0;transition:opacity .4s;pointer-events:none}
+var[data-type]::before{content:"";transform:translateX(-50%);border-width:4px 6px 0 6px;border-style:solid;border-color:transparent;border-top-color:#222}
+var[data-type]::after{content:attr(data-type);transform:translateX(-50%) translateY(-100%);background:#222;text-align:center;font-family:"Dank Mono","Fira Code",monospace;font-style:normal;padding:6px;border-radius:3px;color:#daca88;text-indent:0;font-weight:400}
+var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
+</style>
+<script id="initialUserConfig" type="application/json">{
+  "editors": [
+    {
+      "name": "Luigi Asprino",
+      "company": "Università Telematica San Raffaele - Roma",
+      "companyURL": "https://www.uniroma5.it/",
+      "mailto": "luigi.asprino@uniroma5.it",
+      "orcid": "https://orcid.org/0000-0003-1907-0677",
+      "w3cid": 130089,
+      "url": "mailto:luigi.asprino@uniroma5.it"
+    },
+    {
+      "name": "Enrico Daga",
+      "company": "The Open University",
+      "companyURL": "https://www.open.ac.uk/",
+      "mailto": "enrico.daga@open.ac.uk",
+      "orcid": "https://orcid.org/0000-0002-3184-5407",
+      "w3cid": 76898,
+      "url": "mailto:enrico.daga@open.ac.uk"
+    }
+  ],
+  "github": "w3c-facade-x/facade-x-specs",
+  "shortName": "facade-x",
+  "xref": "web-platform",
+  "group": "cg/facade-x",
+  "license": "w3c-software-doc",
+  "specStatus": "CG-DRAFT",
+  "isPreview": false,
+  "edDraftURI": "https://w3c-facade-x.github.io/facade-x-specs/dev/mapping-json.html",
+  "latestVersion": "https://w3c-facade-x.github.io/facade-x-specs/mapping-json.html",
+  "publishDate": "2026-10-06",
+  "publishISODate": "2026-10-06T00:00:00.000Z",
+  "generatedSubtitle": "Draft Community Group Report 06 October 2026"
+}</script>
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/cg-draft">
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/dark.css" disabled=""></head>
+
+<body class="h-entry informative" data-cite="HTML INFRA URL WEBIDL DOM FETCH"><div class="head">
+    
+    <h1 id="title" class="title"><code>Façade-X</code> mapping for JSON</h1> <h2 id="subtitle" class="subtitle">Representing JSON in Façade-X.</h2>
+    <p id="w3c-state">
+      <a href="https://www.w3.org/standards/types#reports">Draft Community Group Report</a>
+      <time class="dt-published" datetime="2026-10-06">06 October 2026</time>
+    </p>
+    <dl>
+      
+      <dt>Latest published version:</dt><dd>
+                <a href="https://w3c-facade-x.github.io/facade-x-specs/mapping-json.html">https://w3c-facade-x.github.io/facade-x-specs/mapping-json.html</a>
+              </dd>
+      <dt>Latest editor's draft:</dt><dd><a href="https://w3c-facade-x.github.io/facade-x-specs/dev/mapping-json.html">https://w3c-facade-x.github.io/facade-x-specs/dev/mapping-json.html</a></dd>
+      
+      
+      
+      
+      <dt>
+                Editors:
+              </dt><dd class="editor p-author h-card vcard" data-editor-id="130089">
+    <a class="ed_mailto u-email email p-name" href="mailto:luigi.asprino@uniroma5.it">Luigi Asprino</a><a class="p-name orcid" href="https://orcid.org/0000-0003-1907-0677"><svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <style>
+
+      .st1 {
+        fill: #fff;
+      }
+    
+</style>
+    <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z" fill="#a6ce39"></path>
+    <path class="st1" d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"></path>
+  </svg></a> (<a class="p-org org h-org" href="https://www.uniroma5.it/">Università Telematica San Raffaele - Roma</a>)
+  </dd><dd class="editor p-author h-card vcard" data-editor-id="76898">
+    <a class="ed_mailto u-email email p-name" href="mailto:enrico.daga@open.ac.uk">Enrico Daga</a><a class="p-name orcid" href="https://orcid.org/0000-0002-3184-5407"><svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <style>
+
+      .st1 {
+        fill: #fff;
+      }
+    
+</style>
+    <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z" fill="#a6ce39"></path>
+    <path class="st1" d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"></path>
+  </svg></a> (<a class="p-org org h-org" href="https://www.open.ac.uk/">The Open University</a>)
+  </dd>
+      
+      
+      <dt>Feedback:</dt><dd>
+        <a href="https://github.com/w3c-facade-x/facade-x-specs/">GitHub w3c-facade-x/facade-x-specs</a>
+        (<a href="https://github.com/w3c-facade-x/facade-x-specs/pulls/">pull requests</a>,
+        <a href="https://github.com/w3c-facade-x/facade-x-specs/issues/new/choose">new issue</a>,
+        <a href="https://github.com/w3c-facade-x/facade-x-specs/issues/">open issues</a>)
+      </dd>
+      
+    </dl>
+    
+    <p class="copyright">
+            <a href="https://www.w3.org/policies/#copyright">Copyright</a>
+            ©
+            2026
+            
+            the Contributors to the <code>Façade-X</code> mapping for JSON
+            Specification, published by the
+            <a href="https://www.w3.org/groups/cg/facade-x">Data Façades Community Group</a> under the
+            <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable
+                    <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a>
+                    is available.
+                  
+          </p>
+    <hr title="Separator for header">
+  </div>
+
+  
+  
+
+  <section id="abstract" class="introductory"><h2>Abstract</h2>
+<p>This document specifies how a JSON resource is represented as a Façade-X data source.</p>
+</section>
+<section id="sotd" class="introductory"><h2>Status of This Document</h2><p>
+      This specification was published by the
+      <a href="https://www.w3.org/groups/cg/facade-x">Data Façades Community Group</a>. It is not a W3C Standard nor is it
+      on the W3C Standards Track.
+      
+              Please note that under the
+              <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>
+              there is a limited opt-out and other conditions apply.
+            
+      Learn more about
+      <a href="https://www.w3.org/community/">W3C Community and Business Groups</a>.
+    </p>
+<p id="versions">This is version 0.1 of this document, released on 2026-10-06, at <a href="https://w3c-facade-x.github.io/facade-x-specs/0.1/mapping-json.html">https://w3c-facade-x.github.io/facade-x-specs/0.1/mapping-json.html</a>. This version will not change. The latest release is always at <a href="https://w3c-facade-x.github.io/facade-x-specs/mapping-json.html">https://w3c-facade-x.github.io/facade-x-specs/mapping-json.html</a>. The editor's draft, which may include changes made after this release, is at <a href="https://w3c-facade-x.github.io/facade-x-specs/dev/mapping-json.html">https://w3c-facade-x.github.io/facade-x-specs/dev/mapping-json.html</a>. The issues addressed in this release, and those still open, are listed in the <a href="https://github.com/w3c-facade-x/facade-x-specs/releases/tag/v0.1">release notes</a>.</p>
+<p>This document is a first draft. It follows the behaviour of the reference implementation,
+<a href="https://sparql-anything.cc/">SPARQL Anything</a>, and the test cases in
+<a href="https://github.com/w3c-facade-x/facade-x-tests/tree/main/tests/json">facade-x-tests</a>, except where
+the <a href="#Issues" class="respec-offending-element" title="Broken local reference found in document." id="respec-offender-broken-local-reference-found-in-document">Issues</a> section says otherwise.</p>
+<p>
+    <a href="https://github.com/w3c-facade-x/facade-x-specs/issues/">GitHub Issues</a> are preferred for
+            discussion of this specification.
+          
+    
+  </p><section id="set-of-documents"><div class="header-wrapper"><h3 id="set-of-documents-0">Set of Documents</h3><a class="self-link" href="#set-of-documents" aria-label="Permalink for this Section"></a></div>
+
+<p>This document is listed in <a href="mappings.html">Façade-X Mappings</a>, one of the seven Façade-X specification documents produced by the Data Façades Community Group:</p>
+<ol>
+    <li><a href="index.html">Façade-X Overview</a></li>
+    <li><a href="primer.html">Façade-X Primer</a></li>
+    <li><a href="schema.html">Façade-X Schema vocabulary</a></li>
+    <li><a href="engine.html">Façade-X Engine vocabulary</a></li>
+    <li><a href="sparql.html">Façade-X Data Access in SPARQL</a></li>
+    <li><a href="metamodel.html">Façade-X Concepts and Metamodel Specification</a></li>
+    <li><a href="mappings.html">Façade-X Mappings</a>
+      <ul>
+        <li><a href="mapping-csv.html">Façade-X mapping for CSV</a></li>
+        <li><a href="mapping-json.html">Façade-X mapping for JSON</a> (this document)</li>
+        <li><a href="mapping-xml.html">Façade-X mapping for XML</a></li>
+      </ul>
+    </li>
+  </ol>
+</section>
+</section><nav id="toc"><h2 class="introductory" id="table-of-contents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Abstract</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status of This Document</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#set-of-documents">Set of Documents</a></li></ol></li><li class="tocline"><a class="tocxref" href="#Introduction"><bdi class="secno">1. </bdi>Introduction</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#Namespaces"><bdi class="secno">1.1 </bdi>Namespaces</a></li></ol></li><li class="tocline"><a class="tocxref" href="#issues"><bdi class="secno">2. </bdi>Issues</a></li><li class="tocline"><a class="tocxref" href="#Selection"><bdi class="secno">3. </bdi>Selection</a></li><li class="tocline"><a class="tocxref" href="#Mapping"><bdi class="secno">4. </bdi>Mapping</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#DataSource"><bdi class="secno">4.1 </bdi>Data source</a></li><li class="tocline"><a class="tocxref" href="#Objects"><bdi class="secno">4.2 </bdi>Objects</a></li><li class="tocline"><a class="tocxref" href="#Arrays"><bdi class="secno">4.3 </bdi>Arrays</a></li><li class="tocline"><a class="tocxref" href="#Values"><bdi class="secno">4.4 </bdi>Values</a></li></ol></li><li class="tocline"><a class="tocxref" href="#Options"><bdi class="secno">5. </bdi>Options</a></li><li class="tocline"><a class="tocxref" href="#Examples"><bdi class="secno">6. </bdi>Examples</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#ExampleBase"><bdi class="secno">6.1 </bdi>Object</a></li><li class="tocline"><a class="tocxref" href="#ExampleNested"><bdi class="secno">6.2 </bdi>Nested objects and arrays</a></li><li class="tocline"><a class="tocxref" href="#ExampleNumbers"><bdi class="secno">6.3 </bdi>Numbers</a></li><li class="tocline"><a class="tocxref" href="#ExampleQuery"><bdi class="secno">6.4 </bdi>Query</a></li></ol></li><li class="tocline"><a class="tocxref" href="#References"><bdi class="secno">7. </bdi>References</a></li></ol></nav>
+<section class="informative" id="Introduction"><div class="header-wrapper"><h2 id="x1-introduction"><bdi class="secno">1. </bdi>Introduction</h2><a class="self-link" href="#Introduction" aria-label="Permalink for Section 1."></a></div><p><em>This section is non-normative.</em></p>
+
+<p>A <a href="https://www.rfc-editor.org/rfc/rfc8259#section-2">JSON text</a> is a single <a href="https://www.rfc-editor.org/rfc/rfc8259#section-3">value</a>: an
+<a href="https://www.rfc-editor.org/rfc/rfc8259#section-4">object</a>, an <a href="https://www.rfc-editor.org/rfc/rfc8259#section-5">array</a>, a
+<a href="https://www.rfc-editor.org/rfc/rfc8259#section-7">string</a>, a <a href="https://www.rfc-editor.org/rfc/rfc8259#section-6">number</a>,
+<code>true</code>, <code>false</code>, or <code>null</code> [<a href="#bib-rfc8259">RFC8259</a>]. Objects hold members by name, and arrays hold
+elements by position.
+In Façade-X, objects and arrays are containers. Object members are held by string slots and
+array elements by numbered slots. Strings, numbers and booleans are values.</p>
+<p>This document applies the <a href="mappings.html#Principles">common principles</a> of the format mappings.</p>
+<section id="Namespaces"><div class="header-wrapper"><h3 id="x1-1-namespaces"><bdi class="secno">1.1 </bdi>Namespaces</h3><a class="self-link" href="#Namespaces" aria-label="Permalink for Section 1.1"></a></div>
+
+<table class="model">
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Namespace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fx</td>
+<td><code>http://sparql.xyz/facade-x/ns/</code></td>
+</tr>
+<tr>
+<td>fxe</td>
+<td><code>http://sparql.xyz/facade-x/engine/</code></td>
+</tr>
+<tr>
+<td>xyz</td>
+<td><code>http://sparql.xyz/facade-x/data/</code></td>
+</tr>
+<tr>
+<td>rdf</td>
+<td><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></td>
+</tr>
+<tr>
+<td>xsd</td>
+<td><code>http://www.w3.org/2001/XMLSchema#</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="issues"><div class="header-wrapper"><h2 id="x2-issues"><bdi class="secno">2. </bdi>Issues</h2><a class="self-link" href="#issues" aria-label="Permalink for Section 2."></a></div>
+
+<div class="issue" id="issue-container-number-41"><div class="issue-title marker" id="h-issue"><a href="https://github.com/w3c-facade-x/facade-x-specs/issues/41"><span class="issue-number">Issue 41</span></a><span class="issue-label">: Surface form of literals in format mappings (JSON numbers as a first case) <a class="respec-gh-label" href="https://github.com/w3c-facade-x/facade-x-specs/issues/?q=is%3Aissue+is%3Aopen+label%3A%22Mapping%3A+JSON%22" style="background-color: rgb(139, 102, 22); color: rgb(255, 255, 255);" aria-label="GitHub label: Mapping: JSON">Mapping: JSON</a><a class="respec-gh-label" href="https://github.com/w3c-facade-x/facade-x-specs/issues/?q=is%3Aissue+is%3Aopen+label%3A%22FX+Mappings%22" style="background-color: rgb(228, 234, 187); color: rgb(0, 0, 0);" aria-label="GitHub label: FX Mappings">FX Mappings</a></span></div><p dir="auto">The starting point is the idea that Facade-X should not modify the <em>lexical form</em> of data values. Previously, we mapped JSON numerals to <code class="notranslate">xsd:decimal</code> (see also <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="4059051848" data-permission-text="Title is private" data-url="https://github.com/SPARQL-Anything/sparql.anything/issues/620" data-hovercard-type="issue" data-hovercard-url="/SPARQL-Anything/sparql.anything/issues/620/hovercard" href="https://github.com/SPARQL-Anything/sparql.anything/issues/620">SPARQL-Anything/sparql.anything#620</a>)</p>
+<p dir="auto">However, JSON numerals and xsd:decimal lexical forms are not the same set: JSON allows exponents (<code class="notranslate">1.5e3</code>) and <code class="notranslate">xsd:decimal</code> does not. Keeping the source text, therefore, produces ill-typed literals, so the mappings need a shared rule for when to keep a value's surface form and when to rewrite it as the canonical form. Cases of mismatches between format specifications and XSD datatypes may arise. We should discuss this issue more generally and then make a decision that can guide future mappings.</p>
+<p dir="auto">We review first what SPARQL Anything does, then discuss potential solutions.</p>
+<div class="header-wrapper"><h2 dir="auto" id="sparql-anything-behaviour">SPARQL Anything behaviour</h2><a class="self-link" href="#issue-container-number-41" aria-label="Permalink for this Section"></a></div>
+<p dir="auto">SPARQL Anything types every JSON number as <code class="notranslate">xsd:decimal</code> and copies the numeral from the source as the lexical form. From <code class="notranslate">tests/json/2-features</code>:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>JSON</th>
+<th>SPARQL Anything output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">42</code></td>
+<td><code class="notranslate">"42"^^xsd:decimal</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">3.0</code></td>
+<td><code class="notranslate">"3.0"^^xsd:decimal</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">-0</code></td>
+<td><code class="notranslate">"0"^^xsd:decimal</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">1.5e3</code></td>
+<td><code class="notranslate">"1.5e3"^^xsd:decimal</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">2E-4</code></td>
+<td><code class="notranslate">"2E-4"^^xsd:decimal</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">12345678901234567890</code></td>
+<td><code class="notranslate">"12345678901234567890"^^xsd:decimal</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The last two exponent rows are <strong>ill-typed literals</strong>. The lexical space of <code class="notranslate">xsd:decimal</code> is <code class="notranslate">(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)</code>, with no exponent notation (<a href="https://www.w3.org/TR/xmlschema11-2/#decimal-lexical-representation" rel="nofollow">XSD 1.1 Part 2, §3.3.3.1</a>). A SPARQL engine cannot compute a value for them, so numeric comparisons and arithmetic on them fail. The behaviour is also inconsistent with itself: <code class="notranslate">3.0</code> keeps its surface form, but <code class="notranslate">-0</code> is normalised to <code class="notranslate">0</code>.</p>
+<div class="header-wrapper"><h2 dir="auto" id="the-underlying-inconsistency">The underlying inconsistency</h2><a class="self-link" href="#issue-container-number-41" aria-label="Permalink for this Section"></a></div>
+<p dir="auto">JSON and XSD agree on the <em>values</em> but not on the <em>numerals</em>:</p>
+<ul dir="auto">
+<li><strong>Values.</strong> Every JSON number has the form <em>d</em> × 10^<em>e</em> with finitely many digits, so it is in the value space of <code class="notranslate">xsd:decimal</code>: numbers of the form <em>i</em> / 10^<em>n</em> (<a href="https://www.w3.org/TR/xmlschema11-2/#decimal" rel="nofollow">§3.3.3</a>). <code class="notranslate">xsd:decimal</code> can represent every JSON number exactly.</li>
+<li><strong>Numerals.</strong> The JSON number grammar (<a href="https://www.rfc-editor.org/rfc/rfc8259#section-6" rel="nofollow">RFC 8259 §6</a>) allows an exponent, which the <code class="notranslate">xsd:decimal</code> lexical space does not. Conversely, XSD allows forms JSON forbids (<code class="notranslate">+1</code>, <code class="notranslate">.5</code>, <code class="notranslate">5.</code>, <code class="notranslate">007</code>), but those don't matter here. Every JSON numeral <strong>without</strong> an exponent is a valid <code class="notranslate">xsd:decimal</code> lexical form; every numeral <strong>with</strong> an exponent is not.</li>
+<li><strong>Why not <code class="notranslate">xsd:double</code>.</strong> The <code class="notranslate">xsd:double</code> lexical space accepts exponent notation, but its value space is <em>m</em> × 2^<em>e</em> with |<em>m</em>| &lt; 2^53 (<a href="https://www.w3.org/TR/xmlschema11-2/#double" rel="nofollow">§3.3.5</a>). <code class="notranslate">2E-4</code> and <code class="notranslate">12345678901234567890</code> have no exact double value, so switching to <code class="notranslate">xsd:double</code> would lose information.</li>
+</ul>
+<div class="header-wrapper"><h2 dir="auto" id="decision-in-the-json-mapping-draft">Decision in the JSON mapping draft</h2><a class="self-link" href="#issue-container-number-41" aria-label="Permalink for this Section"></a></div>
+<ul dir="auto">
+<li>Every JSON number is typed <code class="notranslate">xsd:decimal</code>.</li>
+<li>If the numeral has no exponent, its source text is kept as the lexical form (<code class="notranslate">3.0</code> → <code class="notranslate">"3.0"</code>, <code class="notranslate">-0</code> → <code class="notranslate">"-0"</code>).</li>
+<li>If the numeral has an exponent, the lexical form is the canonical <code class="notranslate">xsd:decimal</code> representation of its value (<code class="notranslate">1.5e3</code> → <code class="notranslate">"1500"</code>, <code class="notranslate">2E-4</code> → <code class="notranslate">"0.0002"</code>).</li>
+</ul>
+<p dir="auto">Every literal produced is well-typed and exactly equal in value to the JSON number. The surface form is kept wherever XSD allows it.</p>
+<div class="header-wrapper"><h2 dir="auto" id="what-changes-compared-with-sparql-anything">What changes compared with SPARQL Anything</h2><a class="self-link" href="#issue-container-number-41" aria-label="Permalink for this Section"></a></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>JSON</th>
+<th>SPARQL Anything</th>
+<th>Draft</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">1.5e3</code></td>
+<td><code class="notranslate">"1.5e3"^^xsd:decimal</code> (ill-typed)</td>
+<td><code class="notranslate">"1500"^^xsd:decimal</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">2E-4</code></td>
+<td><code class="notranslate">"2E-4"^^xsd:decimal</code> (ill-typed)</td>
+<td><code class="notranslate">"0.0002"^^xsd:decimal</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">-0</code></td>
+<td><code class="notranslate">"0"^^xsd:decimal</code></td>
+<td><code class="notranslate">"-0"^^xsd:decimal</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">All other numbers are unchanged. The expected output of <code class="notranslate">tests/json/2-features</code> needs updating to match, and SPARQL Anything needs a fix.</p>
+<div class="header-wrapper"><h2 dir="auto" id="the-general-question-surface-form-versus-value">The general question: surface form versus value</h2><a class="self-link" href="#issue-container-number-41" aria-label="Permalink for this Section"></a></div>
+<p dir="auto">Façade-X aims to represent the source <em>as it is</em>, which argues for keeping the surface form of values. In RDF, though, a typed literal ties the surface form to a datatype's lexical space, and source grammars rarely match XSD lexical spaces exactly. Surface form also matters beyond values: <code class="notranslate">"3.0"^^xsd:decimal</code> and <code class="notranslate">"3"^^xsd:decimal</code> are equal values but different RDF terms, so <code class="notranslate">sameTerm</code>, <code class="notranslate">DISTINCT</code> and joins on literals depend on the lexical form.</p>
+<p dir="auto">This will come up in every mapping whose source format has typed values: YAML (numbers, booleans, dates), spreadsheets (numbers stored as doubles, dates as serial numbers), and possibly XML if schema-aware typing is considered. CSV and plain XML avoid it only because all their values are strings.</p>
+<p dir="auto">Options for a principle shared by all mappings:</p>
+<ol dir="auto">
+<li><strong>Keep the surface form when it is valid for the target datatype; otherwise use the canonical form.</strong> This is the current draft. It is well-typed, but some surface forms are lost, and a reader cannot tell which values were rewritten.</li>
+<li><strong>Always use the canonical form.</strong> Deterministic, but loses the surface form everywhere (<code class="notranslate">3.0</code> → <code class="notranslate">3</code>).</li>
+<li><strong>Always keep the surface form, with a datatype whose lexical space accepts it.</strong> Use the XSD datatype when the source form is in its lexical space; otherwise use a datatype that accepts the source grammar.</li>
+<li><strong>Keep the surface form, even if ill-typed.</strong> This is the current SPARQL Anything behaviour, and not something a specification should require.</li>
+</ol>
+<div class="header-wrapper"><h2 dir="auto" id="proposal-option-3">Proposal: option 3</h2><a class="self-link" href="#issue-container-number-41" aria-label="Permalink for this Section"></a></div>
+<p dir="auto">The source text of every value is its lexical form, and no value is rewritten. The datatype is chosen so that the literal is well-typed. In the case of JSON numerals, we first map to <code class="notranslate">xsd:decimal</code> (design choice) and then verify conformance with the surface form:</p>
+<ul dir="auto">
+<li>when the source form is in the lexical space of the natural XSD datatype, that datatype is used (<code class="notranslate">42</code> → <code class="notranslate">"42"^^xsd:decimal</code>, <code class="notranslate">3.0</code> → <code class="notranslate">"3.0"^^xsd:decimal</code>, <code class="notranslate">-0</code> → <code class="notranslate">"-0"^^xsd:decimal</code>);</li>
+<li>otherwise, a datatype whose lexical space is the source grammar is used (<code class="notranslate">1.5e3</code> → <code class="notranslate">"1.5e3"^^D</code>): <code class="notranslate">xsd:double</code> in the example.</li>
+<li>Mapping specifications should describe the decision process explicitly.</li>
+<li>If no XSD datatype is found that can match the surface form, the source is probably malformed, and the system should fall back to <code class="notranslate">xsd:string</code>.</li>
+</ul>
+<p dir="auto">If agreed, this becomes a common principle in the <a href="https://w3c-facade-x.github.io/facade-x-specs/mappings.html#Principles" rel="nofollow">format mappings</a> page: <em>"The lexical form of a value is its source form. The datatype is the natural XML Schema datatype for the value when the source form is in its lexical space; otherwise it is a datatype whose lexical space accepts the source form, as defined by the mapping."</em> The JSON draft and <code class="notranslate">tests/json/2-features</code> would then be updated accordingly. Opinions welcome.</p></div>
+<p>The typing of numbers follows the decision in
+<a href="https://github.com/w3c-facade-x/facade-x-specs/issues/41">issue #41</a>. It differs from the
+reference implementation, which types every number as <code>xsd:decimal</code> (giving ill-typed literals for
+numbers with an exponent) and writes <code>-0</code> as <code>"0"</code>.</p>
+<p>When <code>fxe:json.include-null-values</code> is <code>true</code>, the reference implementation represents <code>null</code> with
+the IRI <code>xyz:null</code>. Whether <code>null</code> should have a term in the Schema vocabulary is open.</p>
+<p>The representation of a top-level string, number or boolean, and the treatment of duplicate member
+names (which <a href="https://www.rfc-editor.org/rfc/rfc8259#section-4">RFC 8259 §4</a> allows, although names <em class="rfc2119">SHOULD</em> be unique), are not yet
+specified.</p>
+</section>
+<section id="Selection"><div class="header-wrapper"><h2 id="x3-selection"><bdi class="secno">3. </bdi>Selection</h2><a class="self-link" href="#Selection" aria-label="Permalink for Section 3."></a></div>
+
+<p>An engine <em class="rfc2119">MUST</em> apply this mapping to a resource whose media type is
+<a href="https://www.rfc-editor.org/rfc/rfc8259#section-11"><code>application/json</code></a>, or any media type with the
+<a href="https://www.rfc-editor.org/rfc/rfc6839#section-3.1">structured syntax suffix <code>+json</code></a>
+[<a href="#bib-rfc6839">RFC6839</a>] (e.g. <code>application/problem+json</code>).</p>
+<p>When the media type is not given, an engine <em class="rfc2119">SHOULD</em> apply this mapping to resources with the file
+extension <code>json</code>.</p>
+</section>
+<section id="Mapping"><div class="header-wrapper"><h2 id="x4-mapping"><bdi class="secno">4. </bdi>Mapping</h2><a class="self-link" href="#Mapping" aria-label="Permalink for Section 4."></a></div>
+
+<section id="DataSource"><div class="header-wrapper"><h3 id="x4-1-data-source"><bdi class="secno">4.1 </bdi>Data source</h3><a class="self-link" href="#DataSource" aria-label="Permalink for Section 4.1"></a></div>
+
+<p>A JSON resource yields exactly one data source. Its triples are placed in the named graph whose IRI
+is the value of <a href="engine.html#root"><code>fxe:root</code></a>.</p>
+<p>The top-level value is represented by the root container, typed <code>fx:Root</code>:</p>
+<ul>
+<li>a top-level object gives a root container holding the object's members;</li>
+<li>a top-level array gives a root container holding the array's elements.</li>
+</ul>
+</section>
+<section id="Objects"><div class="header-wrapper"><h3 id="x4-2-objects"><bdi class="secno">4.2 </bdi>Objects</h3><a class="self-link" href="#Objects" aria-label="Permalink for Section 4.2"></a></div>
+
+<p>An object is represented by a container. Each member is held by a string slot whose IRI is minted
+from the member name, as defined in the <a href="mappings.html#Principles">common principles</a>. With the
+default namespace, the member <code>"name"</code> gives the slot <code>xyz:name</code>.</p>
+<p>Characters that are not allowed in an IRI are percent-encoded as UTF-8; other characters, including
+non-ASCII letters, are kept. The member <code>"key with spaces"</code> gives <code>xyz:key%20with%20spaces</code>, and the
+empty member name <code>""</code> gives the namespace IRI itself.</p>
+<p>A member whose value is an object or an array holds the container that represents it. An empty
+object gives a container with no slots.</p>
+</section>
+<section id="Arrays"><div class="header-wrapper"><h3 id="x4-3-arrays"><bdi class="secno">4.3 </bdi>Arrays</h3><a class="self-link" href="#Arrays" aria-label="Permalink for Section 4.3"></a></div>
+
+<p>An array is represented by a container. Each element is held by a numbered slot, in the order of the
+array: the first element in <code>rdf:_1</code>, the second in <code>rdf:_2</code>, and so on.</p>
+<p>A <code>null</code> element keeps its position: no triple is produced for it, and the following element keeps
+its own index. For example, in <code>[1, null, 3]</code> the value <code>3</code> is held by <code>rdf:_3</code>.</p>
+<p>An element that is an object or an array holds the container that represents it. An empty array
+gives a container with no slots.</p>
+</section>
+<section id="Values"><div class="header-wrapper"><h3 id="x4-4-values"><bdi class="secno">4.4 </bdi>Values</h3><a class="self-link" href="#Values" aria-label="Permalink for Section 4.4"></a></div>
+
+<p>JSON defines value types. Following the <a href="mappings.html#Principles">common principles</a>, the
+lexical form of every value is its source form, and the datatype is chosen so that the literal is
+well-typed [<a href="#bib-xmlschema11-2">XMLSCHEMA11-2</a>]:</p>
+<table class="model">
+<thead>
+<tr>
+<th>JSON value</th>
+<th>Literal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.rfc-editor.org/rfc/rfc8259#section-7">string</a></td>
+<td><code>xsd:string</code>; the lexical form is the sequence of Unicode characters the string denotes, after unescaping</td>
+</tr>
+<tr>
+<td><a href="https://www.rfc-editor.org/rfc/rfc8259#section-6">number</a> without an exponent</td>
+<td><code>xsd:decimal</code>, with the numeral as written in the source</td>
+</tr>
+<tr>
+<td><a href="https://www.rfc-editor.org/rfc/rfc8259#section-6">number</a> with an exponent (<code>exp</code>)</td>
+<td><code>xsd:double</code>, with the numeral as written in the source</td>
+</tr>
+<tr>
+<td><code>true</code>, <code>false</code></td>
+<td><code>xsd:boolean</code></td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td>no triple, unless <a href="#json.include-null-values"><code>fxe:json.include-null-values</code></a> is <code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Numbers are typed as follows:</p>
+<ol>
+<li>The <a href="https://www.rfc-editor.org/rfc/rfc8259#section-6">JSON number grammar</a> is a decimal numeral with an optional fraction
+   (<code>frac</code>) and exponent (<code>exp</code>). The natural datatype for a JSON number is <code>xsd:decimal</code>, whose
+   <a href="https://www.w3.org/TR/xmlschema11-2/#decimal">value space</a> contains every JSON number exactly.
+   A numeral without an exponent is always in the
+   <a href="https://www.w3.org/TR/xmlschema11-2/#decimal-lexical-representation">lexical space of <code>xsd:decimal</code></a>,
+   so it is typed <code>xsd:decimal</code> (e.g. <code>3.0</code> gives <code>"3.0"^^xsd:decimal</code>, and <code>-0</code> gives <code>"-0"^^xsd:decimal</code>).</li>
+<li>The lexical space of <code>xsd:decimal</code> has no exponent notation. A numeral with an exponent is in the
+   <a href="https://www.w3.org/TR/xmlschema11-2/#sec-lex-double">lexical space of <code>xsd:double</code></a>, so it is
+   typed <code>xsd:double</code> (e.g. <code>1.5e3</code> gives <code>"1.5e3"^^xsd:double</code>).</li>
+<li>A numeral that is in neither lexical space is typed <code>xsd:string</code>. This does not happen for a
+   well-formed JSON text.</li>
+</ol>
+<p>The value of an <code>xsd:double</code> literal is the nearest double-precision value to the number, so it may
+differ from the number written in the source (e.g. <code>2E-4</code>). The lexical form keeps the number as
+written.</p>
+</section>
+</section>
+<section id="Options"><div class="header-wrapper"><h2 id="x5-options"><bdi class="secno">5. </bdi>Options</h2><a class="self-link" href="#Options" aria-label="Permalink for Section 5."></a></div>
+
+<p>These options are terms of the <a href="engine.html">Engine vocabulary</a> and apply only to this mapping.</p>
+<table class="model">
+<thead>
+<tr>
+<th>Term</th>
+<th>Range</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span id="json.include-null-values"></span><code>fxe:json.include-null-values</code></td>
+<td><code>xsd:boolean</code></td>
+<td>false</td>
+<td>Produce a triple for members and elements whose value is <code>null</code>.</td>
+</tr>
+<tr>
+<td><span id="json.path"></span><code>fxe:json.path</code></td>
+<td><code>xsd:string</code></td>
+<td>—</td>
+<td>A JSONPath query [<a href="#bib-rfc9535">RFC9535</a>]. The root container holds the nodes selected by the query in numbered slots, in the order they are selected.</td>
+</tr>
+<tr>
+<td><span id="json.literalize"></span><code>fxe:json.literalize</code></td>
+<td><code>xsd:string</code></td>
+<td>—</td>
+<td>A member name. The values of members with this name are represented as a single literal holding their JSON text, instead of as containers.</td>
+</tr>
+</tbody>
+</table>
+<p>The reference implementation accepts several values for <code>json.path</code> and <code>json.literalize</code> as
+numbered options (<code>json.path.1</code>, <code>json.path.2</code>, …). Whether this form is kept is open.</p>
+</section>
+<section class="informative" id="Examples"><div class="header-wrapper"><h2 id="x6-examples"><bdi class="secno">6. </bdi>Examples</h2><a class="self-link" href="#Examples" aria-label="Permalink for Section 6."></a></div><p><em>This section is non-normative.</em></p>
+
+<section id="ExampleBase"><div class="header-wrapper"><h3 id="x6-1-object"><bdi class="secno">6.1 </bdi>Object</h3><a class="self-link" href="#ExampleBase" aria-label="Permalink for Section 6.1"></a></div>
+
+<p>Input:</p>
+<div class="example" id="example-1">
+        <div class="marker">
+    <a class="self-link" href="#example-1">Example<bdi> 1</bdi></a>
+  </div> <pre aria-busy="false"><code class="hljs json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Alice"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"age"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">30</span>
+<span class="hljs-punctuation">}</span></code></pre>
+      </div>
+<p>Façade-X representation:</p>
+<pre class="turtle" aria-busy="false"><code class="hljs">@prefix fx:  &lt;http://sparql.xyz/facade-x/ns/&gt; .
+@prefix xyz: &lt;http://sparql.xyz/facade-x/data/&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+[] a fx:Root ;
+   xyz:name "Alice" ;
+   xyz:age  "30"^^xsd:decimal .</code></pre>
+</section>
+<section id="ExampleNested"><div class="header-wrapper"><h3 id="x6-2-nested-objects-and-arrays"><bdi class="secno">6.2 </bdi>Nested objects and arrays</h3><a class="self-link" href="#ExampleNested" aria-label="Permalink for Section 6.2"></a></div>
+
+<p>Input:</p>
+<div class="example" id="example-2">
+        <div class="marker">
+    <a class="self-link" href="#example-2">Example<bdi> 2</bdi></a>
+  </div> <pre aria-busy="false"><code class="hljs css">{
+  "<span class="hljs-selector-tag">object</span>": { "nested": { "deep": <span class="hljs-string">"value"</span> } },
+  "array": [<span class="hljs-number">1</span>, <span class="hljs-string">"two"</span>, <span class="hljs-number">3.0</span>, true, null, {"key": <span class="hljs-string">"value"</span>}, <span class="hljs-selector-attr">[<span class="hljs-string">"nested"</span>, <span class="hljs-string">"array"</span>]</span>, <span class="hljs-selector-attr">[]</span>, {}],
+  "emptyObject": {},
+  "key with spaces": <span class="hljs-string">"spaces in key"</span>
+}</code></pre>
+      </div>
+<p>Façade-X representation:</p>
+<pre class="turtle" aria-busy="false"><code class="hljs">@prefix fx:  &lt;http://sparql.xyz/facade-x/ns/&gt; .
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix xyz: &lt;http://sparql.xyz/facade-x/data/&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+[] a fx:Root ;
+   xyz:object [ xyz:nested [ xyz:deep "value" ] ] ;
+   xyz:array [
+       rdf:_1 "1"^^xsd:decimal ;
+       rdf:_2 "two" ;
+       rdf:_3 "3.0"^^xsd:decimal ;
+       rdf:_4 true ;
+       rdf:_6 [ xyz:key "value" ] ;
+       rdf:_7 [ rdf:_1 "nested" ; rdf:_2 "array" ] ;
+       rdf:_8 [ ] ;
+       rdf:_9 [ ]
+   ] ;
+   xyz:emptyObject [ ] ;
+   &lt;http://sparql.xyz/facade-x/data/key%20with%20spaces&gt; "spaces in key" .</code></pre>
+<p>The <code>null</code> element produces no triple, so there is no <code>rdf:_5</code>.</p>
+</section>
+<section id="ExampleNumbers"><div class="header-wrapper"><h3 id="x6-3-numbers"><bdi class="secno">6.3 </bdi>Numbers</h3><a class="self-link" href="#ExampleNumbers" aria-label="Permalink for Section 6.3"></a></div>
+
+<p>Input:</p>
+<div class="example" id="example-3">
+        <div class="marker">
+    <a class="self-link" href="#example-3">Example<bdi> 3</bdi></a>
+  </div> <pre aria-busy="false"><code class="hljs json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"integer"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">42</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"negativeZero"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">-0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"decimal"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3.0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"exponent"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1.5e3</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"negativeExponent"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2E-4</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"bigInteger"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12345678901234567890</span>
+<span class="hljs-punctuation">}</span></code></pre>
+      </div>
+<p>Façade-X representation:</p>
+<pre class="turtle" aria-busy="false"><code class="hljs">@prefix fx:  &lt;http://sparql.xyz/facade-x/ns/&gt; .
+@prefix xyz: &lt;http://sparql.xyz/facade-x/data/&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+[] a fx:Root ;
+   xyz:integer          "42"^^xsd:decimal ;
+   xyz:negativeZero     "-0"^^xsd:decimal ;
+   xyz:decimal          "3.0"^^xsd:decimal ;
+   xyz:exponent         "1.5e3"^^xsd:double ;
+   xyz:negativeExponent "2E-4"^^xsd:double ;
+   xyz:bigInteger       "12345678901234567890"^^xsd:decimal .</code></pre>
+</section>
+<section id="ExampleQuery"><div class="header-wrapper"><h3 id="x6-4-query"><bdi class="secno">6.4 </bdi>Query</h3><a class="self-link" href="#ExampleQuery" aria-label="Permalink for Section 6.4"></a></div>
+
+<p>Listing each element of the <code>array</code> member, with its position:</p>
+<div class="example" id="example-4">
+        <div class="marker">
+    <a class="self-link" href="#example-4">Example<bdi> 4</bdi></a>
+  </div> <pre aria-busy="false"><code class="hljs css">PREFIX fx:   &lt;http://sparql.xyz/facade-x/ns/&gt;
+PREFIX fxe:  &lt;http://sparql.xyz/facade-x/engine/&gt;
+PREFIX xyz:  &lt;http://sparql.xyz/facade-x/data/&gt;
+
+SELECT ?slot ?value WHERE {
+  SERVICE &lt;<span class="hljs-attribute">x</span>-sparql-anything:&gt; {
+    fx:properties fxe:location <span class="hljs-string">"features.json"</span> .
+    ?root a fx:Root ;
+          xyz:array ?array .
+    ?array ?slot ?value .
+  }
+}</code></pre>
+      </div>
+</section>
+</section>
+<section class="informative" id="References"><div class="header-wrapper"><h2 id="x7-references"><bdi class="secno">7. </bdi>References</h2><a class="self-link" href="#References" aria-label="Permalink for Section 7."></a></div><p><em>This section is non-normative.</em></p>
+
+<dt id="bib-rfc8259">[RFC8259]</dt>
+<dd><a href="https://www.rfc-editor.org/rfc/rfc8259">The JavaScript Object Notation (JSON) Data Interchange Format</a>. T. Bray. IETF. December 2017. Internet Standard.</dd>
+<dt id="bib-rfc6839">[RFC6839]</dt>
+<dd><a href="https://www.rfc-editor.org/rfc/rfc6839">Additional Media Type Structured Syntax Suffixes</a>. T. Hansen; A. Melnikov. IETF. January 2013. Informational.</dd>
+<dt id="bib-rfc9535">[RFC9535]</dt>
+<dd><a href="https://www.rfc-editor.org/rfc/rfc9535">JSONPath: Query Expressions for JSON</a>. S. Gössner; G. Normington; C. Bormann. IETF. February 2024. Proposed Standard.</dd>
+<dt id="bib-xmlschema11-2">[XMLSCHEMA11-2]</dt>
+<dd><a href="https://www.w3.org/TR/xmlschema11-2/">W3C XML Schema Definition Language (XSD) 1.1 Part 2: Datatypes</a>. David Peterson; Shudi Gao; Ashok Malhotra; C. M. Sperberg-McQueen; Henry S. Thompson. W3C. 5 April 2012. W3C Recommendation.</dd>
+<dt id="bib-sa-json">[sparql-anything-json]</dt>
+<dd><a href="https://sparql-anything.readthedocs.io/stable/formats/JSON/">SPARQL Anything — JSON</a>.</dd>
+</section>
+
+
+
+
+<p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
+  </p><script id="respec-highlight-vars">(() => {
+// @ts-check
+
+if (document.respec) {
+  document.respec.ready.then(setupVarHighlighter);
+} else {
+  setupVarHighlighter();
+}
+
+function setupVarHighlighter() {
+  document
+    .querySelectorAll("var")
+    .forEach(varElem => varElem.addEventListener("click", highlightListener));
+}
+
+/**
+ * @param {MouseEvent} ev
+ */
+function highlightListener(ev) {
+  ev.stopPropagation();
+  const varElem = /** @type {HTMLElement} */ (ev.target);
+  const hightligtedElems = highlightVars(varElem);
+  const resetListener = () => {
+    const hlColor = getHighlightColor(varElem);
+    hightligtedElems.forEach(el => removeHighlight(el, hlColor));
+    [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
+  };
+  if (hightligtedElems.length) {
+    document.body.addEventListener("click", resetListener, { once: true });
+  }
+}
+
+// availability of highlight colors. colors from var.css
+const HL_COLORS = new Map([
+  ["respec-hl-c1", true],
+  ["respec-hl-c2", true],
+  ["respec-hl-c3", true],
+  ["respec-hl-c4", true],
+  ["respec-hl-c5", true],
+  ["respec-hl-c6", true],
+  ["respec-hl-c7", true],
+]);
+
+/**
+ * @param {HTMLElement} target
+ */
+function getHighlightColor(target) {
+  // return current colors if applicable
+  const { value } = target.classList;
+  const re = /respec-hl-\w+/;
+  const activeClass = re.test(value) && value.match(re);
+  if (activeClass) return activeClass[0];
+
+  // first color preference
+  if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
+
+  // otherwise get some other available color
+  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
+}
+
+/**
+ * @param {HTMLElement} varElem
+ */
+function highlightVars(varElem) {
+  const textContent = norm(varElem.textContent);
+  const parent = /** @type {HTMLElement} */ (
+    varElem.closest(".algorithm, section")
+  );
+  if (!parent) return [];
+  const highlightColor = getHighlightColor(varElem);
+
+  const varsToHighlight = [...parent.querySelectorAll("var")].filter(
+    el =>
+      norm(el.textContent) === textContent &&
+      el.closest(".algorithm, section") === parent
+  );
+
+  // update availability of highlight color
+  const colorStatus = varsToHighlight[0].classList.contains("respec-hl");
+  HL_COLORS.set(highlightColor, colorStatus);
+
+  // highlight vars
+  if (colorStatus) {
+    varsToHighlight.forEach(el => removeHighlight(el, highlightColor));
+    return [];
+  } else {
+    varsToHighlight.forEach(el => addHighlight(el, highlightColor));
+  }
+  return varsToHighlight;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @param {string} highlightColor
+ */
+function removeHighlight(el, highlightColor) {
+  el.classList.remove("respec-hl", highlightColor);
+  // clean up empty class attributes so they don't come in export
+  if (!el.classList.length) el.removeAttribute("class");
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {string} highlightColor
+ */
+function addHighlight(elem, highlightColor) {
+  elem.classList.add("respec-hl", highlightColor);
+}
+
+/**
+ * Same as `norm` from src/core/utils, but our build process doesn't allow
+ * imports in runtime scripts, so duplicated here.
+ * @param {string} str
+ */
+function norm(str) {
+  return str.trim().replace(/\s+/g, " ");
+}
+})()</script><script id="respec-dfn-panel">(() => {
+// @ts-check
+if (document.respec) {
+  document.respec.ready.then(setupPanel);
+} else {
+  setupPanel();
+}
+
+function setupPanel() {
+  const listener = panelListener();
+  document.body.addEventListener("keydown", listener);
+  document.body.addEventListener("click", listener);
+}
+
+function panelListener() {
+  /** @type {HTMLElement | null} */
+  let panel = null;
+  /**
+   * @param {KeyboardEvent|MouseEvent} event
+   */
+  return event => {
+    const { target, type } = event;
+
+    if (!(target instanceof HTMLElement)) return;
+
+    // For keys, we only care about Enter key to activate the panel
+    // otherwise it's activated via a click.
+    if (
+      type === "keydown" &&
+      /** @type {KeyboardEvent} */ (event).key !== "Enter"
+    )
+      return;
+
+    const action = deriveAction(event);
+
+    switch (action) {
+      case "show": {
+        hidePanel(panel);
+        /** @type {HTMLElement | null} */
+        const dfn = target.closest("dfn, .index-term");
+        if (!dfn?.id) break;
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        if (!panel) break;
+        const coords = deriveCoordinates(
+          /** @type {MouseEvent|KeyboardEvent} */ (event)
+        );
+        displayPanel(dfn, panel, coords);
+        break;
+      }
+      case "dock": {
+        if (panel) {
+          panel.style.left = "";
+          panel.style.top = "";
+          panel.classList.add("docked");
+        }
+        break;
+      }
+      case "hide": {
+        hidePanel(panel);
+        panel = null;
+        break;
+      }
+    }
+  };
+}
+
+/**
+ * @param {MouseEvent|KeyboardEvent} event
+ */
+function deriveCoordinates(event) {
+  const target = /** @type HTMLElement */ (event.target);
+
+  // We prevent synthetic AT clicks from putting
+  // the dialog in a weird place. The AT events sometimes
+  // lack coordinates, so they have clientX/Y = 0
+  const rect = target.getBoundingClientRect();
+  if (
+    event instanceof MouseEvent &&
+    event.clientX >= rect.left &&
+    event.clientY >= rect.top
+  ) {
+    // The event probably happened inside the bounding rect...
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  // Offset to the middle of the element
+  const x = rect.x + rect.width / 2;
+  // Placed at the bottom of the element
+  const y = rect.y + rect.height;
+  return { x, y };
+}
+
+/**
+ * @param {Event} event
+ */
+function deriveAction(event) {
+  const target = /** @type {HTMLElement} */ (event.target);
+  const hitALink = !!target.closest("a");
+  if (target.closest("dfn:not([data-cite]), .index-term")) {
+    return hitALink ? "none" : "show";
+  }
+  if (target.closest(".dfn-panel")) {
+    if (hitALink) {
+      return target.classList.contains("self-link") ? "hide" : "dock";
+    }
+
+    const panel = /** @type {HTMLElement} */ (target.closest(".dfn-panel"));
+    return panel.classList.contains("docked") ? "hide" : "none";
+  }
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
+    return "hide";
+  }
+  return "none";
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {HTMLElement} panel
+ * @param {{ x: number, y: number }} clickPosition
+ */
+function displayPanel(dfn, panel, { x, y }) {
+  panel.hidden = false;
+  // distance (px) between edge of panel and the pointing triangle (caret)
+  const MARGIN = 20;
+
+  const dfnRects = dfn.getClientRects();
+  // Find the `top` offset when the `dfn` can be spread across multiple lines
+  let closestTop = 0;
+  let minDiff = Infinity;
+  for (const rect of dfnRects) {
+    const { top, bottom } = rect;
+    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
+    if (diffFromClickY < minDiff) {
+      minDiff = diffFromClickY;
+      closestTop = top;
+    }
+  }
+
+  const top = window.scrollY + closestTop + dfnRects[0].height;
+  const left = x - MARGIN;
+  panel.style.left = `${left}px`;
+  panel.style.top = `${top}px`;
+
+  // Find if the panel is flowing out of the window
+  const panelRect = panel.getBoundingClientRect();
+  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
+  if (panelRect.right > SCREEN_WIDTH) {
+    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
+    const newCaretOffset = left - newLeft;
+    panel.style.left = `${newLeft}px`;
+    /** @type {HTMLElement | null} */
+    const caret = panel.querySelector(".caret");
+    if (caret) caret.style.left = `${newCaretOffset}px`;
+  }
+
+  // As it's a dialog, we trap focus.
+  // TODO: when <dialog> becomes a implemented, we should really
+  // use that.
+  trapFocus(panel, dfn);
+}
+
+/**
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function trapFocus(panel, dfn) {
+  /** @type NodeListOf<HTMLAnchorElement> elements */
+  const anchors = panel.querySelectorAll("a[href]");
+  // No need to trap focus
+  if (!anchors.length) return;
+
+  // Move focus to first anchor element
+  const first = anchors.item(0);
+  first.focus();
+
+  const trapListener = createTrapListener(anchors, panel, dfn);
+  panel.addEventListener("keydown", trapListener);
+
+  // Hiding the panel releases the trap
+  const mo = new MutationObserver(records => {
+    const [record] = records;
+    const target = /** @type HTMLElement */ (record.target);
+    if (target.hidden) {
+      panel.removeEventListener("keydown", trapListener);
+      mo.disconnect();
+    }
+  });
+  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+}
+
+/**
+ *
+ * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function createTrapListener(anchors, panel, dfn) {
+  const lastIndex = anchors.length - 1;
+  let currentIndex = 0;
+  /**
+   * @param {KeyboardEvent} event
+   */
+  return event => {
+    switch (event.key) {
+      // Hitting "Tab" traps us in a nice loop around elements.
+      case "Tab": {
+        event.preventDefault();
+        currentIndex += event.shiftKey ? -1 : +1;
+        if (currentIndex < 0) {
+          currentIndex = lastIndex;
+        } else if (currentIndex > lastIndex) {
+          currentIndex = 0;
+        }
+        anchors.item(currentIndex).focus();
+        break;
+      }
+
+      // Hitting "Enter" on an anchor releases the trap.
+      case "Enter":
+        hidePanel(panel);
+        break;
+
+      // Hitting "Escape" returns focus to dfn.
+      case "Escape":
+        hidePanel(panel);
+        dfn.focus();
+        return;
+    }
+  };
+}
+
+/** @param {HTMLElement | null} panel */
+function hidePanel(panel) {
+  if (!panel) return;
+  panel.hidden = true;
+  panel.classList.remove("docked");
+}
+})()</script><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>

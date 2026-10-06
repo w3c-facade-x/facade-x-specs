@@ -1,0 +1,1641 @@
+<!DOCTYPE html><html lang="en" data-fx-version="0.1"><head>
+<meta charset="utf-8">
+<meta name="generator" content="ReSpec 37.4.1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<style>
+dfn{cursor:pointer}
+.dfn-panel{position:absolute;z-index:35;min-width:300px;max-width:500px;padding:.5em .75em;margin-top:.6em;font-family:"Helvetica Neue",sans-serif;font-size:small;background:#fff;background:var(--indextable-hover-bg,#fff);color:#000;color:var(--text,#000);box-shadow:0 1em 3em -.4em rgba(0,0,0,.3),0 0 1px 1px rgba(0,0,0,.05);box-shadow:0 1em 3em -.4em var(--tocsidebar-shadow,rgba(0,0,0,.3)),0 0 1px 1px var(--tocsidebar-shadow,rgba(0,0,0,.05));border-radius:2px}
+.dfn-panel:not(.docked)>.caret{position:absolute;top:-9px}
+.dfn-panel:not(.docked)>.caret::after,.dfn-panel:not(.docked)>.caret::before{content:"";position:absolute;border:10px solid transparent;border-top:0;border-bottom:10px solid #fff;border-bottom-color:var(--indextable-hover-bg,#fff);top:0}
+.dfn-panel:not(.docked)>.caret::before{border-bottom:9px solid #a2a9b1;border-bottom-color:var(--indextable-hover-bg,#a2a9b1)}
+.dfn-panel *{margin:0}
+.dfn-panel b{display:block;color:#000;color:var(--text,#000);margin-top:.25em}
+.dfn-panel ul a[href]{color:#333;color:var(--text,#333)}
+.dfn-panel>div{display:flex}
+.dfn-panel a.self-link{font-weight:700;margin-right:auto}
+.dfn-panel .marker{padding:.1em;margin-left:.5em;border-radius:.2em;text-align:center;white-space:nowrap;font-size:90%;color:#040b1c}
+.dfn-panel .marker.dfn-exported{background:#d1edfd;box-shadow:0 0 0 .125em #1ca5f940}
+.dfn-panel .marker.idl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel .marker.cddl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel a:not(:hover){text-decoration:none!important;border-bottom:none!important}
+.dfn-panel a[href]:hover{border-bottom-width:1px}
+.dfn-panel ul{padding:0}
+.dfn-panel li{margin-left:1em}
+.dfn-panel.docked{position:fixed;left:.5em;top:unset;bottom:2em;margin:0 auto;max-width:calc(100vw - .75em * 2 - .5em - .2em * 2);max-height:30vh;overflow:auto}
+</style>
+  
+  
+<title>Façade-X Overview</title>
+
+  
+  
+  
+<script>
+    // On a release snapshot, point to the latest release when a newer one
+    // exists. The banner has class "remove" so that the ReSpec export used to
+    // freeze a release does not keep it if it shows up at export time.
+    window.addEventListener('load', function () {
+      var version = document.documentElement.dataset.fxVersion;
+      if (!version || version === 'dev') return;
+      fetch('https://w3c-facade-x.github.io/facade-x-specs/versions.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (v) {
+          if (!v || !v.latest || v.latest === version) return;
+          var page = location.pathname.split('/').pop() || 'index.html';
+          var note = document.createElement('p');
+          note.className = 'remove fx-outdated';
+          note.innerHTML = 'This is version ' + version + ' of this document. ' +
+            'The latest release is <a href="https://w3c-facade-x.github.io/facade-x-specs/' +
+            page + '">version ' + v.latest + '</a>.';
+          document.body.insertBefore(note, document.body.firstChild);
+        })
+        .catch(function () {});
+    });
+  </script>
+  
+<script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      },
+      startup: { typeset: false },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'code'] },
+    };
+  </script>
+  
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer=""></script>
+  
+<script>
+    window.addEventListener('load', function () {
+      if (!window.MathJax || !window.MathJax.startup) return;
+      window.MathJax.startup.promise.then(function () {
+        document.querySelectorAll('pre.math').forEach(function (pre) {
+          var text = pre.textContent.trim();
+          if (!text) return;
+          var math = text.startsWith('\\[') && text.endsWith('\\]')
+            ? text
+            : '\\[' + text + '\\]';
+          var block = document.createElement('div');
+          block.textContent = math;
+          pre.replaceWith(block);
+        });
+        window.MathJax.typesetPromise();
+      });
+    });
+  </script>
+
+  
+
+    
+<style>
+
+      .turtle .hll {
+        background-color: #ffffcc
+      }
+    
+      .turtle .c {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment */
+    
+      .turtle .err {
+        border: 1px solid #FF0000
+      }
+      /* Error */
+    
+      .turtle .k {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword */
+    
+      .turtle .o {
+        color: #666666
+      }
+      /* Operator */
+    
+      .turtle .ch {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Hashbang */
+    
+      .turtle .cm {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Multiline */
+    
+      .turtle .cp {
+        color: #BC7A00
+      }
+      /* Comment.Preproc */
+    
+      .turtle .cpf {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.PreprocFile */
+    
+      .turtle .c1 {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Single */
+    
+      .turtle .cs {
+        color: #408080;
+        font-style: italic
+      }
+      /* Comment.Special */
+    
+      .turtle .gd {
+        color: #A00000
+      }
+      /* Generic.Deleted */
+    
+      .turtle .ge {
+        font-style: italic
+      }
+      /* Generic.Emph */
+    
+      .turtle .gr {
+        color: #FF0000
+      }
+      /* Generic.Error */
+    
+      .turtle .gh {
+        color: #000080;
+        font-weight: bold
+      }
+      /* Generic.Heading */
+    
+      .turtle .gi {
+        color: #00A000
+      }
+      /* Generic.Inserted */
+    
+      .turtle .go {
+        color: #888888
+      }
+      /* Generic.Output */
+    
+      .turtle .gp {
+        color: #000080;
+        font-weight: bold
+      }
+      /* Generic.Prompt */
+    
+      .turtle .gs {
+        font-weight: bold
+      }
+      /* Generic.Strong */
+    
+      .turtle .gu {
+        color: #800080;
+        font-weight: bold
+      }
+      /* Generic.Subheading */
+    
+      .turtle .gt {
+        color: #0044DD
+      }
+      /* Generic.Traceback */
+    
+      .turtle .kc {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Constant */
+    
+      .turtle .kd {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Declaration */
+    
+      .turtle .kn {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Namespace */
+    
+      .turtle .kp {
+        color: #008000
+      }
+      /* Keyword.Pseudo */
+    
+      .turtle .kr {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Keyword.Reserved */
+    
+      .turtle .kt {
+        color: #B00040
+      }
+      /* Keyword.Type */
+    
+      .turtle .m {
+        color: #666666
+      }
+      /* Literal.Number */
+    
+      .turtle .s {
+        color: #BA2121
+      }
+      /* Literal.String */
+    
+      .turtle .na {
+        color: #7D9029
+      }
+      /* Name.Attribute */
+    
+      .turtle .nb {
+        color: #008000
+      }
+      /* Name.Builtin */
+    
+      .turtle .nc {
+        color: #0000FF;
+        font-weight: bold
+      }
+      /* Name.Class */
+    
+      .turtle .no {
+        color: #880000
+      }
+      /* Name.Constant */
+    
+      .turtle .nd {
+        color: #AA22FF
+      }
+      /* Name.Decorator */
+    
+      .turtle .ni {
+        color: #999999;
+        font-weight: bold
+      }
+      /* Name.Entity */
+    
+      .turtle .ne {
+        color: #D2413A;
+        font-weight: bold
+      }
+      /* Name.Exception */
+    
+      .turtle .nf {
+        color: #0000FF
+      }
+      /* Name.Function */
+    
+      .turtle .nl {
+        color: #A0A000
+      }
+      /* Name.Label */
+    
+      .turtle .nn {
+        color: #0000FF;
+        font-weight: bold
+      }
+      /* Name.Namespace */
+    
+      .turtle .nt {
+        color: #008000;
+        font-weight: bold
+      }
+      /* Name.Tag */
+    
+      .turtle .nv {
+        color: #19177C
+      }
+      /* Name.Variable */
+    
+      .turtle .ow {
+        color: #AA22FF;
+        font-weight: bold
+      }
+      /* Operator.Word */
+    
+      .turtle .w {
+        color: #bbbbbb
+      }
+      /* Text.Whitespace */
+    
+      .turtle .mb {
+        color: #666666
+      }
+      /* Literal.Number.Bin */
+    
+      .turtle .mf {
+        color: #666666
+      }
+      /* Literal.Number.Float */
+    
+      .turtle .mh {
+        color: #666666
+      }
+      /* Literal.Number.Hex */
+    
+      .turtle .mi {
+        color: #666666
+      }
+      /* Literal.Number.Integer */
+    
+      .turtle .mo {
+        color: #666666
+      }
+      /* Literal.Number.Oct */
+    
+      .turtle .sa {
+        color: #BA2121
+      }
+      /* Literal.String.Affix */
+    
+      .turtle .sb {
+        color: #BA2121
+      }
+      /* Literal.String.Backtick */
+    
+      .turtle .sc {
+        color: #BA2121
+      }
+      /* Literal.String.Char */
+    
+      .turtle .dl {
+        color: #BA2121
+      }
+      /* Literal.String.Delimiter */
+    
+      .turtle .sd {
+        color: #BA2121;
+        font-style: italic
+      }
+      /* Literal.String.Doc */
+    
+      .turtle .s2 {
+        color: #BA2121
+      }
+      /* Literal.String.Double */
+    
+      .turtle .se {
+        color: #BB6622;
+        font-weight: bold
+      }
+      /* Literal.String.Escape */
+    
+      .turtle .sh {
+        color: #BA2121
+      }
+      /* Literal.String.Heredoc */
+    
+      .turtle .si {
+        color: #BB6688;
+        font-weight: bold
+      }
+      /* Literal.String.Interpol */
+    
+      .turtle .sx {
+        color: #008000
+      }
+      /* Literal.String.Other */
+    
+      .turtle .sr {
+        color: #BB6688
+      }
+      /* Literal.String.Regex */
+    
+      .turtle .s1 {
+        color: #BA2121
+      }
+      /* Literal.String.Single */
+    
+      .turtle .ss {
+        color: #19177C
+      }
+      /* Literal.String.Symbol */
+    
+      .turtle .bp {
+        color: #008000
+      }
+      /* Name.Builtin.Pseudo */
+    
+      .turtle .fm {
+        color: #0000FF
+      }
+      /* Name.Function.Magic */
+    
+      .turtle .vc {
+        color: #19177C
+      }
+      /* Name.Variable.Class */
+    
+      .turtle .vg {
+        color: #19177C
+      }
+      /* Name.Variable.Global */
+    
+      .turtle .vi {
+        color: #19177C
+      }
+      /* Name.Variable.Instance */
+    
+      .turtle .vm {
+        color: #19177C
+      }
+      /* Name.Variable.Magic */
+    
+      .turtle .il {
+        color: #666666
+      }
+      /* Literal.Number.Integer.Long */
+    
+</style>
+    
+<style>
+
+      .model {
+        empty-cells: show;
+        border-collapse: collapse;
+        margin-bottom: .5ex;
+        border: 1px solid black;
+        width: 100%;
+      }
+    
+      .model th {
+        padding: 3px;
+        border: 1px solid #404040;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+      }
+    
+      .model td {
+        padding: 5px;
+        border: 1px solid #404040;
+        text-align: left;
+        font-family: sans-serif;
+      }
+    
+      .termtoc {
+        border: 1px dashed black;
+        background: #f0f0f0;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        font-family: sans-serif;
+        padding: 5px;
+      }
+    
+      .term {
+        /*border: 1px solid black;*/
+        margin-left: 10px;
+        padding: 5px;
+        margin-bottom: 5px;
+      }
+    
+      .term h4 {
+        font-family: sans-serif;
+        color: #6060C0;
+        padding-left: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid black;
+      }
+    
+      .tech {
+        border-top: 1px dashed black;
+        border-bottom: 1px dashed black;
+        background: #f0f0f0;
+        margin: 5px;
+      }
+    
+      .example-padding {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    
+      .tech ul {
+        padding-left: 10px;
+      }
+    
+      .tech ul li {
+        list-style: none;
+        padding-bottom: 2px;
+        padding-left: 0px;
+        margin-left: 0px;
+      }
+    
+      .tech ul li {
+        font-family: sans-serif;
+        font-weight: normal;
+      }
+    
+      .diagram_img {
+        text-align: center;
+      }
+    
+</style>
+    
+<style>
+
+      .fx-outdated {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        margin: 0 0 1em;
+        padding: .5em 1em;
+        background: #fff3cd;
+        border: 1px solid #e0c060;
+        font-family: sans-serif;
+      }
+      h3 {
+        margin-top: 1rem;
+      }
+
+      figure img {
+        max-width: 100%;
+      }
+
+      pre.turtle,
+      pre.example {
+        background: #f7f7f9;
+        border: 1px solid #e1e1e8;
+        padding: 8px;
+        overflow-x: auto;
+      }
+    
+</style>
+
+<style id="respec-mainstyle">
+@keyframes pop{
+0%{transform:scale(1,1)}
+25%{transform:scale(1.25,1.25);opacity:.75}
+100%{transform:scale(1,1)}
+}
+a.internalDFN{color:inherit;border-bottom:1px solid #99c;text-decoration:none}
+a.externalDFN{color:inherit;border-bottom:1px dotted #ccc;text-decoration:none}
+a.bibref{text-decoration:none}
+.respec-offending-element:target{animation:pop .25s ease-in-out 0s 1}
+.respec-offending-element,a[href].respec-offending-element{text-decoration:red wavy underline}
+@supports not (text-decoration:red wavy underline){
+.respec-offending-element:not(pre){display:inline-block}
+.respec-offending-element{background:url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x}
+}
+#references :target{background:#eaf3ff;animation:pop .4s ease-in-out 0s 1}
+@media (prefers-color-scheme:dark){
+#references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+}
+body:has(input[name=color-scheme][value=dark]:checked) #references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+cite .bibref{font-style:italic}
+a[href].orcid{padding-left:4px;padding-right:4px}
+a[href].orcid>svg{margin-bottom:-2px}
+ol.tof,ul.tof{list-style:none outside none}
+.caption{margin-top:.5em;font-style:italic}
+#issue-summary>ul{column-count:2}
+#issue-summary li{list-style:none}
+details.respec-tests-details{margin-left:1em;display:inline-block;vertical-align:top}
+details.respec-tests-details>*{padding-right:2em}
+details.respec-tests-details[open]{z-index:999999;position:absolute;border:thin solid #cad3e2;border-radius:.3em;background-color:#fff;padding-bottom:.5em}
+details.respec-tests-details[open]>summary{border-bottom:thin solid #cad3e2;padding-left:1em;margin-bottom:1em;line-height:2em}
+details.respec-tests-details>ul{width:100%;margin-top:-.3em}
+details.respec-tests-details>li{padding-left:1em}
+.self-link:hover{opacity:1;text-decoration:none;background-color:transparent}
+aside.example .marker>a.self-link{color:inherit}
+.header-wrapper{display:flex;align-items:baseline}
+:is(h2,h3,h4,h5,h6):not(:where(#toc>h2,#abstract>h2,#sotd>h2,.head>h2)):has(+a.self-link){position:relative;left:-.5em}
+:is(h2,h3,h4,h5,h6):not(:where(#toch2))+a.self-link{color:inherit;order:-1;position:relative;left:-1.1em;font-size:1rem;opacity:.8;text-decoration:none}
+:is(h2,h3,h4,h5,h6)+a.self-link::before{content:"§"}
+:is(h2,h3)+a.self-link{top:-.2em}
+:is(h2,h3)+a.self-link::before{color:var(--heading-text)}
+@media (max-width:767px){
+dd{margin-left:0}
+}
+@media print{
+.removeOnSave{display:none}
+}
+body:has(input[name=color-scheme][value=light]:checked),head:not(:has(meta[name=color-scheme][content~=dark]))+body{color-scheme:light}
+body:has(input[name=color-scheme][value=dark]:checked){color-scheme:dark}
+</style>
+<style type="text/css">
+.CtxtMenu_InfoClose {  top:.2em; right:.2em;}
+.CtxtMenu_InfoContent {  overflow:auto; text-align:left; font-size:80%;  padding:.4em .6em; border:1px inset; margin:1em 0px;  max-height:20em; max-width:30em; background-color:#EEEEEE;  white-space:normal;}
+.CtxtMenu_Info.CtxtMenu_MousePost {outline:none;}
+.CtxtMenu_Info {  position:fixed; left:50%; width:auto; text-align:center;  border:3px outset; padding:1em 2em; background-color:#DDDDDD;  color:black;  cursor:default; font-family:message-box; font-size:120%;  font-style:normal; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 15px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius:15px;               /* Safari and Chrome */  -moz-border-radius:15px;                  /* Firefox */  -khtml-border-radius:15px;                /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */  filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color="gray", Positive="true"); /* IE */}
+
+</style>
+<style type="text/css">
+.CtxtMenu_MenuClose {  position:absolute;  cursor:pointer;  display:inline-block;  border:2px solid #AAA;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  font-family: "Courier New", Courier;  font-size:24px;  color:#F0F0F0}
+.CtxtMenu_MenuClose span {  display:block; background-color:#AAA; border:1.5px solid;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  line-height:0;  padding:8px 0 6px     /* may need to be browser-specific */}
+.CtxtMenu_MenuClose:hover {  color:white!important;  border:2px solid #CCC!important}
+.CtxtMenu_MenuClose:hover span {  background-color:#CCC!important}
+.CtxtMenu_MenuClose:hover:focus {  outline:none}
+
+</style>
+<style type="text/css">
+.CtxtMenu_Menu {  position:absolute;  background-color:white;  color:black;  width:auto; padding:5px 0px;  border:1px solid #CCCCCC; margin:0; cursor:default;  font: menu; text-align:left; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 5px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius: 5px;             /* Safari and Chrome */  -moz-border-radius: 5px;                /* Firefox */  -khtml-border-radius: 5px;              /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */}
+.CtxtMenu_MenuItem {  padding: 1px 2em;  background:transparent;}
+.CtxtMenu_MenuArrow {  position:absolute; right:.5em; padding-top:.25em; color:#666666;  font-family: null; font-size: .75em}
+.CtxtMenu_MenuActive .CtxtMenu_MenuArrow {color:white}
+.CtxtMenu_MenuArrow.CtxtMenu_RTL {left:.5em; right:auto}
+.CtxtMenu_MenuCheck {  position:absolute; left:.7em;  font-family: null}
+.CtxtMenu_MenuCheck.CtxtMenu_RTL { right:.7em; left:auto }
+.CtxtMenu_MenuRadioCheck {  position:absolute; left: .7em;}
+.CtxtMenu_MenuRadioCheck.CtxtMenu_RTL {  right: .7em; left:auto}
+.CtxtMenu_MenuInputBox {  padding-left: 1em; right:.5em; color:#666666;  font-family: null;}
+.CtxtMenu_MenuInputBox.CtxtMenu_RTL {  left: .1em;}
+.CtxtMenu_MenuComboBox {  left:.1em; padding-bottom:.5em;}
+.CtxtMenu_MenuSlider {  left: .1em;}
+.CtxtMenu_SliderValue {  position:absolute; right:.1em; padding-top:.25em; color:#333333;  font-size: .75em}
+.CtxtMenu_SliderBar {  outline: none; background: #d3d3d3}
+.CtxtMenu_MenuLabel {  padding: 1px 2em 3px 1.33em;  font-style:italic}
+.CtxtMenu_MenuRule {  border-top: 1px solid #DDDDDD;  margin: 4px 3px;}
+.CtxtMenu_MenuDisabled {  color:GrayText}
+.CtxtMenu_MenuActive {  background-color: #606872;  color: white;}
+.CtxtMenu_MenuDisabled:focus {  background-color: #E8E8E8}
+.CtxtMenu_MenuLabel:focus {  background-color: #E8E8E8}
+.CtxtMenu_ContextMenu:focus {  outline:none}
+.CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus {  outline:none}
+.CtxtMenu_SelectionMenu {  position:relative; float:left;  border-bottom: none; -webkit-box-shadow:none; -webkit-border-radius:0px; }
+.CtxtMenu_SelectionItem {  padding-right: 1em;}
+.CtxtMenu_Selection {  right: 40%; width:50%; }
+.CtxtMenu_SelectionBox {  padding: 0em; max-height:20em; max-width: none;  background-color:#FFFFFF;}
+.CtxtMenu_SelectionDivider {  clear: both; border-top: 2px solid #000000;}
+.CtxtMenu_Menu .CtxtMenu_MenuClose {  top:-10px; left:-10px}
+
+</style>
+<style id="MJX-CHTML-styles">
+
+mjx-container[jax="CHTML"] {
+  line-height: 0;
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > * {
+  display: table-cell;
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+_::-webkit-full-page-media, _:future, :root mjx-container {
+  will-change: opacity;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-c::before {
+  display: block;
+  width: 0;
+}
+
+.MJX-TEX {
+  font-family: MJXZERO, MJXTEX;
+}
+
+.TEX-B {
+  font-family: MJXZERO, MJXTEX-B;
+}
+
+.TEX-I {
+  font-family: MJXZERO, MJXTEX-I;
+}
+
+.TEX-MI {
+  font-family: MJXZERO, MJXTEX-MI;
+}
+
+.TEX-BI {
+  font-family: MJXZERO, MJXTEX-BI;
+}
+
+.TEX-S1 {
+  font-family: MJXZERO, MJXTEX-S1;
+}
+
+.TEX-S2 {
+  font-family: MJXZERO, MJXTEX-S2;
+}
+
+.TEX-S3 {
+  font-family: MJXZERO, MJXTEX-S3;
+}
+
+.TEX-S4 {
+  font-family: MJXZERO, MJXTEX-S4;
+}
+
+.TEX-A {
+  font-family: MJXZERO, MJXTEX-A;
+}
+
+.TEX-C {
+  font-family: MJXZERO, MJXTEX-C;
+}
+
+.TEX-CB {
+  font-family: MJXZERO, MJXTEX-CB;
+}
+
+.TEX-FR {
+  font-family: MJXZERO, MJXTEX-FR;
+}
+
+.TEX-FRB {
+  font-family: MJXZERO, MJXTEX-FRB;
+}
+
+.TEX-SS {
+  font-family: MJXZERO, MJXTEX-SS;
+}
+
+.TEX-SSB {
+  font-family: MJXZERO, MJXTEX-SSB;
+}
+
+.TEX-SSI {
+  font-family: MJXZERO, MJXTEX-SSI;
+}
+
+.TEX-SC {
+  font-family: MJXZERO, MJXTEX-SC;
+}
+
+.TEX-T {
+  font-family: MJXZERO, MJXTEX-T;
+}
+
+.TEX-V {
+  font-family: MJXZERO, MJXTEX-V;
+}
+
+.TEX-VB {
+  font-family: MJXZERO, MJXTEX-VB;
+}
+
+mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
+  font-family: MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important;
+}
+
+@font-face /* 0 */ {
+  font-family: MJXZERO;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff") format("woff");
+}
+
+@font-face /* 1 */ {
+  font-family: MJXTEX;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff") format("woff");
+}
+
+@font-face /* 2 */ {
+  font-family: MJXTEX-B;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Bold.woff") format("woff");
+}
+
+@font-face /* 3 */ {
+  font-family: MJXTEX-I;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff") format("woff");
+}
+
+@font-face /* 4 */ {
+  font-family: MJXTEX-MI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Italic.woff") format("woff");
+}
+
+@font-face /* 5 */ {
+  font-family: MJXTEX-BI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-BoldItalic.woff") format("woff");
+}
+
+@font-face /* 6 */ {
+  font-family: MJXTEX-S1;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff") format("woff");
+}
+
+@font-face /* 7 */ {
+  font-family: MJXTEX-S2;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff") format("woff");
+}
+
+@font-face /* 8 */ {
+  font-family: MJXTEX-S3;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff") format("woff");
+}
+
+@font-face /* 9 */ {
+  font-family: MJXTEX-S4;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff") format("woff");
+}
+
+@font-face /* 10 */ {
+  font-family: MJXTEX-A;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff") format("woff");
+}
+
+@font-face /* 11 */ {
+  font-family: MJXTEX-C;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff") format("woff");
+}
+
+@font-face /* 12 */ {
+  font-family: MJXTEX-CB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Bold.woff") format("woff");
+}
+
+@font-face /* 13 */ {
+  font-family: MJXTEX-FR;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Regular.woff") format("woff");
+}
+
+@font-face /* 14 */ {
+  font-family: MJXTEX-FRB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Bold.woff") format("woff");
+}
+
+@font-face /* 15 */ {
+  font-family: MJXTEX-SS;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Regular.woff") format("woff");
+}
+
+@font-face /* 16 */ {
+  font-family: MJXTEX-SSB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Bold.woff") format("woff");
+}
+
+@font-face /* 17 */ {
+  font-family: MJXTEX-SSI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Italic.woff") format("woff");
+}
+
+@font-face /* 18 */ {
+  font-family: MJXTEX-SC;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Script-Regular.woff") format("woff");
+}
+
+@font-face /* 19 */ {
+  font-family: MJXTEX-T;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Typewriter-Regular.woff") format("woff");
+}
+
+@font-face /* 20 */ {
+  font-family: MJXTEX-V;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Regular.woff") format("woff");
+}
+
+@font-face /* 21 */ {
+  font-family: MJXTEX-VB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff");
+}
+
+</style>
+<meta name="color-scheme" content="light">
+<meta name="description" content="This page provides an overview of the Façade-X specification documents.
+Façade-X is the abstraction of all the basic data structures used to
+represent source data formats, combined into a unified model. RDF languages can implement it to
+provide users with direct access to external, heterogeneous data structures without requiring
+format-specific transformations.">
+<style>
+var:hover{text-decoration:underline;cursor:pointer}
+var.respec-hl{color:var(--color,#000);background-color:var(--bg-color);box-shadow:0 0 0 2px var(--bg-color)}
+@media (prefers-color-scheme:dark){
+var.respec-hl{filter:saturate(.9) brightness(.9)}
+}
+var.respec-hl-c1{--bg-color:#f4d200}
+var.respec-hl-c2{--bg-color:#ff87a2}
+var.respec-hl-c3{--bg-color:#96e885}
+var.respec-hl-c4{--bg-color:#3eeed2}
+var.respec-hl-c5{--bg-color:#eacfb6}
+var.respec-hl-c6{--bg-color:#82ddff}
+var.respec-hl-c7{--bg-color:#ffbcf2}
+@media print{
+var.respec-hl{background:0 0;color:#000;box-shadow:unset}
+}
+</style>
+<style>
+var[data-type]{position:relative}
+var[data-type]::after,var[data-type]::before{position:absolute;left:50%;top:-6px;opacity:0;transition:opacity .4s;pointer-events:none}
+var[data-type]::before{content:"";transform:translateX(-50%);border-width:4px 6px 0 6px;border-style:solid;border-color:transparent;border-top-color:#222}
+var[data-type]::after{content:attr(data-type);transform:translateX(-50%) translateY(-100%);background:#222;text-align:center;font-family:"Dank Mono","Fira Code",monospace;font-style:normal;padding:6px;border-radius:3px;color:#daca88;text-indent:0;font-weight:400}
+var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
+</style>
+<script id="initialUserConfig" type="application/json">{
+  "editors": [
+    {
+      "name": "Luigi Asprino",
+      "company": "Università Telematica San Raffaele - Roma",
+      "companyURL": "https://www.uniroma5.it/",
+      "mailto": "luigi.asprino@uniroma5.it",
+      "orcid": "https://orcid.org/0000-0003-1907-0677",
+      "w3cid": 130089,
+      "url": "mailto:luigi.asprino@uniroma5.it"
+    },
+    {
+      "name": "Enrico Daga",
+      "company": "The Open University",
+      "companyURL": "https://www.open.ac.uk/",
+      "mailto": "enrico.daga@open.ac.uk",
+      "orcid": "https://orcid.org/0000-0002-3184-5407",
+      "w3cid": 76898,
+      "url": "mailto:enrico.daga@open.ac.uk"
+    }
+  ],
+  "github": "w3c-facade-x/facade-x-specs",
+  "shortName": "facade-x",
+  "xref": "web-platform",
+  "group": "cg/facade-x",
+  "license": "w3c-software-doc",
+  "specStatus": "CG-DRAFT",
+  "isPreview": false,
+  "edDraftURI": "https://w3c-facade-x.github.io/facade-x-specs/dev/index.html",
+  "latestVersion": "https://w3c-facade-x.github.io/facade-x-specs/index.html",
+  "publishDate": "2026-10-06",
+  "publishISODate": "2026-10-06T00:00:00.000Z",
+  "generatedSubtitle": "Draft Community Group Report 06 October 2026"
+}</script>
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/cg-draft">
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/dark.css" disabled=""></head>
+
+<body class="h-entry informative" data-cite="HTML INFRA URL WEBIDL DOM FETCH"><div class="head">
+    
+    <h1 id="title" class="title">Façade-X Overview</h1> <h2 id="subtitle" class="subtitle">A minimalist metamodel for representing heterogeneous data formats in a unified way.</h2>
+    <p id="w3c-state">
+      <a href="https://www.w3.org/standards/types#reports">Draft Community Group Report</a>
+      <time class="dt-published" datetime="2026-10-06">06 October 2026</time>
+    </p>
+    <dl>
+      
+      <dt>Latest published version:</dt><dd>
+                <a href="https://w3c-facade-x.github.io/facade-x-specs/index.html">https://w3c-facade-x.github.io/facade-x-specs/index.html</a>
+              </dd>
+      <dt>Latest editor's draft:</dt><dd><a href="https://w3c-facade-x.github.io/facade-x-specs/dev/index.html">https://w3c-facade-x.github.io/facade-x-specs/dev/index.html</a></dd>
+      
+      
+      
+      
+      <dt>
+                Editors:
+              </dt><dd class="editor p-author h-card vcard" data-editor-id="130089">
+    <a class="ed_mailto u-email email p-name" href="mailto:luigi.asprino@uniroma5.it">Luigi Asprino</a><a class="p-name orcid" href="https://orcid.org/0000-0003-1907-0677"><svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <style>
+
+      .st1 {
+        fill: #fff;
+      }
+    
+</style>
+    <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z" fill="#a6ce39"></path>
+    <path class="st1" d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"></path>
+  </svg></a> (<a class="p-org org h-org" href="https://www.uniroma5.it/">Università Telematica San Raffaele - Roma</a>)
+  </dd><dd class="editor p-author h-card vcard" data-editor-id="76898">
+    <a class="ed_mailto u-email email p-name" href="mailto:enrico.daga@open.ac.uk">Enrico Daga</a><a class="p-name orcid" href="https://orcid.org/0000-0002-3184-5407"><svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <style>
+
+      .st1 {
+        fill: #fff;
+      }
+    
+</style>
+    <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z" fill="#a6ce39"></path>
+    <path class="st1" d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"></path>
+  </svg></a> (<a class="p-org org h-org" href="https://www.open.ac.uk/">The Open University</a>)
+  </dd>
+      
+      
+      <dt>Feedback:</dt><dd>
+        <a href="https://github.com/w3c-facade-x/facade-x-specs/">GitHub w3c-facade-x/facade-x-specs</a>
+        (<a href="https://github.com/w3c-facade-x/facade-x-specs/pulls/">pull requests</a>,
+        <a href="https://github.com/w3c-facade-x/facade-x-specs/issues/new/choose">new issue</a>,
+        <a href="https://github.com/w3c-facade-x/facade-x-specs/issues/">open issues</a>)
+      </dd>
+      
+    </dl>
+    
+    <p class="copyright">
+            <a href="https://www.w3.org/policies/#copyright">Copyright</a>
+            ©
+            2026
+            
+            the Contributors to the Façade-X Overview
+            Specification, published by the
+            <a href="https://www.w3.org/groups/cg/facade-x">Data Façades Community Group</a> under the
+            <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable
+                    <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a>
+                    is available.
+                  
+          </p>
+    <hr title="Separator for header">
+  </div>
+
+  
+  
+
+  <section id="abstract" class="introductory"><h2>Abstract</h2>
+<p>This page provides an overview of the Façade-X specification documents.
+Façade-X is the abstraction of all the basic data structures used to
+represent source data formats, combined into a unified model. RDF languages can implement it to
+provide users with direct access to external, heterogeneous data structures without requiring
+format-specific transformations.</p>
+</section>
+<section id="sotd" class="introductory"><h2>Status of This Document</h2><p>
+      This specification was published by the
+      <a href="https://www.w3.org/groups/cg/facade-x">Data Façades Community Group</a>. It is not a W3C Standard nor is it
+      on the W3C Standards Track.
+      
+              Please note that under the
+              <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>
+              there is a limited opt-out and other conditions apply.
+            
+      Learn more about
+      <a href="https://www.w3.org/community/">W3C Community and Business Groups</a>.
+    </p>
+<p id="versions">This is version 0.1 of this document, released on 2026-10-06, at <a href="https://w3c-facade-x.github.io/facade-x-specs/0.1/index.html">https://w3c-facade-x.github.io/facade-x-specs/0.1/index.html</a>. This version will not change. The latest release is always at <a href="https://w3c-facade-x.github.io/facade-x-specs/index.html">https://w3c-facade-x.github.io/facade-x-specs/index.html</a>. The editor's draft, which may include changes made after this release, is at <a href="https://w3c-facade-x.github.io/facade-x-specs/dev/index.html">https://w3c-facade-x.github.io/facade-x-specs/dev/index.html</a>. The issues addressed in this release, and those still open, are listed in the <a href="https://github.com/w3c-facade-x/facade-x-specs/releases/tag/v0.1">release notes</a>.</p>
+<p>This document is currently in active development.</p>
+<p>
+    <a href="https://github.com/w3c-facade-x/facade-x-specs/issues/">GitHub Issues</a> are preferred for
+            discussion of this specification.
+          
+    
+  </p><section id="set-of-documents"><div class="header-wrapper"><h3 id="set-of-documents-0">Set of Documents</h3><a class="self-link" href="#set-of-documents" aria-label="Permalink for this Section"></a></div>
+
+<p>This document is one of seven Façade-X specification documents produced by the Data Façades Community Group:</p>
+<ol>
+    <li><a href="index.html">Façade-X Overview</a> (this document)</li>
+    <li><a href="primer.html">Façade-X Primer</a></li>
+    <li><a href="schema.html">Façade-X Schema vocabulary</a></li>
+    <li><a href="engine.html">Façade-X Engine vocabulary</a></li>
+    <li><a href="sparql.html">Façade-X Data Access in SPARQL</a></li>
+    <li><a href="metamodel.html">Façade-X Concepts and Metamodel Specification</a></li>
+    <li><a href="mappings.html">Façade-X Mappings</a>
+      <ul>
+        <li><a href="mapping-csv.html">Façade-X mapping for CSV</a></li>
+        <li><a href="mapping-json.html">Façade-X mapping for JSON</a></li>
+        <li><a href="mapping-xml.html">Façade-X mapping for XML</a></li>
+      </ul>
+    </li>
+  </ol>
+</section>
+</section><nav id="toc"><h2 class="introductory" id="table-of-contents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Abstract</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status of This Document</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#set-of-documents">Set of Documents</a></li></ol></li><li class="tocline"><a class="tocxref" href="#overview"><bdi class="secno">1. </bdi>Overview</a></li><li class="tocline"><a class="tocxref" href="#specification-documents"><bdi class="secno">2. </bdi>Specification Documents</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#facade-x-primer"><bdi class="secno">2.1 </bdi><span class="formerLink">Façade-X Primer</span></a></li><li class="tocline"><a class="tocxref" href="#facade-x-schema-vocabulary"><bdi class="secno">2.2 </bdi><span class="formerLink">Façade-X Schema Vocabulary</span></a></li><li class="tocline"><a class="tocxref" href="#facade-x-engine-vocabulary"><bdi class="secno">2.3 </bdi><span class="formerLink">Façade-X Engine Vocabulary</span></a></li><li class="tocline"><a class="tocxref" href="#facade-x-data-access-in-sparql"><bdi class="secno">2.4 </bdi><span class="formerLink">Façade-X Data Access in SPARQL</span></a></li><li class="tocline"><a class="tocxref" href="#facade-x-concepts-and-metamodel"><bdi class="secno">2.5 </bdi><span class="formerLink">Façade-X Concepts and Metamodel</span></a></li><li class="tocline"><a class="tocxref" href="#facade-x-format-mappings"><bdi class="secno">2.6 </bdi><span class="formerLink">Façade-X Format Mappings</span></a></li></ol></li></ol></nav>
+<section class="informative" id="overview"><div class="header-wrapper"><h2 id="x1-overview"><bdi class="secno">1. </bdi>Overview</h2><a class="self-link" href="#overview" aria-label="Permalink for Section 1."></a></div><p><em>This section is non-normative.</em></p>
+
+<p>Modern data landscapes are inherently heterogeneous: CSV files, JSON documents, spreadsheets,
+XML, and many other formats each impose their own structural conventions. Façade-X addresses this
+fragmentation by identifying the minimal set of structural primitives —
+<em>containers</em>, <em>slots</em>, and <em>values</em> — that are sufficient to faithfully
+represent any of these formats within a single, coherent model.</p>
+<p>The model is intentionally abstract. A container generalises both ordered lists and associative
+maps; a slot is the allotted place for a value or a nested container, identified either by a
+cardinal number (a <em>NumberSlot</em>) or by a string key (a <em>StringSlot</em>).
+This small vocabulary, together with a precisely stated set of logical axioms, constitutes the
+metamodel from which format-specific RDF mappings are derived.</p>
+<p>This repository contains three normative specification documents — the formal metamodel; the RDF vocabulary that realises it under the namespace
+<code>http://sparql.xyz/facade-x/ns/</code>; and the specification of how Façade-X data is accessed and queried
+in SPARQL — together with a non-normative <em>Primer</em> that introduces the model informally through
+worked examples. Readers new to Façade-X should start with the Primer.</p>
+</section>
+<section id="specification-documents"><div class="header-wrapper"><h2 id="x2-specification-documents"><bdi class="secno">2. </bdi>Specification Documents</h2><a class="self-link" href="#specification-documents" aria-label="Permalink for Section 2."></a></div>
+
+<section id="facade-x-primer"><div class="header-wrapper"><h3 id="x2-1-facade-x-primer"><bdi class="secno">2.1 </bdi><a href="primer.html">Façade-X Primer</a></h3><a class="self-link" href="#facade-x-primer" aria-label="Permalink for Section 2.1"></a></div>
+
+<p>A non-normative, example-driven introduction to Façade-X, intended for developers, implementers,
+and users. It motivates the model, walks through how common formats (JSON, CSV, and others) map
+onto containers, slots, and values, explains why the model is shaped the way it is, and shows how
+to query the resulting RDF with SPARQL. Start here, then move on to the normative documents below.</p>
+</section>
+<section id="facade-x-schema-vocabulary"><div class="header-wrapper"><h3 id="x2-2-facade-x-schema-vocabulary"><bdi class="secno">2.2 </bdi><a href="schema.html">Façade-X Schema Vocabulary</a></h3><a class="self-link" href="#facade-x-schema-vocabulary" aria-label="Permalink for Section 2.2"></a></div>
+
+<p>This document specifies the RDF realisation of the Façade-X metamodel.
+It defines the vocabulary terms under the <code>fx:</code> namespace
+(<code>http://sparql.xyz/facade-x/ns/</code>), including:</p>
+<ul>
+<li><code>fx:Container</code> — the class of containers.</li>
+<li><code>fx:Slot</code>, <code>fx:SlotNumber</code>, <code>fx:SlotString</code> — the slot hierarchy.</li>
+<li><code>fx:Value</code> — the class of primitive values.</li>
+<li><code>fx:Type</code> — the class of types assignable to containers.</li>
+<li><code>fx:Root</code> — the type of the unique top-level container of a data source.</li>
+</ul>
+</section>
+<section id="facade-x-engine-vocabulary"><div class="header-wrapper"><h3 id="x2-3-facade-x-engine-vocabulary"><bdi class="secno">2.3 </bdi><a href="engine.html">Façade-X Engine Vocabulary</a></h3><a class="self-link" href="#facade-x-engine-vocabulary" aria-label="Permalink for Section 2.3"></a></div>
+
+<p>This document specifies the options used to configure an engine that builds a Façade-X
+representation, under the <code>fxe:</code> namespace (<code>http://sparql.xyz/facade-x/engine/</code>). It is separate
+from the Schema vocabulary so that it can be adopted independently and used outside SPARQL.
+It covers source options (<code>fxe:location</code>, <code>fxe:content</code>, <code>fxe:media-type</code>, …) and mapping options
+(<code>fxe:root</code>, <code>fxe:namespace</code>, <code>fxe:blank-nodes</code>, …).</p>
+</section>
+<section id="facade-x-data-access-in-sparql"><div class="header-wrapper"><h3 id="x2-4-facade-x-data-access-in-sparql"><bdi class="secno">2.4 </bdi><a href="sparql.html">Façade-X Data Access in SPARQL</a></h3><a class="self-link" href="#facade-x-data-access-in-sparql" aria-label="Permalink for Section 2.4"></a></div>
+
+<p>This document specifies how a Façade-X view of a resource is obtained and queried from within a
+SPARQL query. It defines the <code>SERVICE</code> clause, how
+<a href="engine.html">Engine vocabulary</a> options are supplied in a query (in the service IRI or as triples
+on <code>fx:properties</code>), and the use of <code>rdfs:member</code> for traversing container members.</p>
+</section>
+<section id="facade-x-concepts-and-metamodel"><div class="header-wrapper"><h3 id="x2-5-facade-x-concepts-and-metamodel"><bdi class="secno">2.5 </bdi><a href="metamodel.html">Façade-X Concepts and Metamodel</a></h3><a class="self-link" href="#facade-x-concepts-and-metamodel" aria-label="Permalink for Section 2.5"></a></div>
+
+<p>This document provides the formal definition of the Façade-X metamodel. It introduces and specifies the following concepts:</p>
+<ul>
+<li><strong>Resources and Data Sources</strong> — digital artifacts and the data collections they contain.</li>
+<li><strong>Containers, Slots, and Values</strong> — the core structural primitives of the model, abstracting over lists and maps.</li>
+<li><strong>Types</strong> — classifications that can be assigned to containers.</li>
+<li><strong>Root Container</strong> — the unique top-level entry point for each data source.</li>
+<li><strong>Disjointness</strong> — a complete set of axioms ensuring the concepts are pairwise disjoint.</li>
+</ul>
+</section>
+<section id="facade-x-format-mappings"><div class="header-wrapper"><h3 id="x2-6-facade-x-format-mappings"><bdi class="secno">2.6 </bdi><a href="mappings.html">Façade-X Format Mappings</a></h3><a class="self-link" href="#facade-x-format-mappings" aria-label="Permalink for Section 2.6"></a></div>
+
+<p>The list of format mappings, and the principles they share. Each mapping specifies how resources
+in one source format (CSV, JSON, XML, …) are represented as Façade-X data sources.</p>
+</section>
+</section>
+
+
+
+
+<p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
+  </p><script id="respec-highlight-vars">(() => {
+// @ts-check
+
+if (document.respec) {
+  document.respec.ready.then(setupVarHighlighter);
+} else {
+  setupVarHighlighter();
+}
+
+function setupVarHighlighter() {
+  document
+    .querySelectorAll("var")
+    .forEach(varElem => varElem.addEventListener("click", highlightListener));
+}
+
+/**
+ * @param {MouseEvent} ev
+ */
+function highlightListener(ev) {
+  ev.stopPropagation();
+  const varElem = /** @type {HTMLElement} */ (ev.target);
+  const hightligtedElems = highlightVars(varElem);
+  const resetListener = () => {
+    const hlColor = getHighlightColor(varElem);
+    hightligtedElems.forEach(el => removeHighlight(el, hlColor));
+    [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
+  };
+  if (hightligtedElems.length) {
+    document.body.addEventListener("click", resetListener, { once: true });
+  }
+}
+
+// availability of highlight colors. colors from var.css
+const HL_COLORS = new Map([
+  ["respec-hl-c1", true],
+  ["respec-hl-c2", true],
+  ["respec-hl-c3", true],
+  ["respec-hl-c4", true],
+  ["respec-hl-c5", true],
+  ["respec-hl-c6", true],
+  ["respec-hl-c7", true],
+]);
+
+/**
+ * @param {HTMLElement} target
+ */
+function getHighlightColor(target) {
+  // return current colors if applicable
+  const { value } = target.classList;
+  const re = /respec-hl-\w+/;
+  const activeClass = re.test(value) && value.match(re);
+  if (activeClass) return activeClass[0];
+
+  // first color preference
+  if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
+
+  // otherwise get some other available color
+  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
+}
+
+/**
+ * @param {HTMLElement} varElem
+ */
+function highlightVars(varElem) {
+  const textContent = norm(varElem.textContent);
+  const parent = /** @type {HTMLElement} */ (
+    varElem.closest(".algorithm, section")
+  );
+  if (!parent) return [];
+  const highlightColor = getHighlightColor(varElem);
+
+  const varsToHighlight = [...parent.querySelectorAll("var")].filter(
+    el =>
+      norm(el.textContent) === textContent &&
+      el.closest(".algorithm, section") === parent
+  );
+
+  // update availability of highlight color
+  const colorStatus = varsToHighlight[0].classList.contains("respec-hl");
+  HL_COLORS.set(highlightColor, colorStatus);
+
+  // highlight vars
+  if (colorStatus) {
+    varsToHighlight.forEach(el => removeHighlight(el, highlightColor));
+    return [];
+  } else {
+    varsToHighlight.forEach(el => addHighlight(el, highlightColor));
+  }
+  return varsToHighlight;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @param {string} highlightColor
+ */
+function removeHighlight(el, highlightColor) {
+  el.classList.remove("respec-hl", highlightColor);
+  // clean up empty class attributes so they don't come in export
+  if (!el.classList.length) el.removeAttribute("class");
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {string} highlightColor
+ */
+function addHighlight(elem, highlightColor) {
+  elem.classList.add("respec-hl", highlightColor);
+}
+
+/**
+ * Same as `norm` from src/core/utils, but our build process doesn't allow
+ * imports in runtime scripts, so duplicated here.
+ * @param {string} str
+ */
+function norm(str) {
+  return str.trim().replace(/\s+/g, " ");
+}
+})()</script><script id="respec-dfn-panel">(() => {
+// @ts-check
+if (document.respec) {
+  document.respec.ready.then(setupPanel);
+} else {
+  setupPanel();
+}
+
+function setupPanel() {
+  const listener = panelListener();
+  document.body.addEventListener("keydown", listener);
+  document.body.addEventListener("click", listener);
+}
+
+function panelListener() {
+  /** @type {HTMLElement | null} */
+  let panel = null;
+  /**
+   * @param {KeyboardEvent|MouseEvent} event
+   */
+  return event => {
+    const { target, type } = event;
+
+    if (!(target instanceof HTMLElement)) return;
+
+    // For keys, we only care about Enter key to activate the panel
+    // otherwise it's activated via a click.
+    if (
+      type === "keydown" &&
+      /** @type {KeyboardEvent} */ (event).key !== "Enter"
+    )
+      return;
+
+    const action = deriveAction(event);
+
+    switch (action) {
+      case "show": {
+        hidePanel(panel);
+        /** @type {HTMLElement | null} */
+        const dfn = target.closest("dfn, .index-term");
+        if (!dfn?.id) break;
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        if (!panel) break;
+        const coords = deriveCoordinates(
+          /** @type {MouseEvent|KeyboardEvent} */ (event)
+        );
+        displayPanel(dfn, panel, coords);
+        break;
+      }
+      case "dock": {
+        if (panel) {
+          panel.style.left = "";
+          panel.style.top = "";
+          panel.classList.add("docked");
+        }
+        break;
+      }
+      case "hide": {
+        hidePanel(panel);
+        panel = null;
+        break;
+      }
+    }
+  };
+}
+
+/**
+ * @param {MouseEvent|KeyboardEvent} event
+ */
+function deriveCoordinates(event) {
+  const target = /** @type HTMLElement */ (event.target);
+
+  // We prevent synthetic AT clicks from putting
+  // the dialog in a weird place. The AT events sometimes
+  // lack coordinates, so they have clientX/Y = 0
+  const rect = target.getBoundingClientRect();
+  if (
+    event instanceof MouseEvent &&
+    event.clientX >= rect.left &&
+    event.clientY >= rect.top
+  ) {
+    // The event probably happened inside the bounding rect...
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  // Offset to the middle of the element
+  const x = rect.x + rect.width / 2;
+  // Placed at the bottom of the element
+  const y = rect.y + rect.height;
+  return { x, y };
+}
+
+/**
+ * @param {Event} event
+ */
+function deriveAction(event) {
+  const target = /** @type {HTMLElement} */ (event.target);
+  const hitALink = !!target.closest("a");
+  if (target.closest("dfn:not([data-cite]), .index-term")) {
+    return hitALink ? "none" : "show";
+  }
+  if (target.closest(".dfn-panel")) {
+    if (hitALink) {
+      return target.classList.contains("self-link") ? "hide" : "dock";
+    }
+
+    const panel = /** @type {HTMLElement} */ (target.closest(".dfn-panel"));
+    return panel.classList.contains("docked") ? "hide" : "none";
+  }
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
+    return "hide";
+  }
+  return "none";
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {HTMLElement} panel
+ * @param {{ x: number, y: number }} clickPosition
+ */
+function displayPanel(dfn, panel, { x, y }) {
+  panel.hidden = false;
+  // distance (px) between edge of panel and the pointing triangle (caret)
+  const MARGIN = 20;
+
+  const dfnRects = dfn.getClientRects();
+  // Find the `top` offset when the `dfn` can be spread across multiple lines
+  let closestTop = 0;
+  let minDiff = Infinity;
+  for (const rect of dfnRects) {
+    const { top, bottom } = rect;
+    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
+    if (diffFromClickY < minDiff) {
+      minDiff = diffFromClickY;
+      closestTop = top;
+    }
+  }
+
+  const top = window.scrollY + closestTop + dfnRects[0].height;
+  const left = x - MARGIN;
+  panel.style.left = `${left}px`;
+  panel.style.top = `${top}px`;
+
+  // Find if the panel is flowing out of the window
+  const panelRect = panel.getBoundingClientRect();
+  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
+  if (panelRect.right > SCREEN_WIDTH) {
+    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
+    const newCaretOffset = left - newLeft;
+    panel.style.left = `${newLeft}px`;
+    /** @type {HTMLElement | null} */
+    const caret = panel.querySelector(".caret");
+    if (caret) caret.style.left = `${newCaretOffset}px`;
+  }
+
+  // As it's a dialog, we trap focus.
+  // TODO: when <dialog> becomes a implemented, we should really
+  // use that.
+  trapFocus(panel, dfn);
+}
+
+/**
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function trapFocus(panel, dfn) {
+  /** @type NodeListOf<HTMLAnchorElement> elements */
+  const anchors = panel.querySelectorAll("a[href]");
+  // No need to trap focus
+  if (!anchors.length) return;
+
+  // Move focus to first anchor element
+  const first = anchors.item(0);
+  first.focus();
+
+  const trapListener = createTrapListener(anchors, panel, dfn);
+  panel.addEventListener("keydown", trapListener);
+
+  // Hiding the panel releases the trap
+  const mo = new MutationObserver(records => {
+    const [record] = records;
+    const target = /** @type HTMLElement */ (record.target);
+    if (target.hidden) {
+      panel.removeEventListener("keydown", trapListener);
+      mo.disconnect();
+    }
+  });
+  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+}
+
+/**
+ *
+ * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function createTrapListener(anchors, panel, dfn) {
+  const lastIndex = anchors.length - 1;
+  let currentIndex = 0;
+  /**
+   * @param {KeyboardEvent} event
+   */
+  return event => {
+    switch (event.key) {
+      // Hitting "Tab" traps us in a nice loop around elements.
+      case "Tab": {
+        event.preventDefault();
+        currentIndex += event.shiftKey ? -1 : +1;
+        if (currentIndex < 0) {
+          currentIndex = lastIndex;
+        } else if (currentIndex > lastIndex) {
+          currentIndex = 0;
+        }
+        anchors.item(currentIndex).focus();
+        break;
+      }
+
+      // Hitting "Enter" on an anchor releases the trap.
+      case "Enter":
+        hidePanel(panel);
+        break;
+
+      // Hitting "Escape" returns focus to dfn.
+      case "Escape":
+        hidePanel(panel);
+        dfn.focus();
+        return;
+    }
+  };
+}
+
+/** @param {HTMLElement | null} panel */
+function hidePanel(panel) {
+  if (!panel) return;
+  panel.hidden = true;
+  panel.classList.remove("docked");
+}
+})()</script><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>
