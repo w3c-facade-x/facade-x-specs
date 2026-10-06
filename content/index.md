@@ -7,9 +7,9 @@ order: 1
 <section id="abstract">
 
 This page provides an overview of the Façade-X specification documents.
-Façade-X is the (meta-)model resulting from the abstraction of all the basic data structures used to
+Façade-X is the abstraction of all the basic data structures used to
 represent source data formats, combined into a unified model. RDF languages can implement it to
-provide users with direct access to external, heterogeneous data formats without requiring
+provide users with direct access to external, heterogeneous data structures without requiring
 format-specific transformations.
 
 </section>
@@ -36,8 +36,7 @@ cardinal number (a *NumberSlot*) or by a string key (a *StringSlot*).
 This small vocabulary, together with a precisely stated set of logical axioms, constitutes the
 metamodel from which format-specific RDF mappings are derived.
 
-This repository contains three normative specification documents — the formal metamodel, expressed
-in first-order logic; the RDF vocabulary that realises it under the namespace
+This repository contains three normative specification documents — the formal metamodel; the RDF vocabulary that realises it under the namespace
 `http://sparql.xyz/facade-x/ns/`; and the specification of how Façade-X data is accessed and queried
 in SPARQL — together with a non-normative *Primer* that introduces the model informally through
 worked examples. Readers new to Façade-X should start with the Primer.
@@ -91,7 +90,7 @@ It covers source options (`fxe:location`, `fxe:content`, `fxe:media-type`, …) 
 ### [Façade-X Data Access in SPARQL](sparql.html)
 
 This document specifies how a Façade-X view of a resource is obtained and queried from within a
-SPARQL query. It defines the `SERVICE` clause and `x-sparql-anything:` IRI scheme, how
+SPARQL query. It defines the `SERVICE` clause, how
 [Engine vocabulary](engine.html) options are supplied in a query (in the service IRI or as triples
 on `fx:properties`), and the use of `rdfs:member` for traversing container members.
 
@@ -101,8 +100,7 @@ on `fx:properties`), and the use of `rdfs:member` for traversing container membe
 
 ### [Façade-X Concepts and Metamodel](metamodel.html)
 
-This document provides the formal definition of the Façade-X metamodel using first-order
-logic axioms. It introduces and specifies the following concepts:
+This document provides the formal definition of the Façade-X metamodel. It introduces and specifies the following concepts:
 
 - **Resources and Data Sources** — digital artifacts and the data collections they contain.
 - **Containers, Slots, and Values** — the core structural primitives of the model, abstracting over lists and maps.
