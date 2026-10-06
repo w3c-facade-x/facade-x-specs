@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-fx-version="{{VERSION}}">
 
 <head>
   <meta charset="utf-8" />
@@ -16,12 +16,33 @@
       shortName: "facade-x",
       xref: "web-platform",
       group: "cg/facade-x",
-      isPreview: true,
       license: "w3c-software-doc",
-      specStatus: "unofficial",
-      latestVersion: "https://w3c-facade-x.github.io/facade-x-specs/",
-
+      // Filled in by build.py for each page and version: specStatus,
+      // isPreview, edDraftURI, latestVersion, prevVersion, publishDate.
+      {{VERSION_CONFIG}}
     };
+  </script>
+  <script>
+    // On a release snapshot, point to the latest release when a newer one
+    // exists. The banner has class "remove" so that the ReSpec export used to
+    // freeze a release does not keep it if it shows up at export time.
+    window.addEventListener('load', function () {
+      var version = document.documentElement.dataset.fxVersion;
+      if (!version || version === 'dev') return;
+      fetch('https://w3c-facade-x.github.io/facade-x-specs/versions.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (v) {
+          if (!v || !v.latest || v.latest === version) return;
+          var page = location.pathname.split('/').pop() || 'index.html';
+          var note = document.createElement('p');
+          note.className = 'remove fx-outdated';
+          note.innerHTML = 'This is version ' + version + ' of this document. ' +
+            'The latest release is <a href="https://w3c-facade-x.github.io/facade-x-specs/' +
+            page + '">version ' + v.latest + '</a>.';
+          document.body.insertBefore(note, document.body.firstChild);
+        })
+        .catch(function () {});
+    });
   </script>
   <script>
     window.MathJax = {
@@ -499,6 +520,16 @@
       }
     </style>
     <style>
+      .fx-outdated {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        margin: 0 0 1em;
+        padding: .5em 1em;
+        background: #fff3cd;
+        border: 1px solid #e0c060;
+        font-family: sans-serif;
+      }
       h3 {
         margin-top: 1rem;
       }

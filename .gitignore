@@ -422,3 +422,10 @@ FodyWeavers.xsd
 # to GitHub Pages by CI. It is not version-controlled.
 _site/
 .python3.12
+
+# --- Façade-X releases ---
+# Release snapshots are committed: re-include releases/, which the
+# [Rr]eleases/ pattern above would ignore.
+!/releases/
+# Intermediate release builds, made by release.sh.
+/build/
