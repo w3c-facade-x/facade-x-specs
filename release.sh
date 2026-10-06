@@ -160,7 +160,9 @@ publish() {
   [ -d "releases/$VERSION" ] || die "releases/$VERSION is not on main"
 
   # Publishing the draft creates tag v<version> on the merge commit.
-  gh release edit "$TAG" -R "$REPO" --target "$merge" --draft=false --latest
+  gh release edit "$TAG" -R "$REPO" --target "$merge" --draft=false
+  # Separate call: GitHub refuses to mark a release as latest while it is a draft.
+  gh release edit "$TAG" -R "$REPO" --latest
   git fetch -q --tags
 
   # The release branch is no longer needed.
