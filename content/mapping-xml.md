@@ -150,7 +150,8 @@ An element with no attributes and no represented content gives a container that 
 
 XML without a schema defines no value types. Following the
 [common principles](mappings.html#Principles), every attribute value and text node is a literal of
-type `xsd:string`, including values such as `10.50` or `true`.
+type `xsd:string`, including values such as `10.50` or `true`. When [`fxe:xml.lang-tags`](#xml.lang-tags) is `true`,
+values in the scope of `xml:lang` are language-tagged instead (see [Language](#Language)).
 
 The lexical form of a text node is its character data, with whitespace kept: `Text ` and ` tail`
 keep their spaces. Line ends are normalised as required by
@@ -159,6 +160,33 @@ keep their spaces. Line ends are normalised as required by
 The lexical form of an attribute value is the value after
 [attribute-value normalisation](https://www.w3.org/TR/xml/#AVNormalize). A line feed written as
 the character reference `&#10;` is kept as a line feed.
+
+</section>
+
+<section id="Language">
+
+### Language
+
+By default, `xml:lang` is held by a string slot like any other attribute (see [Names](#Names)) and
+has no other effect on the representation.
+
+When [`fxe:xml.lang-tags`](#xml.lang-tags) is `true`, values are also language-tagged, following
+the scope of `xml:lang` defined in [XML 1.0 §2.12](https://www.w3.org/TR/xml/#sec-lang-tag):
+
+- The language of an element is the value of its `xml:lang` attribute or, when it has none, the
+  language of its parent element. A document element without `xml:lang` has no language.
+- `xml:lang=""` gives the element no language.
+- A value of `xml:lang` that is not a well-formed language tag [[BCP47](#bib-bcp47)] is treated as
+  `xml:lang=""`.
+- Each text node of an element that has a language, and each attribute value of that element, is a
+  [language-tagged string](https://www.w3.org/TR/rdf11-concepts/#dfn-language-tagged-string)
+  whose lexical form is as defined in [Values](#Values) and whose language tag is the language of
+  the element, as written in the source.
+- Values of attributes in the XML namespace (`xml:lang`, `xml:space`, `xml:base`, `xml:id`) are not
+  language-tagged.
+- The `xml:lang` slot is kept.
+
+All other values are of type `xsd:string`.
 
 </section>
 
@@ -173,6 +201,7 @@ These options are terms of the [Engine vocabulary](engine.html) and apply only t
 | Term | Range | Default | Description |
 |---|---|---|---|
 | <span id="xml.path"></span>`fxe:xml.path` | `xsd:string` | — | An XPath expression [[XPATH](#bib-xpath)]. Only the nodes it selects, and their content, are represented. |
+| <span id="xml.lang-tags"></span>`fxe:xml.lang-tags` | `xsd:boolean` | false | Language-tag text nodes and attribute values in the scope of `xml:lang` (see [Language](#Language)). |
 
 The reference implementation accepts several values for `xml.path` as numbered options
 (`xml.path.1`, `xml.path.2`, …). Whether this form is kept is open.
@@ -301,6 +330,46 @@ The comment does not use up a slot number, so `empty` is held by `rdf:_2`.
 
 </section>
 
+<section id="ExampleLanguage">
+
+### Language tags
+
+Input, with `fxe:xml.lang-tags` set to `true`:
+
+```example
+<doc xml:lang="en">
+  <title>Colour</title>
+  <title xml:lang="it" note="variante">Colore</title>
+  <code xml:lang="">RGB</code>
+</doc>
+```
+
+Fa&ccedil;ade-X representation:
+
+```turtle
+@prefix fx:  <http://sparql.xyz/facade-x/ns/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xyz: <http://sparql.xyz/facade-x/data/> .
+
+[] a fx:Root, xyz:doc ;
+   <http://www.w3.org/XML/1998/namespace#lang> "en" ;
+   rdf:_1 [ a xyz:title ; rdf:_1 "Colour"@en ] ;
+   rdf:_2 [ a xyz:title ;
+            <http://www.w3.org/XML/1998/namespace#lang> "it" ;
+            xyz:note "variante"@it ;
+            rdf:_1 "Colore"@it ] ;
+   rdf:_3 [ a xyz:code ;
+            <http://www.w3.org/XML/1998/namespace#lang> "" ;
+            rdf:_1 "RGB" ] .
+```
+
+The first `title` inherits `en` from `doc`; the second overrides it with `it`, which also applies to
+its attribute `note`. In `code`, `xml:lang=""` removes the language. The `xml:lang` values
+themselves are not tagged. With the default, `fxe:xml.lang-tags` set to `false`, all these values
+are of type `xsd:string`.
+
+</section>
+
 <section id="ExampleQuery">
 
 ### Query
@@ -342,6 +411,8 @@ SELECT ?id ?price WHERE {
 <dd><a href="https://www.rfc-editor.org/rfc/rfc7303">XML Media Types</a>. H. Thompson; C. Lilley. IETF. July 2014. Proposed Standard.</dd>
 <dt id="bib-xpath">[XPATH]</dt>
 <dd><a href="https://www.w3.org/TR/xpath-31/">XML Path Language (XPath) 3.1</a>. Jonathan Robie; Michael Dyck; Josh Spiegel. W3C. 21 March 2017. W3C Recommendation.</dd>
+<dt id="bib-bcp47">[BCP47]</dt>
+<dd><a href="https://www.rfc-editor.org/info/bcp47">Tags for Identifying Languages</a>. A. Phillips; M. Davis. IETF. September 2009. Best Current Practice.</dd>
 <dt id="bib-sa-xml">[sparql-anything-xml]</dt>
 <dd><a href="https://sparql-anything.readthedocs.io/stable/formats/XML/">SPARQL Anything — XML</a>.</dd>
 
